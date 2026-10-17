@@ -1,5 +1,7 @@
 # VoltGecko
 
+![VoltGecko cyberpunk logo](public/brand/voltgecko-cyberpunk-logo.png)
+
 Offline-first electrical floor-plan and distribution-board planner, in **English and Hungarian**. Built with React, TypeScript, Vite and an installable PWA; projects stay on the user's device unless the user exports a file or explicitly saves to Google Drive.
 
 [Magyar útmutató](#magyar) · [GitHub](https://github.com/SmartLizardOrg/VoltGecko) · [MIT License](LICENSE)
