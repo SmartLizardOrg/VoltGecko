@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.*
+!.env.example
+.dev.vars*
+.wrangler/
+public/THIRD_PARTY_NOTICES.txt
+.cert/
+test-results/
+playwright-report/
+tmp/
+*.tsbuildinfo
+public/pdfjs/
+.cache/
+debug.log

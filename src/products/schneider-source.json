@@ -1,0 +1,3929 @@
+{
+  "source": {
+    "title": "Easy9 Pro Katalógus 2025.",
+    "documentReference": "Easy9Pro_catalog_HU",
+    "documentVersion": "2.0",
+    "releaseDate": "2026-04-02",
+    "retrievedDate": "2026-10-16",
+    "landingUrl": "https://www.se.com/hu/hu/download/document/Easy9Pro_catalog_HU/",
+    "pdfUrl": "https://download.se.com/files?p_Doc_Ref=Easy9Pro_catalog_HU",
+    "pdfFilename": "easy9pro_katalogus_20260402.pdf",
+    "sha256": "a996a1750451276066c785067010b074c16e19a6e13b6f3af9794f8c70ac85a3",
+    "offerPages": [
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34
+    ],
+    "note": "Includes all explicit order references in offer pages6-34, including prose accessories (A9A27062 on page23); replacement-table legacy SKU references on pages44-45 excluded. Easy9 EU, PrismaSeT XS and Acti9 are distinct compatible families, not Easy9 Pro branded products. DIN widths converted from catalog9mm units into18mm modules. A9A27062 width and pack size additionally verified against its official Schneider Electric product page."
+  },
+  "products": [
+    {
+      "sku": "EZ9F57102",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "2 A – EZ9F57102 – EZ9F57202 – EZ9F57302 – –",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 2,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57202",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "2 A – EZ9F57102 – EZ9F57202 – EZ9F57302 – –",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 2,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57302",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "2 A – EZ9F57102 – EZ9F57202 – EZ9F57302 – –",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 2,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57104",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "4 A – EZ9F57104 – EZ9F57204 – EZ9F57304 – –",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 4,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57204",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "4 A – EZ9F57104 – EZ9F57204 – EZ9F57304 – –",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 4,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57304",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "4 A – EZ9F57104 – EZ9F57204 – EZ9F57304 – –",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 4,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27106",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "6 A EZ9F27106 EZ9F57106 EZ9F27206 EZ9F57206 EZ9F27306 EZ9F57306 – EZ9F57406",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 6,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57106",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "6 A EZ9F27106 EZ9F57106 EZ9F27206 EZ9F57206 EZ9F27306 EZ9F57306 – EZ9F57406",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 6,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27206",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "6 A EZ9F27106 EZ9F57106 EZ9F27206 EZ9F57206 EZ9F27306 EZ9F57306 – EZ9F57406",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 6,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57206",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "6 A EZ9F27106 EZ9F57106 EZ9F27206 EZ9F57206 EZ9F27306 EZ9F57306 – EZ9F57406",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 6,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27306",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "6 A EZ9F27106 EZ9F57106 EZ9F27206 EZ9F57206 EZ9F27306 EZ9F57306 – EZ9F57406",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 6,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57306",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "6 A EZ9F27106 EZ9F57106 EZ9F27206 EZ9F57206 EZ9F27306 EZ9F57306 – EZ9F57406",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 6,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57406",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "6 A EZ9F27106 EZ9F57106 EZ9F27206 EZ9F57206 EZ9F27306 EZ9F57306 – EZ9F57406",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 6,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27110",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "10 A EZ9F27110 EZ9F57110 EZ9F27210 EZ9F57210 EZ9F27310 EZ9F57310 EZ9F27410 EZ9F57410",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 10,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57110",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "10 A EZ9F27110 EZ9F57110 EZ9F27210 EZ9F57210 EZ9F27310 EZ9F57310 EZ9F27410 EZ9F57410",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 10,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27210",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "10 A EZ9F27110 EZ9F57110 EZ9F27210 EZ9F57210 EZ9F27310 EZ9F57310 EZ9F27410 EZ9F57410",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 10,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57210",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "10 A EZ9F27110 EZ9F57110 EZ9F27210 EZ9F57210 EZ9F27310 EZ9F57310 EZ9F27410 EZ9F57410",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 10,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27310",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "10 A EZ9F27110 EZ9F57110 EZ9F27210 EZ9F57210 EZ9F27310 EZ9F57310 EZ9F27410 EZ9F57410",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 10,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57310",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "10 A EZ9F27110 EZ9F57110 EZ9F27210 EZ9F57210 EZ9F27310 EZ9F57310 EZ9F27410 EZ9F57410",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 10,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27410",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "10 A EZ9F27110 EZ9F57110 EZ9F27210 EZ9F57210 EZ9F27310 EZ9F57310 EZ9F27410 EZ9F57410",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 10,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57410",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "10 A EZ9F27110 EZ9F57110 EZ9F27210 EZ9F57210 EZ9F27310 EZ9F57310 EZ9F27410 EZ9F57410",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 10,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27113",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "13 A EZ9F27113 EZ9F57113 – EZ9F57213 – EZ9F57313 – –",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 13,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57113",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "13 A EZ9F27113 EZ9F57113 – EZ9F57213 – EZ9F57313 – –",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 13,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57213",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "13 A EZ9F27113 EZ9F57113 – EZ9F57213 – EZ9F57313 – –",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 13,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57313",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "13 A EZ9F27113 EZ9F57113 – EZ9F57213 – EZ9F57313 – –",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 13,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27116",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "16 A EZ9F27116 EZ9F57116 EZ9F27216 EZ9F57216 EZ9F27316 EZ9F57316 EZ9F27416 EZ9F57416",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 16,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57116",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "16 A EZ9F27116 EZ9F57116 EZ9F27216 EZ9F57216 EZ9F27316 EZ9F57316 EZ9F27416 EZ9F57416",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 16,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27216",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "16 A EZ9F27116 EZ9F57116 EZ9F27216 EZ9F57216 EZ9F27316 EZ9F57316 EZ9F27416 EZ9F57416",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 16,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57216",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "16 A EZ9F27116 EZ9F57116 EZ9F27216 EZ9F57216 EZ9F27316 EZ9F57316 EZ9F27416 EZ9F57416",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 16,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27316",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "16 A EZ9F27116 EZ9F57116 EZ9F27216 EZ9F57216 EZ9F27316 EZ9F57316 EZ9F27416 EZ9F57416",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 16,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57316",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "16 A EZ9F27116 EZ9F57116 EZ9F27216 EZ9F57216 EZ9F27316 EZ9F57316 EZ9F27416 EZ9F57416",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 16,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27416",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "16 A EZ9F27116 EZ9F57116 EZ9F27216 EZ9F57216 EZ9F27316 EZ9F57316 EZ9F27416 EZ9F57416",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 16,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57416",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "16 A EZ9F27116 EZ9F57116 EZ9F27216 EZ9F57216 EZ9F27316 EZ9F57316 EZ9F27416 EZ9F57416",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 16,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27120",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "20 A EZ9F27120 EZ9F57120 EZ9F27220 EZ9F57220 EZ9F27320 EZ9F57320 EZ9F27420 EZ9F57420",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 20,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57120",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "20 A EZ9F27120 EZ9F57120 EZ9F27220 EZ9F57220 EZ9F27320 EZ9F57320 EZ9F27420 EZ9F57420",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 20,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27220",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "20 A EZ9F27120 EZ9F57120 EZ9F27220 EZ9F57220 EZ9F27320 EZ9F57320 EZ9F27420 EZ9F57420",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 20,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57220",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "20 A EZ9F27120 EZ9F57120 EZ9F27220 EZ9F57220 EZ9F27320 EZ9F57320 EZ9F27420 EZ9F57420",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 20,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27320",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "20 A EZ9F27120 EZ9F57120 EZ9F27220 EZ9F57220 EZ9F27320 EZ9F57320 EZ9F27420 EZ9F57420",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 20,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57320",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "20 A EZ9F27120 EZ9F57120 EZ9F27220 EZ9F57220 EZ9F27320 EZ9F57320 EZ9F27420 EZ9F57420",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 20,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27420",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "20 A EZ9F27120 EZ9F57120 EZ9F27220 EZ9F57220 EZ9F27320 EZ9F57320 EZ9F27420 EZ9F57420",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 20,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57420",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "20 A EZ9F27120 EZ9F57120 EZ9F27220 EZ9F57220 EZ9F27320 EZ9F57320 EZ9F27420 EZ9F57420",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 20,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27125",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "25 A EZ9F27125 EZ9F57125 EZ9F27225 EZ9F57225 EZ9F27325 EZ9F57325 EZ9F27425 EZ9F57425",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 25,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57125",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "25 A EZ9F27125 EZ9F57125 EZ9F27225 EZ9F57225 EZ9F27325 EZ9F57325 EZ9F27425 EZ9F57425",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 25,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27225",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "25 A EZ9F27125 EZ9F57125 EZ9F27225 EZ9F57225 EZ9F27325 EZ9F57325 EZ9F27425 EZ9F57425",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 25,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57225",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "25 A EZ9F27125 EZ9F57125 EZ9F27225 EZ9F57225 EZ9F27325 EZ9F57325 EZ9F27425 EZ9F57425",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 25,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27325",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "25 A EZ9F27125 EZ9F57125 EZ9F27225 EZ9F57225 EZ9F27325 EZ9F57325 EZ9F27425 EZ9F57425",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 25,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57325",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "25 A EZ9F27125 EZ9F57125 EZ9F27225 EZ9F57225 EZ9F27325 EZ9F57325 EZ9F27425 EZ9F57425",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 25,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27425",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "25 A EZ9F27125 EZ9F57125 EZ9F27225 EZ9F57225 EZ9F27325 EZ9F57325 EZ9F27425 EZ9F57425",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 25,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57425",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "25 A EZ9F27125 EZ9F57125 EZ9F27225 EZ9F57225 EZ9F27325 EZ9F57325 EZ9F27425 EZ9F57425",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 25,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27132",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "32 A EZ9F27132 EZ9F57132 EZ9F27232 EZ9F57232 EZ9F27332 EZ9F57332 EZ9F27432 EZ9F57432",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 32,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57132",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "32 A EZ9F27132 EZ9F57132 EZ9F27232 EZ9F57232 EZ9F27332 EZ9F57332 EZ9F27432 EZ9F57432",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 32,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27232",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "32 A EZ9F27132 EZ9F57132 EZ9F27232 EZ9F57232 EZ9F27332 EZ9F57332 EZ9F27432 EZ9F57432",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 32,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57232",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "32 A EZ9F27132 EZ9F57132 EZ9F27232 EZ9F57232 EZ9F27332 EZ9F57332 EZ9F27432 EZ9F57432",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 32,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27332",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "32 A EZ9F27132 EZ9F57132 EZ9F27232 EZ9F57232 EZ9F27332 EZ9F57332 EZ9F27432 EZ9F57432",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 32,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57332",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "32 A EZ9F27132 EZ9F57132 EZ9F27232 EZ9F57232 EZ9F27332 EZ9F57332 EZ9F27432 EZ9F57432",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 32,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27432",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "32 A EZ9F27132 EZ9F57132 EZ9F27232 EZ9F57232 EZ9F27332 EZ9F57332 EZ9F27432 EZ9F57432",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 32,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57432",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "32 A EZ9F27132 EZ9F57132 EZ9F27232 EZ9F57232 EZ9F27332 EZ9F57332 EZ9F27432 EZ9F57432",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 32,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27140",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "40 A EZ9F27140 EZ9F57140 EZ9F27240 EZ9F57240 EZ9F27340 EZ9F57340 EZ9F27440 EZ9F57440",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 40,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57140",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "40 A EZ9F27140 EZ9F57140 EZ9F27240 EZ9F57240 EZ9F27340 EZ9F57340 EZ9F27440 EZ9F57440",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 40,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27240",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "40 A EZ9F27140 EZ9F57140 EZ9F27240 EZ9F57240 EZ9F27340 EZ9F57340 EZ9F27440 EZ9F57440",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 40,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57240",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "40 A EZ9F27140 EZ9F57140 EZ9F27240 EZ9F57240 EZ9F27340 EZ9F57340 EZ9F27440 EZ9F57440",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 40,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27340",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "40 A EZ9F27140 EZ9F57140 EZ9F27240 EZ9F57240 EZ9F27340 EZ9F57340 EZ9F27440 EZ9F57440",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 40,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57340",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "40 A EZ9F27140 EZ9F57140 EZ9F27240 EZ9F57240 EZ9F27340 EZ9F57340 EZ9F27440 EZ9F57440",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 40,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27440",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "40 A EZ9F27140 EZ9F57140 EZ9F27240 EZ9F57240 EZ9F27340 EZ9F57340 EZ9F27440 EZ9F57440",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 40,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57440",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "40 A EZ9F27140 EZ9F57140 EZ9F27240 EZ9F57240 EZ9F27340 EZ9F57340 EZ9F27440 EZ9F57440",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 40,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57150",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "50 A – EZ9F57150 – EZ9F57250 EZ9F27350 EZ9F57350 – EZ9F57450",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 50,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57250",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "50 A – EZ9F57150 – EZ9F57250 EZ9F27350 EZ9F57350 – EZ9F57450",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 50,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27350",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "50 A – EZ9F57150 – EZ9F57250 EZ9F27350 EZ9F57350 – EZ9F57450",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 50,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57350",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "50 A – EZ9F57150 – EZ9F57250 EZ9F27350 EZ9F57350 – EZ9F57450",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 50,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57450",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "50 A – EZ9F57150 – EZ9F57250 EZ9F27350 EZ9F57350 – EZ9F57450",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 50,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57163",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "63 A – EZ9F57163 – EZ9F57263 EZ9F27363 EZ9F57363 – EZ9F57463",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 63,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57263",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "63 A – EZ9F57163 – EZ9F57263 EZ9F27363 EZ9F57363 – EZ9F57463",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 63,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F27363",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "63 A – EZ9F57163 – EZ9F57263 EZ9F27363 EZ9F57363 – EZ9F57463",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 63,
+      "curve": "B",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57363",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "63 A – EZ9F57163 – EZ9F57263 EZ9F27363 EZ9F57363 – EZ9F57463",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 63,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9F57463",
+      "family": "Easy9 Pro",
+      "category": "mcb",
+      "sourcePages": [
+        6
+      ],
+      "sourceEvidence": "63 A – EZ9F57163 – EZ9F57263 EZ9F27363 EZ9F57363 – EZ9F57463",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 63,
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9L33620",
+      "family": "Easy9 Pro",
+      "category": "spd",
+      "sourcePages": [
+        8
+      ],
+      "sourceEvidence": "20 kA 10 kA 1.3 kV EZ9L33620",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "1P+N",
+      "spdType": "T2",
+      "maxDischargeKA": 20,
+      "nominalDischargeKA": 10,
+      "voltageProtectionKV": 1.3
+    },
+    {
+      "sku": "EZ9L33720",
+      "family": "Easy9 Pro",
+      "category": "spd",
+      "sourcePages": [
+        9
+      ],
+      "sourceEvidence": "20 kA 10 kA 1,3 kV EZ9L33720",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "3P+N",
+      "spdType": "T2",
+      "maxDischargeKA": 20,
+      "nominalDischargeKA": 10,
+      "voltageProtectionKV": 1.3
+    },
+    {
+      "sku": "EZ9L33745",
+      "family": "Easy9 Pro",
+      "category": "spd",
+      "sourcePages": [
+        9
+      ],
+      "sourceEvidence": "45 kA 20 kA 1,5 kV EZ9L33745",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "3P+N",
+      "spdType": "T2",
+      "maxDischargeKA": 45,
+      "nominalDischargeKA": 20,
+      "voltageProtectionKV": 1.5
+    },
+    {
+      "sku": "EZ9R49225",
+      "family": "Easy9 Pro",
+      "category": "rccb",
+      "sourcePages": [
+        10
+      ],
+      "sourceEvidence": "Névle- 25 A EZ9R49225 -",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 25,
+      "residualCurrentMa": 30,
+      "residualType": "A"
+    },
+    {
+      "sku": "EZ9R49240",
+      "family": "Easy9 Pro",
+      "category": "rccb",
+      "sourcePages": [
+        10
+      ],
+      "sourceEvidence": "áram 40 A EZ9R49240 -",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 40,
+      "residualCurrentMa": 30,
+      "residualType": "A"
+    },
+    {
+      "sku": "EZ9R49263",
+      "family": "Easy9 Pro",
+      "category": "rccb",
+      "sourcePages": [
+        10
+      ],
+      "sourceEvidence": "63 A EZ9R49263 -",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 63,
+      "residualCurrentMa": 30,
+      "residualType": "A"
+    },
+    {
+      "sku": "EZ9R49425",
+      "family": "Easy9 Pro",
+      "category": "rccb",
+      "sourcePages": [
+        10
+      ],
+      "sourceEvidence": "Névle- 25 A EZ9R49425 -",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 25,
+      "residualCurrentMa": 30,
+      "residualType": "A"
+    },
+    {
+      "sku": "EZ9R49440",
+      "family": "Easy9 Pro",
+      "category": "rccb",
+      "sourcePages": [
+        10
+      ],
+      "sourceEvidence": "áram 40 A EZ9R49440 -",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 40,
+      "residualCurrentMa": 30,
+      "residualType": "A"
+    },
+    {
+      "sku": "EZ9R49463",
+      "family": "Easy9 Pro",
+      "category": "rccb",
+      "sourcePages": [
+        10
+      ],
+      "sourceEvidence": "63 A EZ9R49463 EZ9R89463",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 63,
+      "residualCurrentMa": 30,
+      "residualType": "A"
+    },
+    {
+      "sku": "EZ9R89463",
+      "family": "Easy9 Pro",
+      "category": "rccb",
+      "sourcePages": [
+        10
+      ],
+      "sourceEvidence": "63 A EZ9R49463 EZ9R89463",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 63,
+      "residualCurrentMa": 300,
+      "residualType": "A"
+    },
+    {
+      "sku": "EZ9D55606",
+      "family": "Easy9 Pro",
+      "category": "rcbo",
+      "sourcePages": [
+        12
+      ],
+      "sourceEvidence": "6 A EZ9D55606 -",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "1P+N",
+      "ratedCurrentA": 6,
+      "residualCurrentMa": 30,
+      "residualType": "A",
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9D55610",
+      "family": "Easy9 Pro",
+      "category": "rcbo",
+      "sourcePages": [
+        12
+      ],
+      "sourceEvidence": "10 A EZ9D55610 EZ9D55710",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "1P+N",
+      "ratedCurrentA": 10,
+      "residualCurrentMa": 30,
+      "residualType": "A",
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9D55613",
+      "family": "Easy9 Pro",
+      "category": "rcbo",
+      "sourcePages": [
+        12
+      ],
+      "sourceEvidence": "13 A EZ9D55613 EZ9D55713",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "1P+N",
+      "ratedCurrentA": 13,
+      "residualCurrentMa": 30,
+      "residualType": "A",
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9D55616",
+      "family": "Easy9 Pro",
+      "category": "rcbo",
+      "sourcePages": [
+        12
+      ],
+      "sourceEvidence": "16 A EZ9D55616 EZ9D55716",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "1P+N",
+      "ratedCurrentA": 16,
+      "residualCurrentMa": 30,
+      "residualType": "A",
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9D55620",
+      "family": "Easy9 Pro",
+      "category": "rcbo",
+      "sourcePages": [
+        12
+      ],
+      "sourceEvidence": "20 A EZ9D55620 EZ9D55720",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "1P+N",
+      "ratedCurrentA": 20,
+      "residualCurrentMa": 30,
+      "residualType": "A",
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9D55625",
+      "family": "Easy9 Pro",
+      "category": "rcbo",
+      "sourcePages": [
+        12
+      ],
+      "sourceEvidence": "25 A EZ9D55625 EZ9D55725",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "1P+N",
+      "ratedCurrentA": 25,
+      "residualCurrentMa": 30,
+      "residualType": "A",
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9D55710",
+      "family": "Easy9 Pro",
+      "category": "rcbo",
+      "sourcePages": [
+        12
+      ],
+      "sourceEvidence": "10 A EZ9D55610 EZ9D55710",
+      "mountingType": "din",
+      "widthModules18": 5,
+      "widthMm": 90,
+      "poles": "3P+N",
+      "ratedCurrentA": 10,
+      "residualCurrentMa": 30,
+      "residualType": "A",
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9D55713",
+      "family": "Easy9 Pro",
+      "category": "rcbo",
+      "sourcePages": [
+        12
+      ],
+      "sourceEvidence": "13 A EZ9D55613 EZ9D55713",
+      "mountingType": "din",
+      "widthModules18": 5,
+      "widthMm": 90,
+      "poles": "3P+N",
+      "ratedCurrentA": 13,
+      "residualCurrentMa": 30,
+      "residualType": "A",
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9D55716",
+      "family": "Easy9 Pro",
+      "category": "rcbo",
+      "sourcePages": [
+        12
+      ],
+      "sourceEvidence": "16 A EZ9D55616 EZ9D55716",
+      "mountingType": "din",
+      "widthModules18": 5,
+      "widthMm": 90,
+      "poles": "3P+N",
+      "ratedCurrentA": 16,
+      "residualCurrentMa": 30,
+      "residualType": "A",
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9D55720",
+      "family": "Easy9 Pro",
+      "category": "rcbo",
+      "sourcePages": [
+        12
+      ],
+      "sourceEvidence": "20 A EZ9D55620 EZ9D55720",
+      "mountingType": "din",
+      "widthModules18": 5,
+      "widthMm": 90,
+      "poles": "3P+N",
+      "ratedCurrentA": 20,
+      "residualCurrentMa": 30,
+      "residualType": "A",
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9D55725",
+      "family": "Easy9 Pro",
+      "category": "rcbo",
+      "sourcePages": [
+        12
+      ],
+      "sourceEvidence": "25 A EZ9D55625 EZ9D55725",
+      "mountingType": "din",
+      "widthModules18": 5,
+      "widthMm": 90,
+      "poles": "3P+N",
+      "ratedCurrentA": 25,
+      "residualCurrentMa": 30,
+      "residualType": "A",
+      "curve": "C",
+      "breakingCapacityA": 6000
+    },
+    {
+      "sku": "EZ9A29476",
+      "family": "Easy9 Pro",
+      "category": "shunt_trip",
+      "sourcePages": [
+        14
+      ],
+      "sourceEvidence": "Rendelési számok EZ9A29476 EZ9A29924 EZ9A29927",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "description": "Munkaáramú kioldó / Shunt release MX",
+      "assemblyPosition": "left_of_compatible_device"
+    },
+    {
+      "sku": "EZ9A29924",
+      "family": "Easy9 Pro",
+      "category": "aux_contact",
+      "sourcePages": [
+        14
+      ],
+      "sourceEvidence": "Rendelési számok EZ9A29476 EZ9A29924 EZ9A29927",
+      "mountingType": "din",
+      "widthModules18": 0.5,
+      "widthMm": 9.0,
+      "description": "Nyitás/zárás segédérintkező / Auxiliary contact OF",
+      "assemblyPosition": "left_of_compatible_device"
+    },
+    {
+      "sku": "EZ9A29927",
+      "family": "Easy9 Pro",
+      "category": "fault_contact",
+      "sourcePages": [
+        14
+      ],
+      "sourceEvidence": "Rendelési számok EZ9A29476 EZ9A29924 EZ9A29927",
+      "mountingType": "din",
+      "widthModules18": 0.5,
+      "widthMm": 9.0,
+      "description": "Hibajelző-érintkező / Fault contact SD",
+      "assemblyPosition": "left_of_compatible_device"
+    },
+    {
+      "sku": "EZ9C33116",
+      "family": "Easy9 Pro",
+      "category": "impulse_relay",
+      "sourcePages": [
+        16
+      ],
+      "sourceEvidence": "16 A 1 NO 230 V AC, 50 Hz EZ9C33116",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 16,
+      "contacts": "1NO",
+      "coilVoltageAC": 230
+    },
+    {
+      "sku": "EZ9C1263",
+      "family": "Easy9 Pro",
+      "category": "voltage_relay",
+      "sourcePages": [
+        18
+      ],
+      "sourceEvidence": "63 A EZ9C1263",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 63
+    },
+    {
+      "sku": "EZ9C32220",
+      "family": "Easy9 Pro",
+      "category": "contactor",
+      "sourcePages": [
+        21
+      ],
+      "sourceEvidence": "20 A 7 A 2 NO 230 V AC, 50 Hz EZ9C32220",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "2P",
+      "ratedCurrentA": 20,
+      "ac7bCurrentA": 7,
+      "contacts": "2NO",
+      "coilVoltageAC": 230
+    },
+    {
+      "sku": "EZ9C32240",
+      "family": "Easy9 Pro",
+      "category": "contactor",
+      "sourcePages": [
+        21
+      ],
+      "sourceEvidence": "40 A 15 A 2 NO 230 V AC, 50 Hz EZ9C32240",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 40,
+      "ac7bCurrentA": 15,
+      "contacts": "2NO",
+      "coilVoltageAC": 230
+    },
+    {
+      "sku": "EZ9C32440",
+      "family": "Easy9 Pro",
+      "category": "contactor",
+      "sourcePages": [
+        21
+      ],
+      "sourceEvidence": "40 A 15 A 4 NO 230 V AC, 50 Hz EZ9C32440",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "4P",
+      "ratedCurrentA": 40,
+      "ac7bCurrentA": 15,
+      "contacts": "4NO",
+      "coilVoltageAC": 230
+    },
+    {
+      "sku": "EZ9S16163",
+      "family": "Easy9 Pro",
+      "category": "isolator",
+      "sourcePages": [
+        24
+      ],
+      "sourceEvidence": "63 A EZ9S16163 EZ9S16263 EZ9S16363 EZ9S16463",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "poles": "1P",
+      "ratedCurrentA": 63
+    },
+    {
+      "sku": "EZ9S16240",
+      "family": "Easy9 Pro",
+      "category": "isolator",
+      "sourcePages": [
+        24
+      ],
+      "sourceEvidence": "40 A - EZ9S16240 EZ9S16340 EZ9S16440",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 40
+    },
+    {
+      "sku": "EZ9S16263",
+      "family": "Easy9 Pro",
+      "category": "isolator",
+      "sourcePages": [
+        24
+      ],
+      "sourceEvidence": "63 A EZ9S16163 EZ9S16263 EZ9S16363 EZ9S16463",
+      "mountingType": "din",
+      "widthModules18": 2,
+      "widthMm": 36,
+      "poles": "2P",
+      "ratedCurrentA": 63
+    },
+    {
+      "sku": "EZ9S16340",
+      "family": "Easy9 Pro",
+      "category": "isolator",
+      "sourcePages": [
+        24
+      ],
+      "sourceEvidence": "40 A - EZ9S16240 EZ9S16340 EZ9S16440",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 40
+    },
+    {
+      "sku": "EZ9S16363",
+      "family": "Easy9 Pro",
+      "category": "isolator",
+      "sourcePages": [
+        24
+      ],
+      "sourceEvidence": "63 A EZ9S16163 EZ9S16263 EZ9S16363 EZ9S16463",
+      "mountingType": "din",
+      "widthModules18": 3,
+      "widthMm": 54,
+      "poles": "3P",
+      "ratedCurrentA": 63
+    },
+    {
+      "sku": "EZ9S16440",
+      "family": "Easy9 Pro",
+      "category": "isolator",
+      "sourcePages": [
+        24
+      ],
+      "sourceEvidence": "40 A - EZ9S16240 EZ9S16340 EZ9S16440",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 40
+    },
+    {
+      "sku": "EZ9S16463",
+      "family": "Easy9 Pro",
+      "category": "isolator",
+      "sourcePages": [
+        24
+      ],
+      "sourceEvidence": "63 A EZ9S16163 EZ9S16263 EZ9S16363 EZ9S16463",
+      "mountingType": "din",
+      "widthModules18": 4,
+      "widthMm": 72,
+      "poles": "4P",
+      "ratedCurrentA": 63
+    },
+    {
+      "sku": "EZ9A34223",
+      "family": "Easy9 Pro",
+      "category": "bell",
+      "sourcePages": [
+        26
+      ],
+      "sourceEvidence": "EZ9A34223",
+      "mountingType": "din",
+      "widthModules18": 1,
+      "widthMm": 18,
+      "ratedVoltageAC": 230
+    },
+    {
+      "sku": "R9XFH112",
+      "family": "Resi9 compatible accessory",
+      "category": "busbar",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "12 modulos 18 mm R9XFH112 R9XFH212 R9XFH312 R9XFH412",
+      "mountingType": "accessory",
+      "poles": "1P",
+      "lengthModules18": 12,
+      "pitchMm": 18,
+      "cuttable": true
+    },
+    {
+      "sku": "R9XFH212",
+      "family": "Resi9 compatible accessory",
+      "category": "busbar",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "12 modulos 18 mm R9XFH112 R9XFH212 R9XFH312 R9XFH412",
+      "mountingType": "accessory",
+      "poles": "2P",
+      "lengthModules18": 12,
+      "pitchMm": 18,
+      "cuttable": true
+    },
+    {
+      "sku": "R9XFH312",
+      "family": "Resi9 compatible accessory",
+      "category": "busbar",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "12 modulos 18 mm R9XFH112 R9XFH212 R9XFH312 R9XFH412",
+      "mountingType": "accessory",
+      "poles": "3P",
+      "lengthModules18": 12,
+      "pitchMm": 18,
+      "cuttable": true
+    },
+    {
+      "sku": "R9XFH412",
+      "family": "Resi9 compatible accessory",
+      "category": "busbar",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "12 modulos 18 mm R9XFH112 R9XFH212 R9XFH312 R9XFH412",
+      "mountingType": "accessory",
+      "poles": "4P",
+      "lengthModules18": 12,
+      "pitchMm": 18,
+      "cuttable": true
+    },
+    {
+      "sku": "R9XFH118",
+      "family": "Resi9 compatible accessory",
+      "category": "busbar",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "18 modulos 18 mm R9XFH118 R9XFH218 R9XFH318 R9XFH418",
+      "mountingType": "accessory",
+      "poles": "1P",
+      "lengthModules18": 18,
+      "pitchMm": 18,
+      "cuttable": true
+    },
+    {
+      "sku": "R9XFH218",
+      "family": "Resi9 compatible accessory",
+      "category": "busbar",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "18 modulos 18 mm R9XFH118 R9XFH218 R9XFH318 R9XFH418",
+      "mountingType": "accessory",
+      "poles": "2P",
+      "lengthModules18": 18,
+      "pitchMm": 18,
+      "cuttable": true
+    },
+    {
+      "sku": "R9XFH318",
+      "family": "Resi9 compatible accessory",
+      "category": "busbar",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "18 modulos 18 mm R9XFH118 R9XFH218 R9XFH318 R9XFH418",
+      "mountingType": "accessory",
+      "poles": "3P",
+      "lengthModules18": 18,
+      "pitchMm": 18,
+      "cuttable": true
+    },
+    {
+      "sku": "R9XFH418",
+      "family": "Resi9 compatible accessory",
+      "category": "busbar",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "18 modulos 18 mm R9XFH118 R9XFH218 R9XFH318 R9XFH418",
+      "mountingType": "accessory",
+      "poles": "4P",
+      "lengthModules18": 18,
+      "pitchMm": 18,
+      "cuttable": true
+    },
+    {
+      "sku": "R9XFH157",
+      "family": "Resi9 compatible accessory",
+      "category": "busbar",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "57 modulos 18 mm R9XFH157 R9XFH257 R9XFH357 R9XFH457",
+      "mountingType": "accessory",
+      "poles": "1P",
+      "lengthModules18": 57,
+      "pitchMm": 18,
+      "cuttable": true
+    },
+    {
+      "sku": "R9XFH257",
+      "family": "Resi9 compatible accessory",
+      "category": "busbar",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "57 modulos 18 mm R9XFH157 R9XFH257 R9XFH357 R9XFH457",
+      "mountingType": "accessory",
+      "poles": "2P",
+      "lengthModules18": 57,
+      "pitchMm": 18,
+      "cuttable": true
+    },
+    {
+      "sku": "R9XFH357",
+      "family": "Resi9 compatible accessory",
+      "category": "busbar",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "57 modulos 18 mm R9XFH157 R9XFH257 R9XFH357 R9XFH457",
+      "mountingType": "accessory",
+      "poles": "3P",
+      "lengthModules18": 57,
+      "pitchMm": 18,
+      "cuttable": true
+    },
+    {
+      "sku": "R9XFH457",
+      "family": "Resi9 compatible accessory",
+      "category": "busbar",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "57 modulos 18 mm R9XFH157 R9XFH257 R9XFH357 R9XFH457",
+      "mountingType": "accessory",
+      "poles": "4P",
+      "lengthModules18": 57,
+      "pitchMm": 18,
+      "cuttable": true
+    },
+    {
+      "sku": "R9XE110",
+      "family": "Resi9 compatible accessory",
+      "category": "busbar_end_cap",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "Véglezáró (10 db) R9XE110 R9XE210 R9XE310 R9XE410",
+      "mountingType": "accessory",
+      "poles": "1P",
+      "packQuantity": 10
+    },
+    {
+      "sku": "R9XE210",
+      "family": "Resi9 compatible accessory",
+      "category": "busbar_end_cap",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "Véglezáró (10 db) R9XE110 R9XE210 R9XE310 R9XE410",
+      "mountingType": "accessory",
+      "poles": "2P",
+      "packQuantity": 10
+    },
+    {
+      "sku": "R9XE310",
+      "family": "Resi9 compatible accessory",
+      "category": "busbar_end_cap",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "Véglezáró (10 db) R9XE110 R9XE210 R9XE310 R9XE410",
+      "mountingType": "accessory",
+      "poles": "3P",
+      "packQuantity": 10
+    },
+    {
+      "sku": "R9XE410",
+      "family": "Resi9 compatible accessory",
+      "category": "busbar_end_cap",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "Véglezáró (10 db) R9XE110 R9XE210 R9XE310 R9XE410",
+      "mountingType": "accessory",
+      "poles": "4P",
+      "packQuantity": 10
+    },
+    {
+      "sku": "R9XT20",
+      "family": "Resi9 compatible accessory",
+      "category": "busbar_pin_cover",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "Takarósapka villára (20 db) R9XT20",
+      "mountingType": "accessory",
+      "packQuantity": 20
+    },
+    {
+      "sku": "26970",
+      "family": "Compatible accessory",
+      "category": "locking_accessory",
+      "sourcePages": [
+        27
+      ],
+      "sourceEvidence": "Reteszelő 26970 Easy9 Pro A készülék reteszelése „nyitott” vagy „zárt” helyzetben",
+      "mountingType": "accessory",
+      "packQuantity": 2,
+      "description": "Reteszelő / Locking accessory"
+    },
+    {
+      "sku": "EZ9EUD108",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        29
+      ],
+      "sourceEvidence": "1 8 8 63 EZ9EUD108 EZ9EUC108 2 x 8 furat*",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 1,
+      "modulesPerRow": 8,
+      "totalModules18": 8,
+      "ratedCurrentA": 63,
+      "door": "opaque"
+    },
+    {
+      "sku": "EZ9EUC108",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        29
+      ],
+      "sourceEvidence": "1 8 8 63 EZ9EUD108 EZ9EUC108 2 x 8 furat*",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 1,
+      "modulesPerRow": 8,
+      "totalModules18": 8,
+      "ratedCurrentA": 63,
+      "door": "smoked"
+    },
+    {
+      "sku": "EZ9EUD112",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        29
+      ],
+      "sourceEvidence": "1 12 12 63 EZ9EUD112 EZ9EUC112 2 x 8 furat*",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 1,
+      "modulesPerRow": 12,
+      "totalModules18": 12,
+      "ratedCurrentA": 63,
+      "door": "opaque"
+    },
+    {
+      "sku": "EZ9EUC112",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        29
+      ],
+      "sourceEvidence": "1 12 12 63 EZ9EUD112 EZ9EUC112 2 x 8 furat*",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 1,
+      "modulesPerRow": 12,
+      "totalModules18": 12,
+      "ratedCurrentA": 63,
+      "door": "smoked"
+    },
+    {
+      "sku": "EZ9EUD118",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        29
+      ],
+      "sourceEvidence": "1 18 18 63 EZ9EUD118 EZ9EUC118 2 x 16 furat**",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 1,
+      "modulesPerRow": 18,
+      "totalModules18": 18,
+      "ratedCurrentA": 63,
+      "door": "opaque"
+    },
+    {
+      "sku": "EZ9EUC118",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        29
+      ],
+      "sourceEvidence": "1 18 18 63 EZ9EUD118 EZ9EUC118 2 x 16 furat**",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 1,
+      "modulesPerRow": 18,
+      "totalModules18": 18,
+      "ratedCurrentA": 63,
+      "door": "smoked"
+    },
+    {
+      "sku": "EZ9EUD212",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        29
+      ],
+      "sourceEvidence": "2 12 24 63 EZ9EUD212 EZ9EUC212 2 x 16 furat**",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 2,
+      "modulesPerRow": 12,
+      "totalModules18": 24,
+      "ratedCurrentA": 63,
+      "door": "opaque"
+    },
+    {
+      "sku": "EZ9EUC212",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        29
+      ],
+      "sourceEvidence": "2 12 24 63 EZ9EUD212 EZ9EUC212 2 x 16 furat**",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 2,
+      "modulesPerRow": 12,
+      "totalModules18": 24,
+      "ratedCurrentA": 63,
+      "door": "smoked"
+    },
+    {
+      "sku": "EZ9EUD312",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        29
+      ],
+      "sourceEvidence": "3 12 36 80 EZ9EUD312 EZ9EUC312 2 x 22 furat***",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 3,
+      "modulesPerRow": 12,
+      "totalModules18": 36,
+      "ratedCurrentA": 80,
+      "door": "opaque"
+    },
+    {
+      "sku": "EZ9EUC312",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        29
+      ],
+      "sourceEvidence": "3 12 36 80 EZ9EUD312 EZ9EUC312 2 x 22 furat***",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 3,
+      "modulesPerRow": 12,
+      "totalModules18": 36,
+      "ratedCurrentA": 80,
+      "door": "smoked"
+    },
+    {
+      "sku": "EZ9EUB108",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        30
+      ],
+      "sourceEvidence": "1 8 8 63 EZ9EUB108 EZ9EUA108 2 x 8 furat*",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 1,
+      "modulesPerRow": 8,
+      "totalModules18": 8,
+      "ratedCurrentA": 63,
+      "door": "opaque"
+    },
+    {
+      "sku": "EZ9EUA108",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        30
+      ],
+      "sourceEvidence": "1 8 8 63 EZ9EUB108 EZ9EUA108 2 x 8 furat*",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 1,
+      "modulesPerRow": 8,
+      "totalModules18": 8,
+      "ratedCurrentA": 63,
+      "door": "smoked"
+    },
+    {
+      "sku": "EZ9EUB112",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        30
+      ],
+      "sourceEvidence": "1 12 12 63 EZ9EUB112 EZ9EUA112 2 x 8 furat*",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 1,
+      "modulesPerRow": 12,
+      "totalModules18": 12,
+      "ratedCurrentA": 63,
+      "door": "opaque"
+    },
+    {
+      "sku": "EZ9EUA112",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        30
+      ],
+      "sourceEvidence": "1 12 12 63 EZ9EUB112 EZ9EUA112 2 x 8 furat*",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 1,
+      "modulesPerRow": 12,
+      "totalModules18": 12,
+      "ratedCurrentA": 63,
+      "door": "smoked"
+    },
+    {
+      "sku": "EZ9EUB118",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        30
+      ],
+      "sourceEvidence": "1 18 18 63 EZ9EUB118 EZ9EUA118 2 x 16 furat**",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 1,
+      "modulesPerRow": 18,
+      "totalModules18": 18,
+      "ratedCurrentA": 63,
+      "door": "opaque"
+    },
+    {
+      "sku": "EZ9EUA118",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        30
+      ],
+      "sourceEvidence": "1 18 18 63 EZ9EUB118 EZ9EUA118 2 x 16 furat**",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 1,
+      "modulesPerRow": 18,
+      "totalModules18": 18,
+      "ratedCurrentA": 63,
+      "door": "smoked"
+    },
+    {
+      "sku": "EZ9EUB212",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        30
+      ],
+      "sourceEvidence": "2 12 24 63 EZ9EUB212 EZ9EUA212 2 x 16 furat**",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 2,
+      "modulesPerRow": 12,
+      "totalModules18": 24,
+      "ratedCurrentA": 63,
+      "door": "opaque"
+    },
+    {
+      "sku": "EZ9EUA212",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        30
+      ],
+      "sourceEvidence": "2 12 24 63 EZ9EUB212 EZ9EUA212 2 x 16 furat**",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 2,
+      "modulesPerRow": 12,
+      "totalModules18": 24,
+      "ratedCurrentA": 63,
+      "door": "smoked"
+    },
+    {
+      "sku": "EZ9EUB312",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        30
+      ],
+      "sourceEvidence": "3 12 36 80 EZ9EUB312 EZ9EUA312 2 x 22 furat***",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 3,
+      "modulesPerRow": 12,
+      "totalModules18": 36,
+      "ratedCurrentA": 80,
+      "door": "opaque"
+    },
+    {
+      "sku": "EZ9EUA312",
+      "family": "Easy9 EU",
+      "category": "enclosure",
+      "sourcePages": [
+        30
+      ],
+      "sourceEvidence": "3 12 36 80 EZ9EUB312 EZ9EUA312 2 x 22 furat***",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 3,
+      "modulesPerRow": 12,
+      "totalModules18": 36,
+      "ratedCurrentA": 80,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXQ113",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "13-modulos 1 13 63 A (4 x 16v + 4 x 10v) csavaros LVSXQ113 LVSXR113",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 1,
+      "modulesPerRow": 13,
+      "totalModules18": 13,
+      "ratedCurrentA": 63,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXR113",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "13-modulos 1 13 63 A (4 x 16v + 4 x 10v) csavaros LVSXQ113 LVSXR113",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 1,
+      "modulesPerRow": 13,
+      "totalModules18": 13,
+      "ratedCurrentA": 63,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXQ213",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "2 26 63 A (8 x 16v + 8 x 10v) csavaros LVSXQ213 LVSXR213",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 2,
+      "modulesPerRow": 13,
+      "totalModules18": 26,
+      "ratedCurrentA": 63,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXR213",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "2 26 63 A (8 x 16v + 8 x 10v) csavaros LVSXQ213 LVSXR213",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 2,
+      "modulesPerRow": 13,
+      "totalModules18": 26,
+      "ratedCurrentA": 63,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXQ313",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "3 39 90 A (11 x 16v + 11 x 10v) csavaros LVSXQ313 LVSXR313",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 3,
+      "modulesPerRow": 13,
+      "totalModules18": 39,
+      "ratedCurrentA": 90,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXR313",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "3 39 90 A (11 x 16v + 11 x 10v) csavaros LVSXQ313 LVSXR313",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 3,
+      "modulesPerRow": 13,
+      "totalModules18": 39,
+      "ratedCurrentA": 90,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXQ413",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "4 52 90 A (16 x 16v + 16 x 10v) csavaros LVSXQ413 LVSXR413",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 4,
+      "modulesPerRow": 13,
+      "totalModules18": 52,
+      "ratedCurrentA": 90,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXR413",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "4 52 90 A (16 x 16v + 16 x 10v) csavaros LVSXQ413 LVSXR413",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 4,
+      "modulesPerRow": 13,
+      "totalModules18": 52,
+      "ratedCurrentA": 90,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXQ118",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "18-modulos 1 18 90 A (8 x 16v + 8 x 10v) csavaros LVSXQ118 LVSXR118",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 1,
+      "modulesPerRow": 18,
+      "totalModules18": 18,
+      "ratedCurrentA": 90,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXR118",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "18-modulos 1 18 90 A (8 x 16v + 8 x 10v) csavaros LVSXQ118 LVSXR118",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 1,
+      "modulesPerRow": 18,
+      "totalModules18": 18,
+      "ratedCurrentA": 90,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXQ218",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "2 36 90 A (11 x 16v + 11 x 10v) csavaros LVSXQ218 LVSXR218",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 2,
+      "modulesPerRow": 18,
+      "totalModules18": 36,
+      "ratedCurrentA": 90,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXR218",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "2 36 90 A (11 x 16v + 11 x 10v) csavaros LVSXQ218 LVSXR218",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 2,
+      "modulesPerRow": 18,
+      "totalModules18": 36,
+      "ratedCurrentA": 90,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXQ318",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "3 54 125 A (16 x 16v + 16 x 10v) + (4 x 16v + 4 x 10v) csavaros LVSXQ318 LVSXR318",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 3,
+      "modulesPerRow": 18,
+      "totalModules18": 54,
+      "ratedCurrentA": 125,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXR318",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "3 54 125 A (16 x 16v + 16 x 10v) + (4 x 16v + 4 x 10v) csavaros LVSXQ318 LVSXR318",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 3,
+      "modulesPerRow": 18,
+      "totalModules18": 54,
+      "ratedCurrentA": 125,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXQ418",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "4 72 125 A 2 x (11 x 16v + 11 x 10v) csavaros LVSXQ418 LVSXR418",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 4,
+      "modulesPerRow": 18,
+      "totalModules18": 72,
+      "ratedCurrentA": 125,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXR418",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "4 72 125 A 2 x (11 x 16v + 11 x 10v) csavaros LVSXQ418 LVSXR418",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 4,
+      "modulesPerRow": 18,
+      "totalModules18": 72,
+      "ratedCurrentA": 125,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXQ224",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "24-modulos 2 48 125 A 3 x 6/25v (csavaros) + 21 x 1.5/4v (1) (gyorscsatl.)+ LVSXQ224 LVSXR224",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 2,
+      "modulesPerRow": 24,
+      "totalModules18": 48,
+      "ratedCurrentA": 125,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXR224",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "24-modulos 2 48 125 A 3 x 6/25v (csavaros) + 21 x 1.5/4v (1) (gyorscsatl.)+ LVSXQ224 LVSXR224",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 2,
+      "modulesPerRow": 24,
+      "totalModules18": 48,
+      "ratedCurrentA": 125,
+      "door": "transparent"
+    },
+    {
+      "sku": "LVSXQ324",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "3 72 125 A 6 x 6/25v (csavaros) + 32 x 1.5/4v (1) (gyorscsatl.)+ LVSXQ324 LVSXR324",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 3,
+      "modulesPerRow": 24,
+      "totalModules18": 72,
+      "ratedCurrentA": 125,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXR324",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "3 72 125 A 6 x 6/25v (csavaros) + 32 x 1.5/4v (1) (gyorscsatl.)+ LVSXQ324 LVSXR324",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 3,
+      "modulesPerRow": 24,
+      "totalModules18": 72,
+      "ratedCurrentA": 125,
+      "door": "transparent"
+    },
+    {
+      "sku": "LVSXQ424",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "4 96 125 A 6 x 6/25v (csavaros) + 42 x 1.5/4v (1) gyorscsatl.)+ LVSXQ424 LVSXR424",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 4,
+      "modulesPerRow": 24,
+      "totalModules18": 96,
+      "ratedCurrentA": 125,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXR424",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "4 96 125 A 6 x 6/25v (csavaros) + 42 x 1.5/4v (1) gyorscsatl.)+ LVSXQ424 LVSXR424",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 4,
+      "modulesPerRow": 24,
+      "totalModules18": 96,
+      "ratedCurrentA": 125,
+      "door": "transparent"
+    },
+    {
+      "sku": "LVSXQ524",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "5 120 125 A 9 x 6/25v (csavaros) + 53 x 1.5/4v (1) (gyorscsatl.)+ LVSXQ524 LVSXR524",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 5,
+      "modulesPerRow": 24,
+      "totalModules18": 120,
+      "ratedCurrentA": 125,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXR524",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "5 120 125 A 9 x 6/25v (csavaros) + 53 x 1.5/4v (1) (gyorscsatl.)+ LVSXQ524 LVSXR524",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 5,
+      "modulesPerRow": 24,
+      "totalModules18": 120,
+      "ratedCurrentA": 125,
+      "door": "transparent"
+    },
+    {
+      "sku": "LVSXQ624",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "6 144 125 A 9 x 6/25v (csavaros) + 63 x 1.5/4v (1) (gyorscsatl.)+ LVSXQ624 LVSXR624",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 6,
+      "modulesPerRow": 24,
+      "totalModules18": 144,
+      "ratedCurrentA": 125,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXR624",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "6 144 125 A 9 x 6/25v (csavaros) + 63 x 1.5/4v (1) (gyorscsatl.)+ LVSXQ624 LVSXR624",
+      "mountingType": "enclosure",
+      "installation": "surface",
+      "rows": 6,
+      "modulesPerRow": 24,
+      "totalModules18": 144,
+      "ratedCurrentA": 125,
+      "door": "transparent"
+    },
+    {
+      "sku": "LVSXDS113",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "13-modulos 1 sor - LVSXDS113 LVSXDP113",
+      "mountingType": "accessory",
+      "rows": 1,
+      "modulesPerRow": 13,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXDP113",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "13-modulos 1 sor - LVSXDS113 LVSXDP113",
+      "mountingType": "accessory",
+      "rows": 1,
+      "modulesPerRow": 13,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXDS213",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "2 sor - LVSXDS213 LVSXDP213",
+      "mountingType": "accessory",
+      "rows": 2,
+      "modulesPerRow": 13,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXDP213",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "2 sor - LVSXDS213 LVSXDP213",
+      "mountingType": "accessory",
+      "rows": 2,
+      "modulesPerRow": 13,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXDS313",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "3 sor - LVSXDS313 LVSXDP313",
+      "mountingType": "accessory",
+      "rows": 3,
+      "modulesPerRow": 13,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXDP313",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "3 sor - LVSXDS313 LVSXDP313",
+      "mountingType": "accessory",
+      "rows": 3,
+      "modulesPerRow": 13,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXDS413",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "4 sor - LVSXDS413 LVSXDP413",
+      "mountingType": "accessory",
+      "rows": 4,
+      "modulesPerRow": 13,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXDP413",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "4 sor - LVSXDS413 LVSXDP413",
+      "mountingType": "accessory",
+      "rows": 4,
+      "modulesPerRow": 13,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXDS118",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "18-modulos 1 sor - LVSXDS118 LVSXDP118",
+      "mountingType": "accessory",
+      "rows": 1,
+      "modulesPerRow": 18,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXDP118",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "18-modulos 1 sor - LVSXDS118 LVSXDP118",
+      "mountingType": "accessory",
+      "rows": 1,
+      "modulesPerRow": 18,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXDS218",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "2 sor - LVSXDS218 LVSXDP218",
+      "mountingType": "accessory",
+      "rows": 2,
+      "modulesPerRow": 18,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXDP218",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "2 sor - LVSXDS218 LVSXDP218",
+      "mountingType": "accessory",
+      "rows": 2,
+      "modulesPerRow": 18,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXDS318",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "3 sor - LVSXDS318 LVSXDP318",
+      "mountingType": "accessory",
+      "rows": 3,
+      "modulesPerRow": 18,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXDP318",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "3 sor - LVSXDS318 LVSXDP318",
+      "mountingType": "accessory",
+      "rows": 3,
+      "modulesPerRow": 18,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXDS418",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "4 sor - LVSXDS418 LVSXDP418",
+      "mountingType": "accessory",
+      "rows": 4,
+      "modulesPerRow": 18,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXDP418",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "4 sor - LVSXDS418 LVSXDP418",
+      "mountingType": "accessory",
+      "rows": 4,
+      "modulesPerRow": 18,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXDT224",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "24-modulos 2 sor LVSXDT224 - LVSXDP224",
+      "mountingType": "accessory",
+      "rows": 2,
+      "modulesPerRow": 24,
+      "door": "transparent"
+    },
+    {
+      "sku": "LVSXDP224",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "24-modulos 2 sor LVSXDT224 - LVSXDP224",
+      "mountingType": "accessory",
+      "rows": 2,
+      "modulesPerRow": 24,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXDT324",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "3 sor LVSXDT324 - LVSXDP324",
+      "mountingType": "accessory",
+      "rows": 3,
+      "modulesPerRow": 24,
+      "door": "transparent"
+    },
+    {
+      "sku": "LVSXDP324",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "3 sor LVSXDT324 - LVSXDP324",
+      "mountingType": "accessory",
+      "rows": 3,
+      "modulesPerRow": 24,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXDT424",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "4 sor LVSXDT424 - LVSXDP424",
+      "mountingType": "accessory",
+      "rows": 4,
+      "modulesPerRow": 24,
+      "door": "transparent"
+    },
+    {
+      "sku": "LVSXDP424",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "4 sor LVSXDT424 - LVSXDP424",
+      "mountingType": "accessory",
+      "rows": 4,
+      "modulesPerRow": 24,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXDT524",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "5 sor LVSXDT524 - LVSXDP524",
+      "mountingType": "accessory",
+      "rows": 5,
+      "modulesPerRow": 24,
+      "door": "transparent"
+    },
+    {
+      "sku": "LVSXDP524",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "5 sor LVSXDT524 - LVSXDP524",
+      "mountingType": "accessory",
+      "rows": 5,
+      "modulesPerRow": 24,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXDT624",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "6 sor LVSXDT624 - LVSXDP624",
+      "mountingType": "accessory",
+      "rows": 6,
+      "modulesPerRow": 24,
+      "door": "transparent"
+    },
+    {
+      "sku": "LVSXDP624",
+      "family": "PrismaSeT XS",
+      "category": "spare_door",
+      "sourcePages": [
+        31
+      ],
+      "sourceEvidence": "6 sor LVSXDT624 - LVSXDP624",
+      "mountingType": "accessory",
+      "rows": 6,
+      "modulesPerRow": 24,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXN113",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "13-modulos 1 13 63 A (4 x 16v + 4 x 10v) csavaros LVSXN113 LVSXP113",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 1,
+      "modulesPerRow": 13,
+      "totalModules18": 13,
+      "ratedCurrentA": 63,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXP113",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "13-modulos 1 13 63 A (4 x 16v + 4 x 10v) csavaros LVSXN113 LVSXP113",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 1,
+      "modulesPerRow": 13,
+      "totalModules18": 13,
+      "ratedCurrentA": 63,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXN213",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "2 26 63 A 8 x 16v + 8 x 10v) csavaros LVSXN213 LVSXP213",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 2,
+      "modulesPerRow": 13,
+      "totalModules18": 26,
+      "ratedCurrentA": 63,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXP213",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "2 26 63 A 8 x 16v + 8 x 10v) csavaros LVSXN213 LVSXP213",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 2,
+      "modulesPerRow": 13,
+      "totalModules18": 26,
+      "ratedCurrentA": 63,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXN313",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "3 39 90 A (11 x 16v + 11 x 10v) csavaros LVSXN313 LVSXP313",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 3,
+      "modulesPerRow": 13,
+      "totalModules18": 39,
+      "ratedCurrentA": 90,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXP313",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "3 39 90 A (11 x 16v + 11 x 10v) csavaros LVSXN313 LVSXP313",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 3,
+      "modulesPerRow": 13,
+      "totalModules18": 39,
+      "ratedCurrentA": 90,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXN413",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "4 52 90 A (16 x 16v + 16 x 10v) csavaros LVSXN413 LVSXP413",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 4,
+      "modulesPerRow": 13,
+      "totalModules18": 52,
+      "ratedCurrentA": 90,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXP413",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "4 52 90 A (16 x 16v + 16 x 10v) csavaros LVSXN413 LVSXP413",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 4,
+      "modulesPerRow": 13,
+      "totalModules18": 52,
+      "ratedCurrentA": 90,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXN118",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "18-modulos 1 18 90 A (8 x 16v + 8 x 10v) csavaros LVSXN118 LVSXP118",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 1,
+      "modulesPerRow": 18,
+      "totalModules18": 18,
+      "ratedCurrentA": 90,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXP118",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "18-modulos 1 18 90 A (8 x 16v + 8 x 10v) csavaros LVSXN118 LVSXP118",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 1,
+      "modulesPerRow": 18,
+      "totalModules18": 18,
+      "ratedCurrentA": 90,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXN218",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "2 36 90 A (11 x 16v + 11 x 10v) csavaros LVSXN218 LVSXP218",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 2,
+      "modulesPerRow": 18,
+      "totalModules18": 36,
+      "ratedCurrentA": 90,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXP218",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "2 36 90 A (11 x 16v + 11 x 10v) csavaros LVSXN218 LVSXP218",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 2,
+      "modulesPerRow": 18,
+      "totalModules18": 36,
+      "ratedCurrentA": 90,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXN318",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "3 54 125 A (16 x 16v + 16 x 10v) csavaros LVSXN318 LVSXP318",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 3,
+      "modulesPerRow": 18,
+      "totalModules18": 54,
+      "ratedCurrentA": 125,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXP318",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "3 54 125 A (16 x 16v + 16 x 10v) csavaros LVSXN318 LVSXP318",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 3,
+      "modulesPerRow": 18,
+      "totalModules18": 54,
+      "ratedCurrentA": 125,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXN418",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "4 72 125 A 2 x (11 x 16v + 11 x 10v) csavaros LVSXN418 LVSXP418",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 4,
+      "modulesPerRow": 18,
+      "totalModules18": 72,
+      "ratedCurrentA": 125,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXP418",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "4 72 125 A 2 x (11 x 16v + 11 x 10v) csavaros LVSXN418 LVSXP418",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 4,
+      "modulesPerRow": 18,
+      "totalModules18": 72,
+      "ratedCurrentA": 125,
+      "door": "smoked"
+    },
+    {
+      "sku": "LVSXN224",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "24-modulos 2 48 125 A 3 x 6/25v (csavaros) + 21 x 1.5/4v (1) (gyorscsatl.)+ LVSXN224 LVSXP224",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 2,
+      "modulesPerRow": 24,
+      "totalModules18": 48,
+      "ratedCurrentA": 125,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXP224",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "24-modulos 2 48 125 A 3 x 6/25v (csavaros) + 21 x 1.5/4v (1) (gyorscsatl.)+ LVSXN224 LVSXP224",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 2,
+      "modulesPerRow": 24,
+      "totalModules18": 48,
+      "ratedCurrentA": 125,
+      "door": "transparent"
+    },
+    {
+      "sku": "LVSXN324",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "3 72 125 A 6 x 6/25v (csavaros) + 32 x 1.5/4v (1) (gyorscsatl.)+ LVSXN324 LVSXP324",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 3,
+      "modulesPerRow": 24,
+      "totalModules18": 72,
+      "ratedCurrentA": 125,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXP324",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "3 72 125 A 6 x 6/25v (csavaros) + 32 x 1.5/4v (1) (gyorscsatl.)+ LVSXN324 LVSXP324",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 3,
+      "modulesPerRow": 24,
+      "totalModules18": 72,
+      "ratedCurrentA": 125,
+      "door": "transparent"
+    },
+    {
+      "sku": "LVSXN424",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "4 96 125 A 6 x 6/25v (csavaros) + 42 x 1.5/4v (1) (gyorscsatl.)+ LVSXN424 LVSXP424",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 4,
+      "modulesPerRow": 24,
+      "totalModules18": 96,
+      "ratedCurrentA": 125,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXP424",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "4 96 125 A 6 x 6/25v (csavaros) + 42 x 1.5/4v (1) (gyorscsatl.)+ LVSXN424 LVSXP424",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 4,
+      "modulesPerRow": 24,
+      "totalModules18": 96,
+      "ratedCurrentA": 125,
+      "door": "transparent"
+    },
+    {
+      "sku": "LVSXN524",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "5 120 125 A 9 x 6/25v (csavaros) + 53 x 1.5/4v (1) (gyorscsatl.)+ LVSXN524 LVSXP524",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 5,
+      "modulesPerRow": 24,
+      "totalModules18": 120,
+      "ratedCurrentA": 125,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXP524",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "5 120 125 A 9 x 6/25v (csavaros) + 53 x 1.5/4v (1) (gyorscsatl.)+ LVSXN524 LVSXP524",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 5,
+      "modulesPerRow": 24,
+      "totalModules18": 120,
+      "ratedCurrentA": 125,
+      "door": "transparent"
+    },
+    {
+      "sku": "LVSXN624",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "6 144 125 A 9 x 6/25v (csavaros) + 63 x 1.5/4v (1) (gyorscsatl.)+ LVSXN624 LVSXP624",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 6,
+      "modulesPerRow": 24,
+      "totalModules18": 144,
+      "ratedCurrentA": 125,
+      "door": "opaque"
+    },
+    {
+      "sku": "LVSXP624",
+      "family": "PrismaSeT XS",
+      "category": "enclosure",
+      "sourcePages": [
+        32
+      ],
+      "sourceEvidence": "6 144 125 A 9 x 6/25v (csavaros) + 63 x 1.5/4v (1) (gyorscsatl.)+ LVSXN624 LVSXP624",
+      "mountingType": "enclosure",
+      "installation": "flush",
+      "rows": 6,
+      "modulesPerRow": 24,
+      "totalModules18": 144,
+      "ratedCurrentA": 125,
+      "door": "transparent"
+    },
+    {
+      "sku": "LVSXX5",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "enclosure_accessory",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "Gipszkarton falba szerelő készlet - ● LVSXX5",
+      "mountingType": "accessory",
+      "descriptionHu": "Gipszkarton falba szerelő készlet - ●"
+    },
+    {
+      "sku": "LVSXX7",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "enclosure_accessory",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "Külső rögzítőfülek 4 db fém fül ● - LVSXX7",
+      "mountingType": "accessory",
+      "descriptionHu": "Külső rögzítőfülek 4 db fém fül ● -"
+    },
+    {
+      "sku": "R9H13420",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "Tervtartó ● ● R9H13420",
+      "mountingType": "accessory",
+      "descriptionHu": "Tervtartó ● ●"
+    },
+    {
+      "sku": "LVSXF4",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "enclosure_accessory",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "Modultakarók 1 x 24-modulos készlet ● ● LVSXF4",
+      "mountingType": "accessory",
+      "descriptionHu": "Modultakarók 1 x 24-modulos készlet ● ●"
+    },
+    {
+      "sku": "R9H13387",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "enclosure_accessory",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "10 x 5-modulos készlet ● ● R9H13387",
+      "mountingType": "accessory",
+      "descriptionHu": "10 x 5-modulos készlet ● ●"
+    },
+    {
+      "sku": "LVS04227",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "enclosure_accessory",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "DIN sín mélységállító adapter Kiemelő és DIN sín, az NSXm készülék moduláris sorba történő szereléséhez ● ● LVS04227",
+      "mountingType": "accessory",
+      "descriptionHu": "DIN sín mélységállító adapter Kiemelő és DIN sín, az NSXm készülék moduláris sorba történő szereléséhez ● ●"
+    },
+    {
+      "sku": "LVSXS2",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "enclosure_accessory",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "Zár kiselosztó ajtóhoz Kulcsos zár 405 (2 kulccsal) ● ● LVSXS2",
+      "mountingType": "accessory",
+      "descriptionHu": "Zár kiselosztó ajtóhoz Kulcsos zár 405 (2 kulccsal) ● ●"
+    },
+    {
+      "sku": "LGYT1E05",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "Kompakt összekapcsolható 1 x 6/25v (csavaros) + 4 x 1.5/4v (gyorscsatl.) csatlakozóblokk (63 A) + jumper ● ● LGYT1E05",
+      "mountingType": "accessory",
+      "descriptionHu": "Kompakt összekapcsolható 1 x 6/25v (csavaros) + 4 x 1.5/4v (gyorscsatl.) csatlakozóblokk (63 A) + jumper ● ●"
+    },
+    {
+      "sku": "LGYT1E14",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "csavarmentes csatlakozó- 3 x 6/25v (csavaros) + 11 x 1.5/4v (gyorscsatl.) csatlakozóblokk (63 A) + jumper ● ● LGYT1E14",
+      "mountingType": "accessory",
+      "descriptionHu": "csavarmentes csatlakozó- 3 x 6/25v (csavaros) + 11 x 1.5/4v (gyorscsatl.) csatlakozóblokk (63 A) + jumper ● ●"
+    },
+    {
+      "sku": "LGYT1E24",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "3 x 6/25v (csavaros) + 21 x 1.5/4v (gyorscsatl.) csatlakozóblokk (63 A) + jumper ● ● LGYT1E24",
+      "mountingType": "accessory",
+      "descriptionHu": "3 x 6/25v (csavaros) + 21 x 1.5/4v (gyorscsatl.) csatlakozóblokk (63 A) + jumper ● ●"
+    },
+    {
+      "sku": "LGYT1N05",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "Kompakt összekapcsolható 1 x 6/25v (csavaros) + 4 x 1.5/4 v (gyorscsatl.) csatlakozóblokk (63 A) + jumper ● ● LGYT1N05",
+      "mountingType": "accessory",
+      "descriptionHu": "Kompakt összekapcsolható 1 x 6/25v (csavaros) + 4 x 1.5/4 v (gyorscsatl.) csatlakozóblokk (63 A) + jumper ● ●"
+    },
+    {
+      "sku": "LGYT1N14",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "csavarmentes csatlakozó- 3 x 6/25v (csavaros) + 11 x 1.5/4v (gyorscsatl.) csatlakozóblokk (63 A) + jumper ● ● LGYT1N14",
+      "mountingType": "accessory",
+      "descriptionHu": "csavarmentes csatlakozó- 3 x 6/25v (csavaros) + 11 x 1.5/4v (gyorscsatl.) csatlakozóblokk (63 A) + jumper ● ●"
+    },
+    {
+      "sku": "LGYT1N24",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "3 x 6/25v (csavaros) + 21 x 1.5/4v (gyorscsatl.) csatlakozóblokk (63 A) + jumper ● ● LGYT1N24",
+      "mountingType": "accessory",
+      "descriptionHu": "3 x 6/25v (csavaros) + 21 x 1.5/4v (gyorscsatl.) csatlakozóblokk (63 A) + jumper ● ●"
+    },
+    {
+      "sku": "LGYT4A01",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "Összekötő jumper Kompakt, csatlakozóblokk összekötő készlet, 10 darabos ● ● LGYT4A01",
+      "mountingType": "accessory",
+      "descriptionHu": "Összekötő jumper Kompakt, csatlakozóblokk összekötő készlet, 10 darabos ● ●"
+    },
+    {
+      "sku": "R9H13405",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "Csavaros, szigetelt 4 x 16v csavaros csatlakozóblokk P/N (63 A) ● ● R9H13405",
+      "mountingType": "accessory",
+      "descriptionHu": "Csavaros, szigetelt 4 x 16v csavaros csatlakozóblokk P/N (63 A) ● ●"
+    },
+    {
+      "sku": "R9H13405P",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "csatlakozóblokkok 4 x 16v csavaros csatlakozóblokk P/P (63 A) ● ● R9H13405P",
+      "mountingType": "accessory",
+      "descriptionHu": "csatlakozóblokkok 4 x 16v csavaros csatlakozóblokk P/P (63 A) ● ●"
+    },
+    {
+      "sku": "R9H13411",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "1 x 35v + 6 x 16v csavaros csatlakozóblokk P/N (125 A) ● ● R9H13411",
+      "mountingType": "accessory",
+      "descriptionHu": "1 x 35v + 6 x 16v csavaros csatlakozóblokk P/N (125 A) ● ●"
+    },
+    {
+      "sku": "R9H13411P",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "1 x 35v + 6 x 16v csavaros csatlakozóblokk P/P (125 A) ● ● R9H13411P",
+      "mountingType": "accessory",
+      "descriptionHu": "1 x 35v + 6 x 16v csavaros csatlakozóblokk P/P (125 A) ● ●"
+    },
+    {
+      "sku": "LGYT2A04",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "2 x 16v + 2 x 10v csavaros csatlakozóblokk + 1 zöld és 1 kék burkolat (80A) ** ● ● LGYT2A04",
+      "mountingType": "accessory",
+      "descriptionHu": "2 x 16v + 2 x 10v csavaros csatlakozóblokk + 1 zöld és 1 kék burkolat (80A) ** ● ●"
+    },
+    {
+      "sku": "LGYT2A08",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "4 x 16v + 4 x 10v csavaros csatlakozóblokk + 1 zöld és 1 kék burkolat (80A) ** ● ● LGYT2A08",
+      "mountingType": "accessory",
+      "descriptionHu": "4 x 16v + 4 x 10v csavaros csatlakozóblokk + 1 zöld és 1 kék burkolat (80A) ** ● ●"
+    },
+    {
+      "sku": "LGYT2A16",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "8 x 16v + 8 x 10v csavaros csatlakozóblokk + 1 zöld és 1 kék burkolat (80A) ** ● ● LGYT2A16",
+      "mountingType": "accessory",
+      "descriptionHu": "8 x 16v + 8 x 10v csavaros csatlakozóblokk + 1 zöld és 1 kék burkolat (80A) ** ● ●"
+    },
+    {
+      "sku": "LGYT2A22",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "11 x 16v + 11 x 10v csavaros csatlakozóblokk + 1 zöld és 1 kék burkolat (80A) ** ● ● LGYT2A22",
+      "mountingType": "accessory",
+      "descriptionHu": "11 x 16v + 11 x 10v csavaros csatlakozóblokk + 1 zöld és 1 kék burkolat (80A) ** ● ●"
+    },
+    {
+      "sku": "LGYT2A32",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "16 x 16v + 16 x 10v csavaros csatlakozóblokk + 1 zöld és 1 kék burkolat (80A) ** ● ● LGYT2A32",
+      "mountingType": "accessory",
+      "descriptionHu": "16 x 16v + 16 x 10v csavaros csatlakozóblokk + 1 zöld és 1 kék burkolat (80A) ** ● ●"
+    },
+    {
+      "sku": "LVSXK2",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_support",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "Csatlakozóblokk-tartó Csatlakozóblokk tartó készlet 24-modulos szekrényekhez ● ● LVSXK2",
+      "mountingType": "accessory",
+      "descriptionHu": "Csatlakozóblokk-tartó Csatlakozóblokk tartó készlet 24-modulos szekrényekhez ● ●"
+    },
+    {
+      "sku": "LVSXK1",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_support",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "Csatlakozóblokk tartó készlet 13-18 modulos szekrényekhez ● ● LVSXK1",
+      "mountingType": "accessory",
+      "descriptionHu": "Csatlakozóblokk tartó készlet 13-18 modulos szekrényekhez ● ●"
+    },
+    {
+      "sku": "LGYT601R",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_block",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "DIN sín tartó 1 db-os készlet ● ● LGYT601R",
+      "mountingType": "accessory",
+      "descriptionHu": "DIN sín tartó 1 db-os készlet ● ●"
+    },
+    {
+      "sku": "LVSXK6",
+      "family": "PrismaSeT XS compatible accessory",
+      "category": "terminal_support",
+      "sourcePages": [
+        33
+      ],
+      "sourceEvidence": "SPD csatlakozókészlet Rögzítő és 1 x 50 + 2 x 25 csavaros bekötésű csatlakozóblokk ● - LVSXK6",
+      "mountingType": "accessory",
+      "descriptionHu": "SPD csatlakozókészlet Rögzítő és 1 x 50 + 2 x 25 csavaros bekötésű csatlakozóblokk ● -"
+    },
+    {
+      "sku": "LVSXY1124",
+      "family": "PrismaSeT XS",
+      "category": "mounting_panel",
+      "sourcePages": [
+        34
+      ],
+      "sourceEvidence": "Univerzális, rácsos szerelőlemez 24-modulos Két DIN-sín helyére telepíthető LVSXY1124",
+      "mountingType": "accessory",
+      "descriptionHu": "Univerzális, rácsos szerelőlemez 24-modulos Két DIN-sín helyére telepíthető"
+    },
+    {
+      "sku": "LVSXY624",
+      "family": "PrismaSeT XS",
+      "category": "mounting_panel",
+      "sourcePages": [
+        34
+      ],
+      "sourceEvidence": "Háromfázisú felügyeleti panel 24-modul Három DIN-sín helyére telepíthető LVSXY624",
+      "mountingType": "accessory",
+      "descriptionHu": "Háromfázisú felügyeleti panel 24-modul Három DIN-sín helyére telepíthető"
+    },
+    {
+      "sku": "LVSXY724",
+      "family": "PrismaSeT XS",
+      "category": "mounting_panel",
+      "sourcePages": [
+        34
+      ],
+      "sourceEvidence": "Egyfázisú felügyeleti panel (Linky) 24-modul Kettő DIN-sín helyére telepíthető LVSXY724",
+      "mountingType": "accessory",
+      "descriptionHu": "Egyfázisú felügyeleti panel (Linky) 24-modul Kettő DIN-sín helyére telepíthető"
+    },
+    {
+      "sku": "LVSXY024",
+      "family": "PrismaSeT XS",
+      "category": "mounting_panel",
+      "sourcePages": [
+        34
+      ],
+      "sourceEvidence": "Vezérlőpanel 24-modul Kettő DIN-sín helyére telepíthető LVSXY024",
+      "mountingType": "accessory",
+      "descriptionHu": "Vezérlőpanel 24-modul Kettő DIN-sín helyére telepíthető"
+    },
+    {
+      "sku": "A9A27062",
+      "family": "Acti9 compatible accessory",
+      "category": "spacer",
+      "sourcePages": [
+        23
+      ],
+      "sourceEvidence": "Távtartó rendelési\nszáma: A9A27062",
+      "mountingType": "din",
+      "descriptionHu": "Távtartó, fehér, 9 mm (5 darabos készlet)",
+      "descriptionEn": "White DIN rail spacer, 9 mm (set of 5)",
+      "widthModules18": 0.5,
+      "widthMm": 9,
+      "packQuantity": 5,
+      "supplementalSourceUrl": "https://www.se.com/uk/en/product/A9A27062/spacer-acti9-set-of-5-9-mm-pitch-white/",
+      "supplementalSourceEvidence": "Official Schneider Electric product page: spacer, Acti9, set of 5, 9 mm pitch, white; Clip-on Rail Mounting Mode; 9mm Pitch; Set of 5."
+    }
+  ]
+}

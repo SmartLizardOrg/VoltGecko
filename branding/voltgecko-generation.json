@@ -1,0 +1,21 @@
+{
+  "tool": "Built-in image_gen",
+  "brand": "VoltGecko",
+  "assets": [
+    {
+      "file": "public/brand/voltgecko-symbol.png",
+      "role": "Transparent logo symbol",
+      "prompt": "Use case: logo-brand. Create one original, polished logo SYMBOL ONLY for VoltGecko, a professional yet approachable electrical floor-plan and distribution-board planning application for electricians. Subject: an unmistakable small gecko viewed from above, with a broad simple head, four short splayed feet with minimal rounded toe tips, and an elegant curled tail that makes a loose G. Integrate a single crisp lightning-bolt cutout through the body as negative space; it must feel like one coherent iconic silhouette, not a lightning bolt pasted on an animal. Bold, flat, vector-like geometry, smooth deliberate curves, balanced silhouette, generous legibility at tiny app-icon size. Restrained existing app palette: deep evergreen/teal #125D4A as the primary solid color, a very small electric lime #BDE65D accent only if useful. The mark should look confident and friendly, not childish or aggressive. Square composition, one large centered symbol filling about 75% of the square with generous safe margins, fully contained. Genuinely transparent background and transparent negative-space cutouts. No text, no lettering, no surrounding badge, no border, no shadows, no gradients, no texture, no 3D, no presentation mockup, no watermark. This is a finished production logo icon, not a contact sheet."
+    },
+    {
+      "file": "public/brand/voltgecko-logo.png",
+      "role": "Transparent horizontal logo",
+      "prompt": "Use case: logo-brand. Create the finished horizontal primary logo for VoltGecko using the supplied transparent gecko symbol as the exact visual identity reference and edit target. Preserve the recognizable gecko silhouette, diagonal orientation, four rounded splayed feet, curled tail and lightning-shaped transparent cutout; do not redesign the symbol. Place this same gecko symbol on the left and a large expertly kerned wordmark 'VoltGecko' on its right, precisely spelled V-o-l-t-G-e-c-k-o, with uppercase V and G and no space. Modern confident friendly geometric sans-serif lettering, medium-bold with subtly rounded details, very clean professional electrical planning software identity. Use the existing symbol's deep evergreen/teal color for the wordmark. The symbol should be optically the same height as about 1.5 times the wordmark capital letters, compact but with comfortable spacing to the name. Balanced wide horizontal composition, approximately 3:1, generous clearspace, all artwork fully contained. True transparent background; keep every intended transparent cutout in the symbol. No other text, no tagline, no mockup, no badge or surrounding shape, no border, no shadow, no gradients or decorative circuit clutter. Output one crisp high-resolution standalone logo lockup ready for a website header and documentation."
+    },
+    {
+      "file": "public/brand/voltgecko-app.png",
+      "role": "App icon on pale background",
+      "prompt": "Use case: logo-brand. Create a production PWA / mobile app icon for VoltGecko, using the supplied gecko logo symbol as the exact identity reference. Keep the same recognizable deep evergreen gecko, its diagonal orientation, four rounded splayed feet, curled tail, and lightning-shaped negative space. Center the symbol on a completely solid very pale mint/ivory background #F2F7EC. Its ENTIRE silhouette must fit within the central safe-area circle of radius 38% of the square, with generous even clearspace: make the overall gecko about 62% of square width and height, so Android circular and rounded-square masks never clip its head, feet or tail. Full-bleed square background with NO rounded outer corners, no border, no text, no badges. Clean flat graphic treatment, no lighting effects, no texture, no shadows, no added gradients, no 3D. Preserve the same outline instead of inventing a different animal. This is a single standalone square app icon, not a mockup, ready to install on a phone home screen."
+    }
+  ]
+}

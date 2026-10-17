@@ -1,0 +1,40 @@
+import type { DeviceKind } from '../types';
+
+/** Manufacturer facts bundled for offline use; project devices receive a snapshot. */
+export interface CatalogProduct {
+  reference: string;
+  manufacturer: string;
+  range: string;
+  category: 'mcb'|'rccb'|'rcbo'|'spd'|'switch'|'control'|'accessory'|'enclosure';
+  kind: DeviceKind;
+  mounting: 'din'|'accessory'|'enclosure';
+  name: { hu:string; en:string };
+  description: { hu:string; en:string };
+  moduleWidth?:number;
+  widthMm?:number;
+  poles?:string;
+  currentA?:number;
+  curve?:string;
+  breakingCapacityKa?:number;
+  residualType?:string;
+  residualCurrentMa?:number;
+  voltage?:string;
+  boardRows?:number;
+  modulesPerRow?:number;
+  sourceUrl:string;
+  supplementalSourceUrl?:string;
+  sourcePage:number;
+  sourceDocument:string;
+  verifiedAt:string;
+}
+export interface ProductSnapshot {
+  description?:{hu:string;en:string};
+  reference:string; manufacturer:string; range:string; sourceUrl:string;
+  supplementalSourceUrl?:string;
+  sourceDocument:string; sourcePage:number; verifiedAt:string;
+  mounting:CatalogProduct['mounting'];
+  moduleWidth?:number; poles?:string; currentA?:number; curve?:string;
+  widthMm?:number; boardRows?:number; modulesPerRow?:number;
+  breakingCapacityKa?:number; residualType?:string; residualCurrentMa?:number;
+  voltage?:string;
+}

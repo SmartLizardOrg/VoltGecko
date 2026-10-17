@@ -1,0 +1,17 @@
+{
+  "tool": "Built-in image_gen",
+  "brand": "VoltGecko",
+  "selectedConcept": "03-cyberpunk",
+  "assets": [
+    {
+      "file": "public/brand/voltgecko-cyberpunk-icon.png",
+      "role": "app icon",
+      "prompt": "Use case: precise-object-edit / logo-brand. Edit the supplied approved VoltGecko CYBERPUNK logo into a square application icon. Preserve the exact gecko silhouette, orientation, four feet, circuit traces, cyan and magenta colors, the eye and lightning cutout of the reference, with no redesign. Remove the VoltGecko wordmark completely. Put ONLY that gecko symbol centered on a solid near-black navy #030B1B square canvas, with generous even clearspace, entire gecko fits within the center 70% of canvas width and height. A crisp usable small app icon, flat graphic with same restrained glow. No rounded canvas corners, border, extra text or ornament. Keep approved identity exact."
+    },
+    {
+      "file": "public/brand/voltgecko-cyberpunk-logo.png",
+      "role": "horizontal lockup",
+      "prompt": "Use case: precise-object-edit / logo-brand. Adapt the supplied approved VoltGecko CYBERPUNK logo to a WIDE HORIZONTAL LOCKUP, ratio exactly3:1. Preserve the exact approved angular gecko symbol, eye, four splayed feet, circuit traces, cyan-and-magenta colors and lightning idea. Place the gecko symbol on LEFT, exact text 'VoltGecko' on RIGHT in the same clear futuristic geometric lettering, Volt cyan and Gecko magenta. Both parts vertically centered; wordmark large and clearly legible; no subtitle. Solid near-black navy #030B1B background. Retain the restrained neon glow and crisp shapes, do not redesign, no new details or ornament. Wide2130x710-style composition, enough clearspace for navigation-header use, not a poster. Only one horizontal logo."
+    }
+  ]
+}

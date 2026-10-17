@@ -1,0 +1,114 @@
+import { CATALOG, makeDevice, uid } from '../catalog';
+import { getLanguage, t } from '../i18n';
+import type { Board, Device, ProjectData } from '../types';
+import type { CatalogProduct, ProductSnapshot } from './types';
+
+/** Copy manufacturer facts into the project; later catalog updates must not alter a plan. */
+function snapshot(product: CatalogProduct): ProductSnapshot {
+  const facts: ProductSnapshot = {
+    reference: product.reference, manufacturer: product.manufacturer, range: product.range,
+    sourceUrl: product.sourceUrl, sourceDocument: product.sourceDocument,
+    sourcePage: product.sourcePage, verifiedAt: product.verifiedAt, mounting: product.mounting,
+    description: { ...product.description },
+  };
+  for (const key of ['moduleWidth', 'widthMm', 'poles', 'currentA', 'curve', 'breakingCapacityKa', 'residualType', 'residualCurrentMa', 'voltage', 'boardRows', 'modulesPerRow', 'supplementalSourceUrl'] as const) {
+    const value = product[key];
+    if (value !== undefined) Object.assign(facts, { [key]: value });
+  }
+  return facts;
+}
+
+function rating(product: CatalogProduct): string {
+  const values = [
+    product.poles,
+    product.currentA !== undefined ? `${product.curve ?? ''}${product.currentA} A` : product.curve,
+    product.breakingCapacityKa !== undefined ? `${product.breakingCapacityKa} kA` : undefined,
+    product.residualType,
+    product.residualCurrentMa !== undefined ? `${product.residualCurrentMa} mA` : undefined,
+    product.voltage,
+  ];
+  return values.filter(Boolean).join(' · ');
+}
+
+function verified(product: CatalogProduct): boolean {
+  try {
+    const validSource = (value: string): boolean => {
+      const source = new URL(value);
+      return source.protocol === 'https:' && !source.username && !source.password && !/[\u0000-\u0020\u007f]/.test(value);
+    };
+    return Boolean(product.reference.trim() && product.manufacturer.trim() && product.sourceDocument.trim()
+      && Number.isInteger(product.sourcePage) && product.sourcePage > 0
+      && Number.isFinite(Date.parse(product.verifiedAt))
+      && validSource(product.sourceUrl)
+      && (product.supplementalSourceUrl === undefined || validSource(product.supplementalSourceUrl)));
+  } catch { return false; }
+}
+
+export function createDeviceFromProduct(product: CatalogProduct, devices: Device[], boardId?: string): Device {
+  if (!verified(product)) throw new Error(t('A termék gyártói forrása nincs ellenőrizve.'));
+  if (product.mounting === 'enclosure') throw new Error(t('Az elosztóházat új elosztóként kell hozzáadni.'));
+  if (product.mounting === 'din' && (!Number.isFinite(product.moduleWidth) || product.moduleWidth! <= 0)) {
+    throw new Error(t('A készülékhez ellenőrzött gyártói modulszélesség szükséges.'));
+  }
+  const device = makeDevice(product.kind, devices);
+  device.name = product.name[getLanguage()];
+  device.model = `${product.manufacturer} ${product.reference}`;
+  device.rating = rating(product);
+  device.product = snapshot(product);
+  if (boardId) device.boardId = boardId;
+  if (product.mounting === 'din') device.moduleWidth = product.moduleWidth;
+  else { delete device.moduleWidth; device.quantity = 1; }
+  return device;
+}
+
+function makeBoard(name = t('Lakáselosztó'), rows = 1, capacity = 12): Board {
+  return { id: uid(), name, rows: Array.from({ length: rows }, (_, index) => ({
+    id: uid(), name: t('{number}. sor', { number: index + 1 }), capacity, placements: [],
+  })) };
+}
+
+export function addProductToProject(data: ProjectData, product: CatalogProduct, activeBoardId?: string): {
+  data: ProjectData; selectedId: string | null; boardId: string; placed: boolean;
+} {
+  if (!verified(product)) throw new Error(t('A termék gyártói forrása nincs ellenőrizve.'));
+  const next = structuredClone(data);
+  if (product.mounting === 'enclosure') {
+    if (!Number.isInteger(product.boardRows) || product.boardRows! <= 0 || product.boardRows! > 1000
+      || !Number.isInteger(product.modulesPerRow) || product.modulesPerRow! <= 0 || product.modulesPerRow! > 100_000) {
+      throw new Error(t('Az elosztóházhoz ellenőrzött sor- és modulkapacitás szükséges.'));
+    }
+    const board = makeBoard(`${product.name[getLanguage()]} · ${product.reference}`, product.boardRows, product.modulesPerRow);
+    board.product = snapshot(product);
+    next.boards.push(board);
+    return { data: next, selectedId: null, boardId: board.id, placed: true };
+  }
+  if (!next.boards.length) next.boards.push(makeBoard());
+  const board = next.boards.find(item => item.id === activeBoardId) ?? next.boards[0];
+  const device = createDeviceFromProduct(product, next.devices, board.id);
+  next.devices.push(device);
+  // Accessories belong to the board's bill of materials and never consume rail space.
+  if (product.mounting === 'accessory') return { data: next, selectedId: device.id, boardId: board.id, placed: true };
+  const width = device.moduleWidth!;
+  const lookup = new Map(next.devices.map(item => [item.id, item]));
+  for (const row of board.rows) {
+    if (!Number.isFinite(row.capacity) || row.capacity <= 0) continue;
+    // A corrupt/unknown occupied position is not evidence of free capacity.
+    const occupied = row.placements.map(placement => {
+      const existing = lookup.get(placement.deviceId);
+      const size = existing?.moduleWidth ?? CATALOG.find(item => item.kind === existing?.kind)?.moduleWidth;
+      return { start: placement.start, width: size };
+    });
+    if (occupied.some(item => !Number.isFinite(item.start) || item.start < 0 || !Number.isFinite(item.width) || item.width! <= 0)) continue;
+    let start = 0;
+    for (const other of occupied.sort((a, b) => a.start - b.start)) {
+      if (start + width <= other.start + 1e-8) break;
+      if (start < other.start + other.width! - 1e-8) start = Math.ceil((other.start + other.width! - 1e-8) * 2) / 2;
+    }
+    if (start + width <= row.capacity + 1e-8) {
+      row.placements.push({ deviceId: device.id, start });
+      return { data: next, selectedId: device.id, boardId: board.id, placed: true };
+    }
+  }
+  // Keep the selected product in the project so that the user can make room later.
+  return { data: next, selectedId: device.id, boardId: board.id, placed: false };
+}

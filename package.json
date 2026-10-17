@@ -1,0 +1,51 @@
+{
+  "name": "voltgecko",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Offline-first electrical floor-plan and distribution-board planner in English and Hungarian.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SmartLizardOrg/VoltGecko.git"
+  },
+  "homepage": "https://github.com/SmartLizardOrg/VoltGecko#readme",
+  "bugs": {
+    "url": "https://github.com/SmartLizardOrg/VoltGecko/issues"
+  },
+  "engines": {
+    "node": "^22.13.0 || ^24.0.0 || >=26.0.0"
+  },
+  "type": "module",
+  "scripts": {
+    "predev": "node scripts/copy-public-assets.mjs",
+    "dev": "vite --host 0.0.0.0",
+    "prebuild": "node scripts/copy-public-assets.mjs",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "preview:https": "node scripts/https-preview.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "pretest:e2e": "npm run build",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "dexie": "^4.2.0",
+    "fflate": "^0.8.2",
+    "jspdf": "^4.2.1",
+    "lucide-react": "^0.468.0",
+    "pdfjs-dist": "^6.4.299",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "fake-indexeddb": "^6.2.0",
+    "typescript": "~5.9.3",
+    "vite": "^7.2.0",
+    "vite-plugin-pwa": "^1.1.0",
+    "vitest": "^5.0.5"
+  }
+}
