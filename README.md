@@ -6,6 +6,8 @@ Offline-first electrical floor-plan and distribution-board planner, in **English
 
 [Magyar útmutató](#magyar) · [GitHub](https://github.com/SmartLizardOrg/VoltGecko) · [MIT License](LICENSE)
 
+**Live app / Élő alkalmazás:** [voltgecko.pages.dev](https://voltgecko.pages.dev)
+
 ## English
 
 ### Features
