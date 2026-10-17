@@ -3,5 +3,7 @@ import { createRoot } from 'react-dom/client';
 import { registerSW } from 'virtual:pwa-register';
 import App from './App';
 import './styles.css';
+import './appearance.css';
+import './theme';
 const updateSW = registerSW({ onNeedRefresh() { window.dispatchEvent(new CustomEvent('app-update', { detail: () => updateSW(true) })); } });
 createRoot(document.getElementById('root')!).render(<StrictMode><App/></StrictMode>);

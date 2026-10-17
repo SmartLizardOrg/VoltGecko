@@ -1,3 +1,4 @@
+import { chooseSample, reopenRecentProject } from './startup';
 import { expect, test } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
@@ -28,6 +29,7 @@ async function openPlanner(page: Page) {
   // file-picker UI, which cannot be automated through the web platform.
   await page.addInitScript(() => Object.defineProperty(window, 'showSaveFilePicker', { value: undefined, configurable: true }));
   await page.goto('/');
+  await chooseSample(page);
   await expect(page.getByRole('button', { name: 'Dunaparti lakás', exact: true })).toBeVisible();
   await expect(page.getByText('Ezen az eszközön mentve', { exact: true })).toBeVisible();
 }
@@ -55,7 +57,7 @@ async function clickDevice(page: Page, code: string) { const p = await devicePos
 
 test.beforeAll(async () => { await mkdir(qaDir, { recursive: true }); });
 
-test('starts with one persisted sample project and keeps it across reloads', async ({ page }) => {
+test('explicitly opens a sample project and keeps it across reloads', async ({ page }) => {
   const errors: string[] = [];
   page.on('pageerror', error => errors.push(error.message));
   await openPlanner(page);
@@ -67,6 +69,7 @@ test('starts with one persisted sample project and keeps it across reloads', asy
   await expect(page.locator('.project-list > article')).toHaveCount(1);
   await page.getByRole('button', { name: 'Ablak bezárása', exact: true }).click();
   await page.reload();
+  await reopenRecentProject(page);
   await expect(page.locator('.floor-device')).toHaveCount(8);
   expect((await readDocument(page)).data.id).toBe(initial.data.id);
   await page.screenshot({ path: path.join(qaDir, 'desktop-floor.png'), fullPage: true });
@@ -102,6 +105,7 @@ test('adds and edits a floor device, preserves its circuit and undoes one drag',
   await clickDevice(page, 'D4');
   await expect(page.getByLabel('Eszköz neve', { exact: true })).toHaveValue('Pult alatti dugalj');
   await page.reload();
+  await reopenRecentProject(page);
   await clickDevice(page, 'D4');
   await expect(page.getByLabel('Helyiség', { exact: true })).toHaveValue('Konyha');
 });
@@ -195,13 +199,13 @@ test('exports a complete archive and imports an older state as a preserved separ
   const downloadPromise = page.waitForEvent('download');
   await page.getByRole('button', { name: /Projektfájl mentése/ }).click();
   const download = await downloadPromise;
-  expect(download.suggestedFilename()).toMatch(/\.eplan$/);
-  const archivePath = path.join(qaDir, 'roundtrip.eplan');
+  expect(download.suggestedFilename()).toMatch(/\.vgecko$/);
+  const archivePath = path.join(qaDir, 'roundtrip.vgecko');
   await download.saveAs(archivePath);
   const exported = await readDocument(page);
   await page.getByLabel('Eszköz neve', { exact: true }).fill('Újabb helyi változat');
   await expect.poll(async () => (await readDocument(page)).data.devices[0].name).toBe('Újabb helyi változat');
-  await page.locator('input[accept=".eplan,.json,.zip"]').setInputFiles(archivePath);
+  await page.locator('input[accept*=".vgecko"]').setInputFiles(archivePath);
   await expect(page.locator('.project-title')).toContainText('importált másolat');
   const imported = await readDocument(page);
   expect(imported.data.id).not.toBe(exported.data.id);

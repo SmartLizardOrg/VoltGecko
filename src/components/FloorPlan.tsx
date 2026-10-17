@@ -1,6 +1,6 @@
 import { t, getLocale } from '../i18n';
 import { useEffect, useRef, useState } from 'react';
-import type { KeyboardEvent, PointerEvent as ReactPointerEvent, WheelEvent } from 'react';
+import type { KeyboardEvent, PointerEvent as ReactPointerEvent, ReactNode, WheelEvent } from 'react';
 import { Crosshair, Layers2, Maximize, Minus, MousePointer2, Plus, RotateCw, Route as RouteIcon, Ruler, Trash2 } from 'lucide-react';
 import type { Asset, DeviceKind, PlanSheet, Point, ProjectData, Route } from '../types';
 import { kindLabel, uid } from '../catalog';
@@ -17,6 +17,7 @@ export interface FloorPlanProps {
   onChange: (data: ProjectData) => void;
   onAddDevice: (kind: DeviceKind, sheetId: string, point: Point) => void;
   onNotify: (message: string) => void;
+  tools?: ReactNode;
 }
 
 type View = { x: number; y: number; width: number; height: number };
@@ -25,7 +26,7 @@ type Pinch = { distance: number; point: Point; view: View; matrix: DOMMatrix };
 const distance = (a: Point, b: Point) => Math.hypot(a.x - b.x, a.y - b.y);
 const pointOnSegment = (p: Point, a: Point, b: Point) => { const dx = b.x - a.x; const dy = b.y - a.y; const t = Math.max(0, Math.min(1, ((p.x - a.x) * dx + (p.y - a.y) * dy) / (dx * dx + dy * dy || 1))); return distance(p, { x: a.x + t * dx, y: a.y + t * dy }); };
 
-export function FloorPlan({ data, assets, sheetId, selectedId, tool, onSelect, onChange, onAddDevice, onNotify }: FloorPlanProps) {
+export function FloorPlan({ data, assets, sheetId, selectedId, tool, onSelect, onChange, onAddDevice, onNotify, tools }: FloorPlanProps) {
   const persistedSheet = data.sheets.find(s => s.id === sheetId);
   const [draftSheet, setDraftSheet] = useState<PlanSheet | null>(null);
   const draftRef = useRef<PlanSheet | null>(null);
@@ -211,9 +212,10 @@ export function FloorPlan({ data, assets, sheetId, selectedId, tool, onSelect, o
   const instruction = tool === 'route' || tool === 'control' ? fromId ? t("Válaszd ki a kapcsolat másik eszközét") : t("Válaszd ki a kapcsolat első eszközét") : tool === 'scale' ? scaleStart ? t("Jelöld ki a mérési szakasz másik végét") : t("Jelöld ki egy ismert hosszúságú szakasz két végét") : tool === 'note' ? t("Kattints a megjegyzés helyére") : tool !== 'select' ? t('{device} · kattints az elhelyezéshez', {device:kindLabel(tool)}) : '';
 
   return <div className={`floor-workspace ${tool !== 'select' ? 'floor-tool-active' : ''} ${dragging ? 'floor-is-dragging' : ''}`} onKeyDown={onKey} tabIndex={0} aria-label={t("Alaprajz szerkesztő. A kijelölt eszközt a nyilakkal mozgathatod.")}>
-    <div className="floor-sheet-caption"><span className="floor-sheet-dot" />{sheet.name}<span className="floor-caption-separator">/</span><span>{t('{count} eszköz', {count:sheet.placements.length})}</span></div>
+    <div className="floor-control-header">{tools}<div className="floor-sheet-caption visually-hidden"><span className="floor-sheet-dot" />{sheet.name}<span className="floor-caption-separator">/</span><span>{t('{count} eszköz', {count:sheet.placements.length})}</span></div>
     <div className="floor-layer-tools"><button className={`floor-control ${layersOpen ? 'is-on' : ''}`} onClick={() => setLayersOpen(!layersOpen)} title={t("Rétegek")} aria-label={t("Rétegek")} aria-expanded={layersOpen}><Layers2 size={18} /></button>{layersOpen && <div className="floor-layers-popover"><strong>{t("Megjelenítés")}</strong>{([['background', t("Alaprajz")], ['devices', t("Eszközök és jelölések")], ['routes', t("Kapcsolatok")], ['notes', t("Megjegyzések")], ['grid', t("Rács és illesztés")]] as const).map(([key, label]) => <label key={key}><input type="checkbox" checked={layers[key]} onChange={e => setLayers({ ...layers, [key]: e.target.checked })} /><span>{label}</span></label>)}</div>}</div>
-    {instruction && <div className="floor-instruction"><Crosshair size={15} /><span>{instruction}</span>{(fromId || scaleStart) && <button onClick={() => { setFromId(null); setScaleStart(null); }}>{t("Mégse")}</button>}</div>}
+    </div>
+    {instruction && <div className="floor-instruction" role="status"><Crosshair size={15} /><span>{instruction}</span>{(fromId || scaleStart) && <button onClick={() => { setFromId(null); setScaleStart(null); }}>{t("Mégse")}</button>}</div>}
     <svg ref={svg} className="floor-svg" viewBox={`${view.x} ${view.y} ${view.width} ${view.height}`} role="img" aria-label={t('{name} villamos alaprajza', {name:sheet.name})} onPointerDownCapture={registerPointer} onPointerDown={e => { if (tool === 'select') startDrag(e, 'pan', '', { x: 0, y: 0 }); }} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onPointerLeave={e => { if (!drag.current && !pinch.current) pointers.current.delete(e.pointerId); }} onClick={canvasClick} onWheel={onWheel} onContextMenu={e => e.preventDefault()}>
       <defs><pattern id="floor-grid" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="0" cy="0" r=".9" fill="#b8c4be" /></pattern><filter id="floor-paper-shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="4" stdDeviation="10" floodColor="#203e30" floodOpacity=".07" /></filter></defs>
       <rect className="floor-paper" width={sheet.width} height={sheet.height} fill="white" filter="url(#floor-paper-shadow)" />
@@ -233,9 +235,9 @@ export function FloorPlan({ data, assets, sheetId, selectedId, tool, onSelect, o
       </g>; })}
       {layers.notes && sheet.annotations.map(note => <g key={note.id} transform={`translate(${note.x} ${note.y})`} className="floor-note" onClick={e => { e.stopPropagation(); setSelectedNoteId(note.id); setSelectedRouteId(null); onSelect(null); }} onPointerDown={e => { e.stopPropagation(); if (tool === 'select') { setSelectedNoteId(note.id); onSelect(null); startDrag(e, 'note', note.id, note); } }} onDoubleClick={e => { e.stopPropagation(); const text = window.prompt(t("Megjegyzés módosítása:"), note.text); if (text?.trim()) updateSheet(s => ({ ...s, annotations: s.annotations.map(n => n.id === note.id ? { ...n, text: text.trim() } : n) })); }}><rect x="-7" y="-17" width={Math.max(100, note.text.split('\n').reduce((max, line) => Math.max(max, line.length), 0) * 7.2 + 16)} height={Math.max(28, note.text.split('\n').length * 18 + 10)} rx="3" fill="#fffbe7" stroke={note.id === selectedNoteId ? '#b79733' : '#eadfae'} strokeWidth="1" /><text fill="#766534" fontSize="12" fontFamily="inherit">{note.text.split('\n').map((line, i) => <tspan key={i} x="0" dy={i ? 18 : 0}>{line}</tspan>)}</text></g>)}
     </svg>
-    <div className="floor-bottom-info"><span><MousePointer2 size={13} />{dragging ? t("Mozgatás") : t("Húzás: mozgatás · görgetés: nagyítás")}</span>{sheet.mmPerUnit ? <span><Ruler size={13} />{t('{scale} m / 100 egység', {scale:(sheet.mmPerUnit * 100 / 1000).toLocaleString(getLocale(), { maximumFractionDigits: 2 })})}</span> : <span>{t("Méretarány nincs beállítva")}</span>}</div>
+    <div className="floor-bottom-toolbar"><div className="floor-bottom-info"><span><MousePointer2 size={13} />{dragging ? t("Mozgatás") : t("Húzás: mozgatás · görgetés: nagyítás")}</span>{sheet.mmPerUnit ? <span><Ruler size={13} />{t('{scale} m / 100 egység', {scale:(sheet.mmPerUnit * 100 / 1000).toLocaleString(getLocale(), { maximumFractionDigits: 2 })})}</span> : <span>{t("Méretarány nincs beállítva")}</span>}</div>
     {(selectedRoute || selectedNoteId || selectedPlacement) && <div className="floor-selection-tools">{selectedDevice && selectedPlacement && <><span><span className="floor-selected-code">{selectedDevice.code}</span>{kindLabel(selectedDevice.kind)}</span><button title={t("Forgatás 90°")} aria-label={t("Forgatás 90 fokkal")} onClick={() => updateSheet(s => ({ ...s, placements: s.placements.map(p => p.deviceId === selectedId ? { ...p, rotation: (p.rotation + 90) % 360 } : p) }))}><RotateCw size={15} /></button></>}{selectedRoute && <><span><RouteIcon size={15} />{selectedRoute.kind === 'control' ? t("Vezérlési kapcsolat") : t("Villamos kapcsolat")}{sheet.mmPerUnit ? ` · ${routeLength(selectedRoute).toLocaleString(getLocale(), { maximumFractionDigits: 1 })} m` : ''}</span><small>{t("Töréspont: húzás · új pont: dupla kattintás")}</small></>}{selectedNoteId && <span>{t("Megjegyzés · dupla kattintás: szerkesztés")}</span>}<button className="floor-delete-control" title={t("Eltávolítás a tervlapról")} aria-label={t("Kijelölt elem eltávolítása")} onClick={removeSelected}><Trash2 size={15} /></button></div>}
-    <div className="floor-zoom-tools"><button className="floor-control" onClick={() => zoom(1.25)} title={t("Kicsinyítés")} aria-label={t("Kicsinyítés")}><Minus size={17} /></button><span>{zoomPercent}%</span><button className="floor-control" onClick={() => zoom(.8)} title={t("Nagyítás")} aria-label={t("Nagyítás")}><Plus size={17} /></button><i /><button className="floor-control" onClick={() => setView(fit())} title={t("Teljes tervlap")} aria-label={t("Teljes tervlap")}><Maximize size={16} /></button></div>
+    <div className="floor-zoom-tools"><button className="floor-control" onClick={() => zoom(1.25)} title={t("Kicsinyítés")} aria-label={t("Kicsinyítés")}><Minus size={17} /></button><span>{zoomPercent}%</span><button className="floor-control" onClick={() => zoom(.8)} title={t("Nagyítás")} aria-label={t("Nagyítás")}><Plus size={17} /></button><i /><button className="floor-control" onClick={() => setView(fit())} title={t("Teljes tervlap")} aria-label={t("Teljes tervlap")}><Maximize size={16} /></button></div></div>
   </div>;
 }
 

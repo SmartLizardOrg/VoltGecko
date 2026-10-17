@@ -1,3 +1,4 @@
+import { chooseSample, reopenRecentProject } from './startup';
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
@@ -26,6 +27,7 @@ async function readDocument(page: Page): Promise<ProjectDocument> {
 
 async function openPlanner(page: Page, url = '/') {
   await page.goto(url);
+  await chooseSample(page);
   await expect(languageControl(page)).toHaveValue('hu');
   await expect(page.getByText('Ezen az eszközön mentve', { exact: true })).toBeVisible();
   await expect(page.locator('.floor-device')).toHaveCount(8);
@@ -115,6 +117,7 @@ test('creates English device defaults, preserves existing names and remembers th
   expect(await readDocument(page)).toEqual(withNewDevice);
   await languageControl(page).selectOption('en');
   await page.reload();
+  await reopenRecentProject(page);
   await expect(languageControl(page)).toHaveValue('en');
   await expect(page).toHaveTitle('VoltGecko');
   await expect(page.locator('.floor-device')).toHaveCount(9);
@@ -155,11 +158,13 @@ test('reopens production in English offline and switches both languages with cac
   await page.evaluate(async () => { await navigator.serviceWorker.ready; });
   await languageControl(page).selectOption('en');
   await page.reload();
+  await reopenRecentProject(page);
   await expect(languageControl(page)).toHaveValue('en');
   await expect.poll(() => page.evaluate(() => !!navigator.serviceWorker.controller)).toBe(true);
   const initial = await readDocument(page);
   await context.setOffline(true);
   await page.reload();
+  await reopenRecentProject(page);
   await expect(languageControl(page)).toHaveValue('en');
   await expect(page.locator('.statusbar').getByText('Offline', { exact: true })).toBeVisible();
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');

@@ -9,12 +9,14 @@ import enConnections from './locales/en-connections';
 import enSingleLine from './locales/en-single-line';
 import enLegacyBoard from './locales/en-legacy-board';
 import enBoardPlacement from './locales/en-board-placement';
+import enStart from './locales/en-start';
+import enAppearance from './locales/en-appearance';
 import { APP } from './config';
 
 export type Language = 'hu' | 'en';
 export type TranslationParams = Record<string, string | number>;
 export const LANGUAGE_STORAGE_KEY = 'planner.language';
-export const englishMessages: Readonly<Record<string,string>> = { ...enData, ...enServices, ...enComponents, ...enApp, ...enProducts, ...enProductData, ...enConnections, ...enSingleLine, ...enLegacyBoard, ...enBoardPlacement };
+export const englishMessages: Readonly<Record<string,string>> = { ...enData, ...enServices, ...enComponents, ...enApp, ...enProducts, ...enProductData, ...enConnections, ...enSingleLine, ...enLegacyBoard, ...enBoardPlacement, ...enStart, ...enAppearance };
 const subscribers = new Set<()=>void>();
 function initialLanguage():Language {
   try { return typeof localStorage !== 'undefined' && localStorage.getItem(LANGUAGE_STORAGE_KEY) === 'en' ? 'en' : 'hu'; }

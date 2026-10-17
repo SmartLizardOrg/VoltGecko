@@ -106,8 +106,9 @@ export const enServices: Record<string, string> = {
   'A Google fájlválasztó nem tölthető be.': 'The Google file picker could not be loaded.',
   'A Google fájlválasztó nem válaszol.': 'The Google file picker did not respond.',
   'A Google fájlválasztó nem érhető el.': 'The Google file picker is unavailable.',
-  '{app} · .eplan projekt kiválasztása': '{app} · select an .eplan project',
-  'A fájlválasztóban .eplan projektállományt válassz.': 'Select an .eplan project file in the file picker.',
+  '{app} · .vgecko projekt kiválasztása': '{app} · select a .vgecko project',
+  'A fájlválasztóban .vgecko vagy korábbi .eplan projektállományt válassz.': 'Select a .vgecko or legacy .eplan project file in the file picker.',
+  '{app} projekt': '{app} project',
   'A fájlválasztást megszakítottad.': 'File selection was cancelled.',
 };
 

@@ -1,3 +1,4 @@
+import { chooseSample, reopenRecentProject } from './startup';
 import { expect, test } from '@playwright/test';
 import type { Page } from '@playwright/test';
 import { mkdir, readFile } from 'node:fs/promises';
@@ -28,6 +29,7 @@ async function readDocument(page: Page, projectId?: string): Promise<ProjectDocu
 async function openPlanner(page: Page, url = '/') {
   await page.addInitScript(() => Object.defineProperty(window, 'showSaveFilePicker', { value: undefined, configurable: true }));
   await page.goto(url);
+  await chooseSample(page);
   await expect(page.locator('.project-title')).toHaveText(/Dunaparti lakás/);
   await expect(page.getByText('Ezen az eszközön mentve', { exact: true })).toBeVisible();
 }
@@ -166,12 +168,12 @@ test('restores connection and load fields in a new version and preserves an edit
   const restored = await readDocument(page);
   expect(restored.data.boards).toEqual(configured.data.boards);
   expect(restored.data.circuits[0]).toMatchObject({ cable, powerW: 1234.5, loadType: 'socket' });
-  const archive = await exportArchive(page, 'single-line-roundtrip.eplan');
+  const archive = await exportArchive(page, 'single-line-roundtrip.vgecko');
   const exported = await readDocument(page);
   await tab(page, 'Áramkörök');
   await page.getByLabel('ÁK1 kábele', { exact: true }).fill('Megőrzendő helyi módosítás');
   await expect.poll(async () => (await readDocument(page)).data.circuits[0].cable).toBe('Megőrzendő helyi módosítás');
-  await page.locator('input[accept=".eplan,.json,.zip"]').setInputFiles(archive);
+  await page.locator('input[accept*=".vgecko"]').setInputFiles(archive);
   await expect(page.locator('.project-title')).toContainText('importált másolat');
   const imported = await readDocument(page);
   expect(imported.data.id).not.toBe(exported.data.id);
@@ -192,7 +194,7 @@ test('imports inert legacy JSON v2 with every cyclic, parallel and ambiguous edg
   await openPlanner(page);
   const original = await readDocument(page);
   const fixture = legacyFixture();
-  await page.locator('input[accept=".eplan,.json,.zip"]').setInputFiles({ name: 'legacy-v2.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(fixture)) });
+  await page.locator('input[accept*=".vgecko"]').setInputFiles({ name: 'legacy-v2.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(fixture)) });
   await expect(page.locator('.project-title')).toHaveText(fixture.project.name);
   const imported = await readDocument(page);
   expect(imported.data.id).not.toBe(original.data.id);
@@ -229,11 +231,13 @@ test('reopens the production diagram and edits its source data completely offlin
   await tab(page, 'Egyvonalas');
   await expect(page.locator('.single-line-svg [data-connection-id]')).toHaveCount(3);
   await page.reload();
+  await reopenRecentProject(page);
   await expect.poll(() => page.evaluate(() => Boolean(navigator.serviceWorker.controller))).toBe(true);
   const externalRequests: string[] = [];
   page.on('request', request => { if (!request.url().startsWith('http://localhost:4173/') && !/^(data:|blob:)/.test(request.url())) externalRequests.push(request.url()); });
   await context.setOffline(true);
   await page.reload();
+  await reopenRecentProject(page);
   await expect(page.locator('.statusbar').getByText('Offline', { exact: true })).toBeVisible();
   await tab(page, 'Egyvonalas');
   await expect(page.locator('.single-line-svg [data-connection-id]')).toHaveCount(3);
@@ -242,6 +246,7 @@ test('reopens the production diagram and edits its source data completely offlin
   await page.getByLabel('ÁK1 teljesítménye', { exact: true }).fill('2468');
   await expect.poll(async () => (await readDocument(page)).data.circuits[0].powerW).toBe(2468);
   await page.reload();
+  await reopenRecentProject(page);
   await tab(page, 'Egyvonalas');
   await expect(page.locator('.single-line-svg')).toContainText(/2\s?468 W/);
   await expect(page.locator('.single-line-svg [data-connection-id]')).toHaveCount(3);

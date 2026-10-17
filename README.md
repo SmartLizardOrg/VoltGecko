@@ -12,12 +12,14 @@ Offline-first electrical floor-plan and distribution-board planner, in **English
 
 ### Features
 
+- Start with a blank project, open a project file or a local project, or explicitly choose the sample. Starting and reloading never creates or opens a sample automatically.
+- Choose light or dark appearance and standard or large text. The interface uses larger controls and high-contrast colors; your appearance settings stay on the device.
 - Import PDF pages, PNG and JPG floor plans; use multiple sheets, layers, scale calibration, zoom, device placement and rotation.
 - Share device identities and properties across floor plans, circuits, distribution boards and single-line diagrams. Record room, mounting height, product details, notes and site photos.
 - Draw circuit and control connections, edit routes, arrange DIN devices by row and module width, and see collisions and overcapacity.
 - Search the bundled Schneider catalogue offline: 260 references from the Hungarian Easy9 Pro catalogue, including DIN devices, enclosures and accessories. Each entry retains its manufacturer source.
 - Export customer and detailed PDF documents, including legends, circuit lists and board layouts. Export the single-line drawing as SVG.
-- Save automatically to IndexedDB, save named versions, restore without overwriting history, and transfer a complete project as one `.eplan` archive with photos and attachments.
+- Save automatically to IndexedDB, save named versions, restore without overwriting history, and transfer a complete project as one `.vgecko` archive with photos and attachments. Legacy `.eplan` backups can still be opened.
 - Optionally open or save a snapshot to Google Drive. No account is needed for local use.
 
 ### Development
@@ -40,7 +42,7 @@ npm run preview
 
 Open [localhost:4173](http://localhost:4173) and wait for **Ready for offline use**. The production build contains the service worker and local PDF resources. After the first successful load, the app can reopen offline with its saved photos and projects. Updates are applied through the app's update prompt.
 
-Browser storage is tied to the exact origin: localhost, a LAN address, a production domain and preview deployment URLs each have separate data. Export a project file to move work between them. Keep external `.eplan` backups; clearing browser storage or losing the device can remove the local copy. Project files are ZIP archives and are not encrypted.
+Browser storage is tied to the exact origin: localhost, a LAN address, a production domain and preview deployment URLs each have separate data. Export a project file to move work between them. Keep external `.vgecko` backups; clearing browser storage or losing the device can remove the local copy. Project files are ZIP archives and are not encrypted.
 
 ### Cloudflare Pages with Git integration
 
@@ -81,7 +83,7 @@ npm run test:e2e
 
 For WebKit, install `webkit` and set `PLAYWRIGHT_BROWSER=webkit` before running the browser tests. Mobile emulation does not replace installation checks on physical Android and iPhone devices. GitHub Actions runs the unit tests and production build for pushes to `main` and pull requests.
 
-The displayed brand is configured in `src/config.ts`; translations are in `src/locales/en-*.ts`. Existing project identifiers, browser database names and `.eplan` format remain stable across a display-name change.
+The displayed brand and `.vgecko` filename extension are configured in `src/config.ts`; translations are in `src/locales/en-*.ts`. Existing project identifiers, browser database names and the ZIP contents remain stable. Legacy `.eplan` files remain import-compatible, including through Google Drive; new saves use `.vgecko`.
 
 ### Scope
 
@@ -92,6 +94,8 @@ The application source is MIT licensed. Fonts, PDF resources and other dependenc
 ## Magyar
 
 A VoltGecko offline is használható alaprajz- és elosztótervező. A felső **HU / EN** választóval magyar és angol felület között válthatsz; a PDF rendszerfeliratai is a választott nyelven készülnek. A meglévő projektadatokat a nyelvváltás nem írja át.
+
+Induláskor a kezdőképernyőn választhatsz: **Új projekt**, **Projekt megnyitása** vagy **Mintaprojekt kipróbálása**. A helyi projektek külön listából nyithatók meg; automatikusan nem indul sem minta, sem korábban mentett terv. A **Téma** és **Betűméret** beállítás a kezdőképernyőn, munka közben az oldalsó eszköztár alján érhető el. Világos/sötét megjelenés és normál/nagy betű választható; a böngésző megjegyzi őket.
 
 ### Indítás és használat
 
@@ -113,7 +117,7 @@ Korábbi önálló HTML-elosztótervező 2-es verziójú JSON-mentése (`{v:2, p
 
 ### Mentés és adatkezelés
 
-Az automatikus mentés az adott böngészőprofil IndexedDB-tárába kerül. A **Projektfájl mentése** egy `.eplan` ZIP-archívumban viszi magával a tervet, előzményeket és mellékleteket. Ez a külső biztonsági mentés és az eszközök közötti átadás alapja. A fájl nincs titkosítva.
+Az automatikus mentés az adott böngészőprofil IndexedDB-tárába kerül. A **Projektfájl mentése** egy `.vgecko` ZIP-archívumban viszi magával a tervet, előzményeket és mellékleteket. A korábbi `.eplan` fájlok továbbra is megnyithatók, a Google Drive-választóban is. Ez a külső biztonsági mentés és az eszközök közötti átadás alapja. A fájl nincs titkosítva.
 
 A **Verzió mentése**, **Előzmények** és **Visszaállítás** funkciók megőrzik az állapotokat; visszaállításkor a jelenlegi állapot is megmarad. Azonos azonosítójú, eltérő projektimport külön másolatként nyílik meg. Automatikus összefésülés nincs.
 

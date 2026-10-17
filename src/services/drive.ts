@@ -1,7 +1,7 @@
 import { t, getLanguage } from '../i18n';
 import type { ProjectDocument } from '../types';
 import { decodeProject, encodeProject } from '../data/archive';
-import { APP } from '../config';
+import { APP, isProjectFilename, stripProjectExtension } from '../config';
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim() || '';
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY?.trim() || '';
@@ -140,7 +140,7 @@ export async function saveToDrive(doc: ProjectDocument): Promise<void> {
   const snapshot = structuredClone(doc); snapshot.lastDriveSaveAt = now;
   const blob = await encodeProject(snapshot);
   const metadata = {
-    name: `${safeFilename(doc.data.name)} · ${now.replace(/[:.]/g, '-')}.eplan`,
+    name: `${safeFilename(stripProjectExtension(doc.data.name))} · ${now.replace(/[:.]/g, '-')}${APP.extension}`,
     parents: [parent], mimeType: 'application/octet-stream',
     appProperties: { plannerApp: APP_MARKER, projectId: doc.data.id, revisionId: doc.headRevisionId || 'working-copy', parentRevisionId: doc.revisions.find(r => r.id === doc.headRevisionId)?.parentId || '' },
   };
@@ -175,11 +175,11 @@ export async function pickDriveProject(): Promise<ProjectDocument> {
     const builder = new picker.PickerBuilder()
       .setDeveloperKey(API_KEY).setAppId(APP_ID).setOAuthToken(requireToken())
       .addView(new picker.DocsView().setIncludeFolders(true))
-      .setTitle(t('{app} · .eplan projekt kiválasztása', { app: t(APP.name) })).setLocale(getLanguage())
+      .setTitle(t('{app} · .vgecko projekt kiválasztása', { app: t(APP.name) })).setLocale(getLanguage())
       .setCallback(data => {
         if (data.action === picker.Action.PICKED && data.docs?.[0]) {
           const file = data.docs[0];
-          if (file.name && !/\.eplan$/i.test(file.name)) { reject(new Error(t('A fájlválasztóban .eplan projektállományt válassz.'))); return; }
+          if (file.name && !isProjectFilename(file.name)) { reject(new Error(t('A fájlválasztóban .vgecko vagy korábbi .eplan projektállományt válassz.'))); return; }
           resolve(file.id);
         } else if (data.action === picker.Action.CANCEL) reject(new Error(t('A fájlválasztást megszakítottad.')));
       });

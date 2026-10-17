@@ -1,3 +1,4 @@
+import { chooseSample, reopenRecentProject } from './startup';
 import { expect, test } from '@playwright/test';
 import { jsPDF } from 'jspdf';
 
@@ -7,10 +8,12 @@ test('production PWA reopens, edits, imports PDF and exports with photos complet
   page.on('pageerror',error=>errors.push(error.message));
   await page.addInitScript(()=>Object.defineProperty(window,'showSaveFilePicker',{value:undefined,configurable:true}));
   await page.goto('http://localhost:4173/');
+  await chooseSample(page);
   await expect(page.locator('.floor-device')).toHaveCount(8);
   await expect(page.getByText('Offline használatra kész',{exact:true})).toBeVisible({timeout:45_000});
   await page.evaluate(async()=>{await navigator.serviceWorker.ready;});
   await page.reload();
+  await reopenRecentProject(page);
   await expect(page.locator('.floor-device')).toHaveCount(8);
   await expect.poll(()=>page.evaluate(()=>!!navigator.serviceWorker.controller)).toBe(true);
   await page.locator('.floor-device').first().click();
@@ -21,6 +24,7 @@ test('production PWA reopens, edits, imports PDF and exports with photos complet
   await page.getByRole('button',{name:'Kijelölés bezárása',exact:true}).click();
   await context.setOffline(true);
   await page.reload();
+  await reopenRecentProject(page);
   await expect(page.locator('.floor-device')).toHaveCount(8);
   await expect(page.locator('.statusbar').getByText('Offline',{exact:true})).toBeVisible();
   await page.locator('.floor-device').first().click();
@@ -35,8 +39,8 @@ test('production PWA reopens, edits, imports PDF and exports with photos complet
   const downloadEvent=page.waitForEvent('download');
   await page.getByRole('button',{name:'Projektfájl mentése',exact:false}).first().click();
   const download=await downloadEvent;
-  expect(download.suggestedFilename()).toMatch(/\.eplan$/);
-  await download.saveAs('tmp/qa/offline-roundtrip.eplan');
+  expect(download.suggestedFilename()).toMatch(/\.vgecko$/);
+  await download.saveAs('tmp/qa/offline-roundtrip.vgecko');
   await expect(page.locator('.busy-overlay')).toHaveCount(0);
   await page.getByRole('button',{name:'Mentés és export',exact:true}).click();
   const exportEvent=page.waitForEvent('download');

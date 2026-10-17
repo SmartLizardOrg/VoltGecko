@@ -1,5 +1,6 @@
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 import { uid } from '../catalog';
+import { APP, stripProjectExtension } from '../config';
 import { t } from '../i18n';
 import type { Asset, ProjectDocument } from '../types';
 
@@ -434,11 +435,12 @@ export function downloadBlob(blob: Blob, filename: string): void {
 }
 
 export async function saveProjectFile(document: ProjectDocument): Promise<void> {
-  const filename = `${document.data.name.replace(/[<>:"/\\|?*\u0000-\u001f]/g, '-').slice(0, 120) || t('projekt')}.eplan`;
+  const stem = stripProjectExtension(document.data.name).replace(/[<>:"/\\|?*\u0000-\u001f]/g, '-').slice(0, 120).replace(/[. ]+$/, '');
+  const filename = `${stem || t('projekt')}${APP.extension}`;
   type SaveFilePicker = (options: { suggestedName: string; types: { description: string; accept: Record<string, string[]> }[] }) => Promise<{ createWritable(): Promise<{ write(data: Blob): Promise<void>; close(): Promise<void>; abort?(): Promise<void> }> }>;
   const picker = (window as Window & { showSaveFilePicker?: SaveFilePicker }).showSaveFilePicker;
   // Open the picker in the user gesture, before asynchronous ZIP generation.
-  const handle = picker ? await picker.call(window, { suggestedName: filename, types: [{ description: t('Villamos tervező projekt'), accept: { 'application/zip': ['.eplan'] } }] }) : undefined;
+  const handle = picker ? await picker.call(window, { suggestedName: filename, types: [{ description: t('{app} projekt', { app: APP.name }), accept: { 'application/zip': [APP.extension] } }] }) : undefined;
   // The portable copy records this export, rather than retaining the previous
   // file-save date when it is opened on another device.
   const blob = await encodeProject({ ...document, lastExternalSaveAt: new Date().toISOString() });

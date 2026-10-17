@@ -3,7 +3,7 @@ const messages:Record<string,string> = {
   'Tervezz. Szerelj. Add át.':'Plan. Install. Hand over.',
   ' · AKTUÁLIS ELŐZMÉNY':' · CURRENT CHECKPOINT',
   ' · Visszaállításból':' · Restored version',
-  '.eplan · teljes terv és előzmények':'.eplan · complete project and history',
+  '.vgecko · teljes terv és előzmények':'.vgecko · complete project and history',
   'A Drive eléréséhez internetkapcsolat szükséges. A helyi terv szerkeszthető.':'An internet connection is required for Drive. You can keep editing the local project.',
   'A Google-kapcsolat még nincs beállítva':'Google Drive is not configured yet',
   'A MUNKA TÖRTÉNETE':'PROJECT HISTORY',

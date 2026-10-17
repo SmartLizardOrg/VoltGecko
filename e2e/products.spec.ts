@@ -1,3 +1,4 @@
+import { chooseSample, reopenRecentProject } from './startup';
 import { expect, test } from '@playwright/test';
 import type { Locator, Page } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
@@ -36,6 +37,7 @@ async function readDocument(page: Page): Promise<ProjectDocument> {
 async function openPlanner(page: Page, url = '/') {
   await page.addInitScript(() => Object.defineProperty(window, 'showSaveFilePicker', { value: undefined, configurable: true }));
   await page.goto(url);
+  await chooseSample(page);
   await expect(page.locator('.manufacturer-library-button')).toBeAttached();
   await expect(page.getByText('Ezen az eszközön mentve', { exact: true })).toBeVisible();
 }
@@ -90,12 +92,12 @@ test('creates a manufacturer enclosure, adds exact module widths and archives ac
   const downloadPromise = page.waitForEvent('download');
   await page.getByRole('button', { name: /Projektfájl mentése/ }).click();
   const download = await downloadPromise;
-  const archive = path.join(outputDir, 'manufacturer-roundtrip.eplan');
+  const archive = path.join(outputDir, 'manufacturer-roundtrip.vgecko');
   await download.saveAs(archive);
   await expect(page.locator('.busy-overlay')).toHaveCount(0);
   await page.getByLabel('Mennyiség (db)', { exact: true }).fill('7');
   await expect.poll(async () => (await readDocument(page)).data.devices.find(device => device.id === accessoryDevice.id)?.quantity).toBe(7);
-  await page.locator('input[accept=".eplan,.json,.zip"]').setInputFiles(archive);
+  await page.locator('input[accept*=".vgecko"]').setInputFiles(archive);
   await expect(page.locator('.project-title')).toContainText('importált másolat');
   const imported = await readDocument(page);
   expect(imported.data.id).not.toBe(document.data.id);
@@ -156,6 +158,7 @@ test('searches and filters the complete offline catalogue, paginates and transla
   await english.getByRole('button', { name: 'Close product library', exact: true }).click();
   await expect(page.getByLabel('Device name', { exact: true })).toHaveValue(/Miniature circuit breaker/);
   await page.reload();
+  await reopenRecentProject(page);
   await expect(page.getByLabel('Nyelv / Language', { exact: true })).toHaveValue('en');
   await expect.poll(async () => (await readDocument(page)).data.devices.some(device => device.product?.reference === 'EZ9F57116' && device.name.includes('Miniature circuit breaker'))).toBe(true);
 });
@@ -168,9 +171,11 @@ test('reopens production and searches and adds products completely offline witho
   await expect(page.getByText('Offline használatra kész', { exact: true })).toBeVisible({ timeout: 45_000 });
   await page.evaluate(async () => { await navigator.serviceWorker.ready; });
   await page.reload();
+  await reopenRecentProject(page);
   await expect.poll(() => page.evaluate(() => Boolean(navigator.serviceWorker.controller))).toBe(true);
   await context.setOffline(true);
   await page.reload();
+  await reopenRecentProject(page);
   await expect(page.locator('.statusbar').getByText('Offline', { exact: true })).toBeVisible();
   const externalRequests: string[] = [];
   page.on('request', request => { if (!request.url().startsWith('http://localhost:4173/') && !request.url().startsWith('data:')) externalRequests.push(request.url()); });
@@ -182,6 +187,7 @@ test('reopens production and searches and adds products completely offline witho
   await dialog.getByRole('button', { name: 'Termékkönyvtár bezárása', exact: true }).click();
   await expect.poll(async () => (await readDocument(page)).data.devices.some(device => device.product?.reference === 'EZ9F57116')).toBe(true);
   await page.reload();
+  await reopenRecentProject(page);
   await expect(page.locator('.statusbar').getByText('Offline', { exact: true })).toBeVisible();
   const product = (await readDocument(page)).data.devices.find(device => device.product?.reference === 'EZ9F57116')!;
   expect(product.moduleWidth).toBe(1);
