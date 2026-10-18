@@ -72,30 +72,6 @@ async function exportArchive(page: Page, filename: string) {
   return destination;
 }
 
-function legacyFixture() {
-  return {
-    v: 2, project: { name: 'Minta · v2 kapcsolatpróba', author: 'Helyi QA', date: '2026-01-01' },
-    rows: [{ mods: 18 }, { mods: 18 }], nid: 100,
-    comps: [
-      { id: 'old-supply', type: 'supply', row: 0, x: 0, poles: '3P+N', name: 'Régi betáp', cable: 'NYY-J 5×16 mm²' },
-      { id: 'old-main', type: 'main', row: 0, x: 4, poles: '4P', name: 'Leválasztó', rating: 63 },
-      { id: 'old-rcd', type: 'rccb', row: 0, x: 8, poles: '4P', name: 'ÁVK', rating: 40, sens: 30, rtype: 'A' },
-      { id: 'old-mcb', type: 'mcb', row: 1, x: 0, poles: '1P', name: '<script>alert("qa")</script> & konyha', rating: 16, curve: 'B', cable, loadType: 'socket', power: 1234.5 },
-      { id: 'old-rcbo', type: 'rcbo', row: 1, x: 2, poles: '3P+N', name: 'Mosógép', rating: 16, curve: 'C', sens: 30, rtype: 'A', cable: 'NYM-J 5×2,5 mm²', loadType: 'other', power: 0 },
-    ],
-    wires: [
-      { id: 'old-w1', a: { c: 'old-supply', s: 'bottom' }, b: { c: 'old-main', s: 'top' } },
-      { id: 'old-w2', a: { c: 'old-rcd', s: 'top' }, b: { c: 'old-main', s: 'bottom' } },
-      { id: 'old-w3', a: { c: 'old-rcd', s: 'bottom' }, b: { c: 'old-mcb', s: 'top' } },
-      { id: 'old-w4', a: { c: 'old-rcd', s: 'bottom' }, b: { c: 'old-rcbo', s: 'top' } },
-      { id: 'old-cycle', a: { c: 'old-rcbo', s: 'bottom' }, b: { c: 'old-main', s: 'top' } },
-      { id: 'old-parallel', a: { c: 'old-main', s: 'bottom' }, b: { c: 'old-rcd', s: 'top' } },
-      { id: 'old-ambiguous', a: { c: 'old-mcb', s: 'top' }, b: { c: 'old-rcbo', s: 'top' } },
-      { id: 'old-self', a: { c: 'old-mcb', s: 'bottom' }, b: { c: 'old-mcb', s: 'top' } },
-    ],
-  };
-}
-
 test.beforeAll(async () => { await mkdir(outputDir, { recursive: true }); });
 
 test('edits shared board and circuit data, keeps stable device identities, translates and downloads the actual SVG', async ({ page }) => {
@@ -134,12 +110,11 @@ test('edits shared board and circuit data, keeps stable device identities, trans
   expect(source).not.toMatch(/<script|<foreignObject|https?:\/\/(?!www\.w3\.org)/i);
   await page.getByRole('button', { name: 'Fit diagram', exact: true }).click();
   await page.screenshot({ path: path.join(outputDir, 'single-line-desktop.png'), fullPage: true });
-  await mkdir(path.resolve('tmp/legacy-results'), { recursive: true });
   await page.getByRole('button', { name: 'Save and export', exact: true }).click();
   const pdfDownloading = page.waitForEvent('download');
   await page.getByRole('button', { name: /Detailed technical PDF/ }).click();
   const pdf = await pdfDownloading;
-  await pdf.saveAs(path.resolve('tmp/legacy-results/diagram-en.pdf'));
+  await pdf.saveAs(path.join(outputDir, 'diagram-en.pdf'));
   await expect(page.locator('.busy-overlay')).toHaveCount(0);
   const document = await readDocument(page);
   expect(document.data.devices.map(device => [device.id, device.code])).toEqual(configured.data.devices.map(device => [device.id, device.code]));
@@ -184,41 +159,6 @@ test('restores connection and load fields in a new version and preserves an edit
   expect(original.data.circuits[0].cable).toBe('Megőrzendő helyi módosítás');
   await tab(page, 'Egyvonalas');
   await expect(page.locator('.single-line-svg [data-connection-id]')).toHaveCount(3);
-});
-
-test('imports inert legacy JSON v2 with every cyclic, parallel and ambiguous edge and its original generic widths', async ({ page }) => {
-  const errors: string[] = [];
-  const dialogs: string[] = [];
-  page.on('pageerror', error => errors.push(error.message));
-  page.on('dialog', dialog => { dialogs.push(dialog.message()); void dialog.dismiss(); });
-  await openPlanner(page);
-  const original = await readDocument(page);
-  const fixture = legacyFixture();
-  await page.locator('input[accept*=".vgecko"]').setInputFiles({ name: 'legacy-v2.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(fixture)) });
-  await expect(page.locator('.project-title')).toHaveText(fixture.project.name);
-  const imported = await readDocument(page);
-  expect(imported.data.id).not.toBe(original.data.id);
-  expect(imported.data.boards[0].rows.map(row => row.capacity)).toEqual([18, 18]);
-  expect(imported.data.devices).toHaveLength(fixture.comps.length);
-  expect(imported.data.boards[0].connections).toHaveLength(fixture.wires.length);
-  expect(imported.data.devices.find(device => device.kind === 'rcbo')?.moduleWidth).toBe(4);
-  expect(imported.data.devices.every(device => device.product === undefined)).toBe(true);
-  expect(imported.data.notes).toContain('Helyi QA');
-  expect(imported.data.notes).toContain('old-ambiguous');
-  expect(imported.data.circuits[0]).toMatchObject({ cable, powerW: 1234.5, loadType: 'socket' });
-  expect(imported.data.circuits[1].powerW).toBe(0);
-  expect((await readDocument(page, original.data.id)).data).toEqual(original.data);
-  await tab(page, 'Egyvonalas');
-  const svg = page.locator('.single-line-svg svg');
-  await expect(svg.locator('[data-connection-id]')).toHaveCount(fixture.wires.length);
-  await expect(svg.locator('[data-device-id]')).toHaveCount(fixture.comps.length);
-  await expect(svg).toContainText('<script>alert("qa")</script> & konyha');
-  await expect(svg.locator('script,foreignObject')).toHaveCount(0);
-  await expect(page.locator('.single-line-issues')).toBeVisible();
-  await expect(page.locator('.single-line-issues')).toContainText(/hurok|ciklus/i);
-  await page.screenshot({ path: path.join(outputDir, 'legacy-complete-graph.png'), fullPage: true });
-  expect(dialogs).toEqual([]);
-  expect(errors).toEqual([]);
 });
 
 test('reopens the production diagram and edits its source data completely offline', async ({ page, context }) => {

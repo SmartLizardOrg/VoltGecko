@@ -1,6 +1,6 @@
 import { strFromU8, strToU8, unzipSync, zipSync } from 'fflate';
 import { uid } from '../catalog';
-import { APP, stripProjectExtension } from '../config';
+import { APP, isProjectFilename, stripProjectExtension } from '../config';
 import { t } from '../i18n';
 import type { Asset, ProjectDocument } from '../types';
 import { effectiveDevicePoles } from './boardWiring';
@@ -15,6 +15,7 @@ export const ARCHIVE_LIMITS = {
   jsonBytes: 30 * 1024 * 1024,
   entries: 2001,
 } as const;
+export const PROJECT_FILE_FORMAT = 'voltgecko-project';
 
 type JsonObject = Record<string, unknown>;
 const kinds = new Set(['outlet', 'switch', 'light', 'junction', 'sensor', 'relay', 'hub', 'breaker', 'rcd', 'rcbo', 'spd', 'main', 'blank', 'custom']);
@@ -76,23 +77,6 @@ function cableDetails(value: unknown) {
   if (value.lengthM !== undefined) positive(value.lengthM, 'Kábelhossz', 10_000_000, true);
   if (value.material !== undefined && value.material !== 'Cu' && value.material !== 'Al') fail('ismeretlen kábelanyag.');
 }
-/** Retained source metadata is plain bounded JSON, never executable state. */
-function passiveJson(value: unknown, label: string) {
-  object(value, label);
-  let nodes = 0;
-  const walk = (item: unknown, depth: number) => {
-    if (++nodes > 100_000 || depth > 30) fail('a megőrzött forrásadat túl nagy vagy túl mély.');
-    if (item === null || typeof item === 'boolean') return;
-    if (typeof item === 'string') { text(item, label); return; }
-    if (typeof item === 'number') { finite(item, label, 1e15); return; }
-    if (Array.isArray(item)) { array(item, label, 100_000); item.forEach(child => walk(child, depth + 1)); return; }
-    object(item, label);
-    if (Object.getPrototypeOf(item) !== Object.prototype && Object.getPrototypeOf(item) !== null) fail('a megőrzött forrásadat csak egyszerű JSON lehet.');
-    for (const [key, child] of Object.entries(item)) { text(key, label, 2000); walk(child, depth + 1); }
-  };
-  walk(value, 0);
-}
-
 function electrical(value: unknown) {
   if (value === undefined) return;
   object(value, 'Villamos adatok'); poles(value.poles);
@@ -116,7 +100,7 @@ function electrical(value: unknown) {
   if (value.role !== undefined && !['supply', 'main', 'mcb', 'rccb', 'rcbo', 'spd', 'contactor', 'meter', 'terminal', 'mpcb', 'outlet'].includes(value.role as string)) fail('ismeretlen villamos készülékszerep.');
   if (value.phase !== undefined && !['L1', 'L2', 'L3'].includes(value.phase as string)) fail('ismeretlen fázis.');
   for (const key of ['currentA', 'residualCurrentMa']) if (value[key] !== undefined) positive(value[key], 'Villamos adatok', 1_000_000);
-  for (const key of ['curve', 'residualType', 'spdClass', 'group', 'originalId', 'circuitNumbers', 'consumers']) if (value[key] !== undefined) text(value[key], 'Villamos adatok', 20_000);
+  for (const key of ['curve', 'residualType', 'spdClass', 'group']) if (value[key] !== undefined) text(value[key], 'Villamos adatok', 20_000);
 }
 
 function validateWiring(value: JsonObject, devices: unknown[]) {
@@ -149,8 +133,6 @@ function validateWiring(value: JsonObject, devices: unknown[]) {
       for (const key of ['position', 'labelOffset']) if (infeed[key] !== undefined) { object(infeed[key], 'Betáplálás pozíciója'); point(infeed[key], 'Betáplálás pozíciója'); }
     }
     if (wiring.demandFactor !== undefined) { positive(wiring.demandFactor, 'Egyidejűségi tényező', 1, true); }
-    if (wiring.labelOffsets !== undefined) { object(wiring.labelOffsets, 'Felirateltolások'); if (Object.keys(wiring.labelOffsets).length > 50_000) fail('túl sok felirateltolás.'); for (const offset of Object.values(wiring.labelOffsets)) { object(offset, 'Felirateltolás'); point(offset, 'Felirateltolás'); } }
-    if (wiring.source !== undefined) passiveJson(wiring.source, 'Megőrzött forrásadat');
   }
   const endpoint = (item: unknown) => {
     object(item, 'Vezetékvégpont');
@@ -158,8 +140,6 @@ function validateWiring(value: JsonObject, devices: unknown[]) {
     if (item.kind === 'device') {
       reference(item.deviceId, deviceLookup, 'Vezetékvégpont készüléke');
       if (item.side !== 'top' && item.side !== 'bottom') fail('ismeretlen készülékoldal.');
-      // An unresolved imported whole-device endpoint stays explicitly unresolved.
-      if (item.pole === undefined) return;
       count = effectiveDevicePoles(deviceLookup.get(item.deviceId as string) as unknown as Device).length;
     } else if (item.kind === 'bus') {
       reference(item.busId, busLookup, 'Vezetékvégpont sínje');
@@ -181,7 +161,6 @@ function validateWiring(value: JsonObject, devices: unknown[]) {
       cableDetails(wire.cable);
       if (wire.points !== undefined) { array(wire.points, 'Vezeték nyomvonalpontjai', 10_000); for (const entry of wire.points) { object(entry, 'Vezeték nyomvonalpontja'); point(entry, 'Vezeték nyomvonalpontja'); } }
       if (wire.labelOffset !== undefined) { object(wire.labelOffset, 'Vezetékfelirat eltolása'); point(wire.labelOffset, 'Vezetékfelirat eltolása'); }
-      if (wire.sourceRoute !== undefined) passiveJson(wire.sourceRoute, 'Megőrzött nyomvonal');
     }
   }
 }
@@ -494,6 +473,7 @@ export function validateProject(value: unknown): asserts value is ProjectDocumen
 export async function encodeProject(document: ProjectDocument): Promise<Blob> {
   validateProject(document);
   const manifest = structuredClone(document) as unknown as JsonObject;
+  manifest.format = PROJECT_FILE_FORMAT;
   const storedAssets: Record<string, { id: string; name: string; mime: string; path: string }> = Object.create(null);
   const files: Record<string, Uint8Array> = {};
   Object.values(document.assets).forEach((asset, index) => {
@@ -511,40 +491,37 @@ export async function encodeProject(document: ProjectDocument): Promise<Blob> {
 }
 
 export async function decodeProject(file: Blob): Promise<ProjectDocument> {
+  if('name' in file && typeof file.name==='string' && !isProjectFilename(file.name))fail('csak .vgecko projektfájl nyitható meg.');
   if (file.size > ARCHIVE_LIMITS.archiveBytes) fail('a projektfájl meghaladja a 200 MB méretet.');
   const bytes = new Uint8Array(await file.arrayBuffer());
   let value: unknown;
-  // Human-readable schema-v1 JSON is accepted for backup interoperability.
-  const beginning = strFromU8(bytes.subarray(0, Math.min(200, bytes.length))).replace(/^\uFEFF/, '').trimStart();
-  if (beginning.startsWith('{')) {
-    if (bytes.length > ARCHIVE_LIMITS.jsonBytes) fail('a JSON meghaladja a 30 MB méretet.');
-    try { value = JSON.parse(strFromU8(bytes).replace(/^\uFEFF/, '')); } catch { return fail('a JSON nem olvasható.'); }
-  } else {
-    const directory = zipDirectory(bytes);
-    let files: Record<string, Uint8Array>;
-    try {
-      files = unzipSync(bytes);
-    } catch (error) {
-      if (error instanceof Error && error.message.startsWith(t('Érvénytelen projektfájl: {message}', { message: '' }).trimEnd())) throw error;
-      return fail('a ZIP sérült vagy nem támogatott.');
-    }
-    for (const [name, expected] of directory) {
-      if (!files[name] || files[name].length !== expected.size || checksum(files[name]) !== expected.crc) fail('a ZIP egyik állománya sérült (méret vagy ellenőrző összeg).');
-    }
-    if (!files['project.json']) fail('hiányzik a project.json leíró.');
-    try { value = JSON.parse(strFromU8(files['project.json'])); } catch { return fail('a projektleíró nem olvasható.'); }
-    object(value, 'Projekt'); object(value.assets, 'Mellékletek');
-    const assets: Record<string, Asset> = Object.create(null);
-    const usedPaths = new Set<string>();
-    for (const [key, entry] of Object.entries(value.assets)) {
-      object(entry, 'Melléklet'); identifier(entry.id, 'Mellékletazonosító'); text(entry.name, 'Melléklet neve', 2000); text(entry.mime, 'Melléklet típusa', 100); text(entry.path, 'Melléklet útvonala', 200);
-      if (!/^assets\/\d{5}\.bin$/.test(entry.path) || usedPaths.has(entry.path) || !files[entry.path]) fail('hiányzó vagy ismétlődő mellékletfájl.');
-      usedPaths.add(entry.path);
-      assets[key] = { id: entry.id, name: entry.name, mime: entry.mime, data: dataUrl(entry.mime, files[entry.path]) };
-    }
-    if (directory.size !== usedPaths.size + 1) fail('a ZIP nem hivatkozott állományt tartalmaz.');
-    value.assets = assets;
+  const directory = zipDirectory(bytes);
+  let files: Record<string, Uint8Array>;
+  try {
+    files = unzipSync(bytes);
+  } catch (error) {
+    if (error instanceof Error && error.message.startsWith(t('Érvénytelen projektfájl: {message}', { message: '' }).trimEnd())) throw error;
+    return fail('a ZIP sérült vagy nem támogatott.');
   }
+  for (const [name, expected] of directory) {
+    if (!files[name] || files[name].length !== expected.size || checksum(files[name]) !== expected.crc) fail('a ZIP egyik állománya sérült (méret vagy ellenőrző összeg).');
+  }
+  if (!files['project.json']) fail('hiányzik a project.json leíró.');
+  try { value = JSON.parse(strFromU8(files['project.json'])); } catch { return fail('a projektleíró nem olvasható.'); }
+  object(value, 'Projekt');
+  if(value.format!==PROJECT_FILE_FORMAT)fail('nem VoltGecko projektarchívum.');
+  delete value.format;
+  object(value.assets, 'Mellékletek');
+  const assets: Record<string, Asset> = Object.create(null);
+  const usedPaths = new Set<string>();
+  for (const [key, entry] of Object.entries(value.assets)) {
+    object(entry, 'Melléklet'); identifier(entry.id, 'Mellékletazonosító'); text(entry.name, 'Melléklet neve', 2000); text(entry.mime, 'Melléklet típusa', 100); text(entry.path, 'Melléklet útvonala', 200);
+    if (!/^assets\/\d{5}\.bin$/.test(entry.path) || usedPaths.has(entry.path) || !files[entry.path]) fail('hiányzó vagy ismétlődő mellékletfájl.');
+    usedPaths.add(entry.path);
+    assets[key] = { id: entry.id, name: entry.name, mime: entry.mime, data: dataUrl(entry.mime, files[entry.path]) };
+  }
+  if (directory.size !== usedPaths.size + 1) fail('a ZIP nem hivatkozott állományt tartalmaz.');
+  value.assets = assets;
   validateProject(value);
   return value;
 }
@@ -571,10 +548,10 @@ export function downloadBlob(blob: Blob, filename: string): void {
 export async function saveProjectFile(document: ProjectDocument): Promise<void> {
   const stem = stripProjectExtension(document.data.name).replace(/[<>:"/\\|?*\u0000-\u001f]/g, '-').slice(0, 120).replace(/[. ]+$/, '');
   const filename = `${stem || t('projekt')}${APP.extension}`;
-  type SaveFilePicker = (options: { suggestedName: string; types: { description: string; accept: Record<string, string[]> }[] }) => Promise<{ createWritable(): Promise<{ write(data: Blob): Promise<void>; close(): Promise<void>; abort?(): Promise<void> }> }>;
+  type SaveFilePicker = (options: { suggestedName: string; excludeAcceptAllOption:boolean; types: { description: string; accept: Record<string, string[]> }[] }) => Promise<{ createWritable(): Promise<{ write(data: Blob): Promise<void>; close(): Promise<void>; abort?(): Promise<void> }> }>;
   const picker = (window as Window & { showSaveFilePicker?: SaveFilePicker }).showSaveFilePicker;
   // Open the picker in the user gesture, before asynchronous ZIP generation.
-  const handle = picker ? await picker.call(window, { suggestedName: filename, types: [{ description: t('{app} projekt', { app: APP.name }), accept: { 'application/zip': [APP.extension] } }] }) : undefined;
+  const handle = picker ? await picker.call(window, { suggestedName: filename, excludeAcceptAllOption:true, types: [{ description: t('{app} projekt', { app: APP.name }), accept: { 'application/zip': [APP.extension] } }] }) : undefined;
   // The portable copy records this export, rather than retaining the previous
   // file-save date when it is opened on another device.
   const blob = await encodeProject({ ...document, lastExternalSaveAt: new Date().toISOString() });

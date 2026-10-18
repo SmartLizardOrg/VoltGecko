@@ -2,7 +2,6 @@ const messages:Record<string,string>={
   'kapocs':'terminals','Sín':'Busbar','Hiányzó végpont':'Missing endpoint','Külső bekötés':'External connection',
   'Minden elosztó':'All distribution boards','PNG letöltése':'Download PNG','Rajz nyomtatása / PDF':'Print drawing / PDF','A PNG-export nem érhető el.':'PNG export is unavailable.',
   'Részletes kábeladatok':'Detailed cable data','{code} fázisa':'{code} phase',
-  '.vgecko, korábbi .eplan vagy elosztó JSON v2/v3':'.vgecko, legacy .eplan or board JSON v2/v3',
   'A kapcsolt fájl kívülről megváltozott. Az automatikus mentés szünetel.':'The linked file was changed externally. Automatic saving is paused.',
   'A kapcsolt fájl másik projekthez tartozik.':'The linked file belongs to another project.',
   'Fájlba mentve: {name}':'Saved to file: {name}','Fájlmentés szünetel':'File saving paused','Teljes projektarchívum':'Complete project archive',

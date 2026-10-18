@@ -18,8 +18,8 @@ Offline-first electrical floor-plan and distribution-board planner, in **English
 - Share device identities and properties across floor plans, circuits, distribution boards and single-line diagrams. Record room, mounting height, product details, notes and site photos.
 - Draw circuit and control connections, edit routes, arrange DIN devices by row and module width, and see collisions and overcapacity. The detailed cabinet editor adds per-pole terminals, phase/N/PE busbars, incoming supplies, cross-board wires, cable data and movable wire routes and labels.
 - Search the bundled Schneider catalogue offline: 260 references from the Hungarian Easy9 Pro catalogue, including DIN devices, enclosures and accessories. Each entry retains its manufacturer source.
-- Export customer and detailed PDF documents, including legends, circuit lists and board layouts. Export the single-line drawing as SVG.
-- Save automatically to IndexedDB, save named versions, restore without overwriting history, and transfer a complete project as one `.vgecko` archive with photos and attachments. Legacy `.eplan` backups can still be opened.
+- Export customer and detailed PDF documents, including legends, circuit lists and board layouts. Export the single-line drawing as SVG or PNG.
+- Save automatically to IndexedDB, save named versions, restore without overwriting history, and transfer a complete project as one compressed `.vgecko` archive with photos and attachments.
 - Optionally open or save a snapshot to Google Drive. No account is needed for local use.
 
 ### Development
@@ -83,7 +83,9 @@ npm run test:e2e
 
 For WebKit, install `webkit` and set `PLAYWRIGHT_BROWSER=webkit` before running the browser tests. Mobile emulation does not replace installation checks on physical Android and iPhone devices. GitHub Actions runs the unit tests and production build for pushes to `main` and pull requests.
 
-The displayed brand and `.vgecko` filename extension are configured in `src/config.ts`; translations are in `src/locales/en-*.ts`. Existing project identifiers, browser database names and the ZIP contents remain stable. Legacy `.eplan` files remain import-compatible, including through Google Drive; new saves use `.vgecko`.
+The displayed brand and `.vgecko` filename extension are configured in `src/config.ts`; translations are in `src/locales/en-*.ts`. The native `.vgecko` project format uses ZIP compression to keep the plan, photographs, attachments and complete revision history together. Local opening and Google Drive use this same format.
+
+The welcome screen and editor footer show the source commit date in Europe/Budapest time. Clicking it opens the exact GitHub commit embedded in that build. Offline copies retain their own date and commit link. Local builds with uncommitted changes are labelled as local and do not claim an exact commit.
 
 ### Scope
 
@@ -107,25 +109,27 @@ Node.js 22.13+ (22-es ág) vagy Node.js 24 LTS szükséges. Klónozás után `np
 - Az áramkörhöz védelmi készülék, kábelmegnevezés, fogyasztótípus és teljesítmény rögzíthető. Ezek dokumentációs adatok; nem indítanak automatikus villamos méretezést.
 - A fotók, megjegyzések és eszközadatok ugyanahhoz az eszközhöz tartoznak minden nézetben. Az ügyfél- és részletes PDF mellett az egyvonalas rajz SVG-ként is menthető.
 
-### Terméktár és import
+### Terméktár
 
 A beépített terméktár a Schneider Electric **Easy9 Pro Katalógus 2025., 2.0 kiadás (2026. április 2.)** 6–34. oldalának **260 rendelési cikkszámát** tartalmazza: 112 Easy9 Pro DIN-készülék, 1 Acti9 DIN-távtartó, 72 szekrény és 75 tartozék. [Gyártói forrás](https://www.se.com/hu/hu/download/document/Easy9Pro_catalog_HU/). A lista offline kereshető; nem automatikusan frissülő, teljes világpiaci adatbázis. Az Easy9 EU és PrismaSeT XS elemek a saját termékcsaládnevükön szerepelnek.
 
 A DIN-készülék az első szabad helyre kerül, a szekrény új elosztót hoz létre, a sínhelyet nem foglaló tartozék az anyaglistába kerül. A modulszélesség alapja 18 mm. A projektben a kiválasztott termékadatok önálló másolatként megmaradnak; későbbi katalógusfrissítés nem módosítja a kész terveket.
 
-Korábbi önálló HTML-elosztótervező v2 és v3 JSON-mentése a projektmegnyitással importálható. A v3 import több dobozt, pólusokat, síneket, betáplálásokat és kábeladatokat is átvesz. Az eredeti JSON passzív másolata megmarad az archívumban. Az import HTML-t és forrásprogrambeli migrációt nem futtat: nincs automatikus átkötés, földelés-hozzáadás, érszámcsere vagy készülékátrendezés. A nem egyértelmű kapocs külön jelzést kap; a régi nyomvonalparaméterek forrásadatként megmaradnak, az új rajz saját elrendezést használ. A generikus szélességek ellenőrizendő adatként maradnak meg.
-
 ### Részletes huzalozás
 
-Az elosztónézet **Részletes huzalozás** szakaszában két csatlakozópont kiválasztásával és a vezeték hozzáadásával köthetők a készülékek. A pontok a rajzon és billentyűzettel kezelhető listákból is kiválaszthatók; a sorrend nem módosítja a pólust. Másik elosztó végpontja is választható. A régi DIN-elhelyező és készülékszintű táplálási kapcsolatok továbbra is használhatók.
+Az elosztónézet **Részletes huzalozás** szakaszában két csatlakozópont kiválasztásával és a vezeték hozzáadásával köthetők a készülékek. A pontok a rajzon és billentyűzettel kezelhető listákból is kiválaszthatók; a sorrend nem módosítja a pólust. Másik elosztó végpontja is választható. A DIN-elhelyező és a készülékszintű táplálási kapcsolatok ugyanennek a tervnek a részei.
 
 A sínek kapocsszáma, vezetője, sorhoz rendelése és kapocsfeliratai szerkeszthetők. A vezetéken szín, kábelmegnevezés, érszám, keresztmetszet, anyag, hossz és gyártói ellenállás rögzíthető. A nyomvonal töréspontjai és feliratai húzással vagy számértékkel mozgathatók. A készülék adatlapján külön villamos szerep, póluskiosztás, névleges áram és ÁVK-adatok adhatók meg.
 
 A fázisterhelés a rögzített áramköri teljesítmények összege. A kiegyensúlyozás csak a kiosztatlan egyfázisú áramköröket módosítja. Az egyvonalas nézetben egy elosztó vagy az összes elosztó együtt választható; minden megadott kapcsolat megmarad. A fizikai vezeték rajzolási sorrendje nem állít táplálási irányt. SVG, PNG és böngészős nyomtatás is elérhető; a részletes PDF külön huzalozási és sínjegyzéket tartalmaz.
 
+### Az oldalon látható frissítés
+
+A kezdőképernyő és a szerkesztő láblécében látható az adott kiadás forráscommitjának dátuma, budapesti idő szerint. A dátumra kattintva pontosan a megjelenített verzió GitHub-commitja nyílik meg. Az offline példány a saját kiadásának dátumát és linkjét őrzi. Nem commitolt helyi módosítások esetén külön helyi változat jelzés jelenik meg.
+
 ### Mentés és adatkezelés
 
-Az automatikus mentés az adott böngészőprofil IndexedDB-tárába kerül. A **Projektfájl mentése** egy `.vgecko` ZIP-archívumban viszi magával a tervet, előzményeket és mellékleteket. A korábbi `.eplan` fájlok továbbra is megnyithatók, a Google Drive-választóban is. Ez a külső biztonsági mentés és az eszközök közötti átadás alapja. A fájl nincs titkosítva.
+Az automatikus mentés az adott böngészőprofil IndexedDB-tárába kerül. A **Projektfájl mentése** az alkalmazás saját `.vgecko` formátumában, ZIP-tömörítéssel viszi magával a teljes tervet, fotókat, előzményeket és mellékleteket. Ez a külső biztonsági mentés és az eszközök közötti átadás alapja; a helyi megnyitás és a Google Drive is ezt a formátumot használja. A fájl nincs titkosítva.
 
 A **Verzió mentése**, **Előzmények** és **Visszaállítás** funkciók megőrzik az állapotokat; visszaállításkor a jelenlegi állapot is megmarad. Azonos azonosítójú, eltérő projektimport külön másolatként nyílik meg. Automatikus összefésülés nincs.
 

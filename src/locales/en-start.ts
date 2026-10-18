@@ -13,8 +13,8 @@ const messages: Record<string, string> = {
   'Mégse': 'Cancel',
   'Honnan nyissuk meg?': 'Where is your project?',
   'Projektfájl kiválasztása': 'Choose project file',
+  'Projektfájl: {extension}. A teljes terv, fotók és előzmények egy fájlban.': 'Project file: {extension}. The complete plan, photos and history in one file.',
   'Helyi projektek': 'Local projects',
-  'Új formátum: {extension}. A korábbi .eplan és elosztó JSON-fájlok is megnyithatók.': 'New format: {extension}. Earlier .eplan and distribution-board JSON files can also be opened.',
   'Ezen az eszközön': 'On this device',
   '{count} projekt': '{count} projects',
   'Megnyitás': 'Open',
@@ -24,6 +24,5 @@ const messages: Record<string, string> = {
   'Kezdőképernyő': 'Start screen',
   'Mentés és kezdőképernyő…': 'Saving and returning to start…',
   'A projekt már nem található ezen az eszközön.': 'This project is no longer available on this device.',
-  '.vgecko vagy elosztó JSON v2': '.vgecko or distribution-board JSON v2',
 };
 export default messages;

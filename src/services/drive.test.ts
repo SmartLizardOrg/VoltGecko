@@ -47,8 +47,8 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe('Drive project extension compatibility', () => {
-  it('lists legacy and new projects using the same stable app marker', async () => {
+describe('Drive native project files', () => {
+  it('lists only .vgecko archives using the application marker', async () => {
     const { drive } = await connectedDrive();
     const files = [
       { id: 'old', name: 'Legacy.eplan', modifiedTime: '2026-01-01T00:00:00Z' },
@@ -57,7 +57,7 @@ describe('Drive project extension compatibility', () => {
     const fetch = vi.fn().mockResolvedValue(Response.json({ files }));
     vi.stubGlobal('fetch', fetch);
 
-    expect(await drive.listDriveProjects()).toEqual(files);
+    expect(await drive.listDriveProjects()).toEqual([files[1]]);
     const query = new URL(fetch.mock.calls[0][0]).searchParams.get('q');
     expect(query).toContain("value='electric-planner-local-v1'");
     expect(query).not.toMatch(/eplan|vgecko/);
@@ -66,7 +66,7 @@ describe('Drive project extension compatibility', () => {
   it('uploads a new .vgecko snapshot while preserving stable metadata and archive contents', async () => {
     const { drive } = await connectedDrive();
     const original = createDemoProject();
-    original.data.name = 'Version.2.EPLAN';
+    original.data.name = 'Version.2.VGECKO';
     const before = structuredClone(original);
     const fetch = vi.fn()
       .mockResolvedValueOnce(Response.json({ files: [{ id: 'folder' }] }))
@@ -85,12 +85,30 @@ describe('Drive project extension compatibility', () => {
     expect(original).toEqual(before);
   });
 
-  it.each(['shared.VGECKO', 'shared.EPLAN'])('opens %s from Google Picker', async name => {
+  it.each(['shared.VGECKO', 'shared.vgecko'])('opens %s from Google Picker', async name => {
     const { drive, title } = await connectedDrive({ id: 'selected-file', name });
     const original = createDemoProject();
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(await encodeProject(original))));
+    vi.stubGlobal('fetch', vi.fn()
+      .mockResolvedValueOnce(Response.json({ name }))
+      .mockResolvedValueOnce(new Response(await encodeProject(original))));
 
     expect(await drive.pickDriveProject()).toEqual(original);
     expect(title).toHaveBeenCalledWith('VoltGecko · .vgecko projekt kiválasztása');
+  });
+
+  it.each(['shared.EPLAN', 'board.json', 'archive.zip'])('rejects %s in Google Picker before downloading it', async name => {
+    const { drive } = await connectedDrive({ id: 'selected-file', name });
+    const fetch = vi.fn(); vi.stubGlobal('fetch', fetch);
+    await expect(drive.pickDriveProject()).rejects.toThrow('.vgecko projektállományt');
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it('checks the actual Drive filename before fetching archive bytes', async () => {
+    const { drive } = await connectedDrive();
+    const fetch = vi.fn().mockResolvedValueOnce(Response.json({ name:'unsupported.eplan' }));
+    vi.stubGlobal('fetch',fetch);
+    await expect(drive.openFromDrive('unsupported-file')).rejects.toThrow('Csak .vgecko');
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(fetch.mock.calls[0][0]).toContain('?fields=name');
   });
 });

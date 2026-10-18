@@ -128,8 +128,9 @@ async function ensureFolder(): Promise<string> {
   folderId = (await response.json() as { id: string }).id; return folderId;
 }
 
-export function listDriveProjects(): Promise<DriveFile[]> {
-  return listFiles(`trashed = false and mimeType != 'application/vnd.google-apps.folder' and appProperties has { key='plannerApp' and value='${APP_MARKER}' }`);
+export async function listDriveProjects(): Promise<DriveFile[]> {
+  const files = await listFiles(`trashed = false and mimeType != 'application/vnd.google-apps.folder' and appProperties has { key='plannerApp' and value='${APP_MARKER}' }`);
+  return files.filter(file => isProjectFilename(file.name));
 }
 
 /** Every save creates a complete immutable snapshot; no other user's version is overwritten. */
@@ -155,6 +156,9 @@ export async function saveToDrive(doc: ProjectDocument): Promise<void> {
 
 export async function openFromDrive(id: string): Promise<ProjectDocument> {
   if (!/^[a-zA-Z0-9_-]+$/.test(id)) throw new Error(t('Érvénytelen Drive-fájlazonosító.'));
+  const metadata = await driveFetch(`${DRIVE}/${encodeURIComponent(id)}?fields=name`);
+  const file = await metadata.json() as { name?: string };
+  if (!file.name || !isProjectFilename(file.name)) throw new Error(t('Csak .vgecko projektfájl nyitható meg.'));
   const response = await driveFetch(`${DRIVE}/${encodeURIComponent(id)}?alt=media`);
   return decodeProject(await response.blob());
 }
@@ -179,7 +183,7 @@ export async function pickDriveProject(): Promise<ProjectDocument> {
       .setCallback(data => {
         if (data.action === picker.Action.PICKED && data.docs?.[0]) {
           const file = data.docs[0];
-          if (file.name && !isProjectFilename(file.name)) { reject(new Error(t('A fájlválasztóban .vgecko vagy korábbi .eplan projektállományt válassz.'))); return; }
+          if (!file.name || !isProjectFilename(file.name)) { reject(new Error(t('A fájlválasztóban .vgecko projektállományt válassz.'))); return; }
           resolve(file.id);
         } else if (data.action === picker.Action.CANCEL) reject(new Error(t('A fájlválasztást megszakítottad.')));
       });

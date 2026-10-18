@@ -46,6 +46,5 @@ const translations:Record<string,string>={
   'Rajzrészlet: {column}/{columns}. oszlop · {row}/{rows}. sor':'Diagram tile: column {column}/{columns} · row {row}/{rows}',
   '{board} · elosztókapcsolatok':'{board} · board connections',
   '{code} másik elosztóhoz van rendelve; ellenőrizd az elosztók közötti kapcsolatot.':'{code} is assigned to another board; review the connection between boards.',
-  '.vgecko, korábbi .eplan vagy elosztó JSON v2':'.vgecko, legacy .eplan or board JSON v2',
 };
 export default translations;

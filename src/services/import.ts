@@ -1,7 +1,6 @@
 import { t } from '../i18n';
-import type { Asset, DeviceKind, PlanSheet, ProjectDocument } from '../types';
+import type { Asset, PlanSheet } from '../types';
 import { uid } from '../catalog';
-import { checkpoint, createProject } from '../data/project';
 import { assetFromFile } from '../data/archive';
 
 const MAX_FILE_BYTES = 100 * 1024 * 1024;
@@ -67,95 +66,4 @@ export async function importBackground(file: File): Promise<{ sheet: PlanSheet; 
   const size = await imageSize(asset.data);
   if (!size.width || !size.height) throw new Error(t('A kép mérete érvénytelen.'));
   return [{ sheet: blankSheet(name, size.width, size.height, asset.id), assets: [asset] }];
-}
-
-type RecordValue = Record<string, unknown>;
-function record(value: unknown): RecordValue { return value !== null && typeof value === 'object' && !Array.isArray(value) ? value as RecordValue : {}; }
-function string(value: unknown): string { return typeof value === 'string' ? value : typeof value === 'number' ? String(value) : ''; }
-function number(value: unknown, fallback = 0): number { return typeof value === 'number' && Number.isFinite(value) ? value : fallback; }
-function array(value: unknown): RecordValue[] { return Array.isArray(value) ? value.map(record) : []; }
-function position(value: unknown): { x: number; y: number } {
-  if (!Array.isArray(value) || value.length < 2 || !value.slice(0, 2).every(v => typeof v === 'number' && Number.isFinite(v))) {
-    throw new Error(t('A Marina állományban egy elem pozíciója hiányzik vagy hibás.'));
-  }
-  return { x: value[0], y: value[1] };
-}
-
-export function marinaKind(type: unknown): DeviceKind {
-  const key = string(type).toLocaleUpperCase('hu');
-  if (key === 'HUB') return 'hub';
-  if (['KAP', 'DIM', 'KAPCSOLÓ'].includes(key)) return 'switch';
-  if (['TER', 'NYIT', 'MOZG', 'SZENZOR', 'ÉRZÉKELŐ'].includes(key)) return 'sensor';
-  if (['LED', 'LÁMPA', 'LAMPA'].includes(key)) return 'light';
-  if (['DUG', 'DUGALJ'].includes(key)) return 'outlet';
-  if (['REL', 'RELÉ', 'RELE'].includes(key)) return 'relay';
-  return 'custom';
-}
-
-/** Maps the actual Marina layer editor format without inventing unrecorded electrical connections. */
-export function parseMarina(input: unknown, name = t('Marina · importált terv')): ProjectDocument {
-  const source = record(input);
-  if (!Array.isArray(source.eszkozok) && !Array.isArray(source.vilagitas) && !Array.isArray(source.szobak)) {
-    throw new Error(t('Ez nem Marina rétegállomány: a szobak, eszkozok vagy vilagitas lista hiányzik.'));
-  }
-  const canvas = record(source.canvas);
-  const width = number(canvas.width, 1551), height = number(canvas.height, 891);
-  if (width <= 0 || height <= 0 || width > 50000 || height > 50000) throw new Error(t('A Marina rajzlap mérete érvénytelen.'));
-  const doc = createProject(name);
-  doc.data.devices = []; doc.data.circuits = []; doc.data.boards = [];
-  doc.data.sheets = [blankSheet(t('Marina · alaprajz'), width, height)];
-  const sheet = doc.data.sheets[0];
-  const circuits = new Map<string, string>();
-  const colors = ['#e5a33d', '#417bda', '#16a394', '#9b6ad4', '#de6c83', '#55a77b', '#d37339', '#64748b'];
-  function circuitId(value: unknown): string | undefined {
-    const code = string(value).trim();
-    if (!code) return undefined;
-    if (!circuits.has(code)) {
-      const id = uid(); circuits.set(code, id);
-      doc.data.circuits.push({ id, code: `ÁK${code}`, name: t('{code}. áramkör', { code }), color: colors[(circuits.size - 1) % colors.length], notes: t('Marina import: az eredeti áramkörszám alapján.') });
-    }
-    return circuits.get(code);
-  }
-  for (const room of array(source.szobak)) {
-    sheet.annotations.push({ id: uid(), text: string(room.nev) || string(room.id), ...position(room.pos) });
-  }
-  const usedCodes = new Set<string>();
-  function uniqueCode(code: string) {
-    let candidate = code || `E${usedCodes.size + 1}`, suffix = 2;
-    while (usedCodes.has(candidate)) candidate = `${code}-${suffix++}`;
-    usedCodes.add(candidate); return candidate;
-  }
-  for (const [collection, kind] of [[array(source.vilagitas), 'light'], [array(source.eszkozok), undefined]] as const) {
-    for (const item of collection) {
-      const id = uid();
-      const sourceType = string(item.tipus);
-      doc.data.devices.push({
-        id, code: uniqueCode(string(item.id) || string(item.kod)), name: string(item.nev) || sourceType || t('Importált eszköz'),
-        kind: kind ?? marinaKind(item.tipus), room: string(item.helyiseg), heightMm: number(item.magassag),
-        model: string(item.modell) || (kind === 'light' ? string(item.kod) : ''),
-        notes: [string(item.desc), sourceType ? t('Eredeti típus: {type}', { type: sourceType }) : '', string(item.img) ? t('Eredeti képhivatkozás: {image} (helyi fotó külön csatolható)', { image: string(item.img) }) : ''].filter(Boolean).join('\n'),
-        status: 'planned', circuitId: circuitId(kind === 'light' ? item.kor : item.aramkor), photoIds: [],
-      });
-      sheet.placements.push({ deviceId: id, ...position(item.pos), rotation: number(item.rotation) });
-    }
-  }
-  doc.data.notes = t('Marina rétegszerkesztőből importált terv. A szobák feliratként, az áramkörszámok közös áramkörként kerültek át. A forrás nem tartalmaz vezetéknyomvonalakat. A háttérképet és a fotókat külön lehet csatolni.');
-  return checkpoint(doc, t('Marina JSON importálása'));
-}
-
-export async function importMarina(file: File, background?: File): Promise<ProjectDocument> {
-  checkFile(file);
-  let input: unknown;
-  try { input = JSON.parse(await file.text()); }
-  catch { throw new Error(t('A Marina JSON állomány nem olvasható.')); }
-  let doc = parseMarina(input, file.name.replace(/\.[^.]+$/, '') || t('Marina · importált terv'));
-  if (background) {
-    if (background.type === 'application/pdf' || /\.pdf$/i.test(background.name)) throw new Error(t('A Marina importhoz PNG vagy JPG háttérképet válassz.'));
-    const [result] = await importBackground(background);
-    for (const asset of result.assets) doc.assets[asset.id] = asset;
-    doc.data.sheets[0].backgroundAssetId = result.sheet.backgroundAssetId;
-    // Original Marina positions use its canvas size; stretching the image preserves those coordinates.
-    doc = checkpoint(doc, t('Marina háttérkép csatolása'));
-  }
-  return doc;
 }

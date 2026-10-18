@@ -3,7 +3,7 @@ import { setLanguage } from '../i18n';
 import { createProject } from '../data/project';
 import { makeDevice } from '../catalog';
 import { buildPdf } from './pdf';
-import { importBackground, parseMarina } from './import';
+import { importBackground } from './import';
 import { listDriveProjects, safeFilename } from './drive';
 
 const pdfCalls = vi.hoisted(() => ({ text: [] as string[], language: '' }));
@@ -69,23 +69,6 @@ describe('service language boundaries', () => {
     expect(pdfCalls.text).toContain('Megrendelő: Állapot');
     expect(pdfCalls.text).not.toContain('Device schedule');
     expect(doc).toEqual(before);
-  });
-
-  it('localizes new Marina defaults and leaves original names, codes, notes and positions intact', () => {
-    setLanguage('en');
-    const doc = parseMarina({
-      szobak: [{ nev: 'Helyiség', pos: [20, 30] }],
-      eszkozok: [{ id: 'ÁK1-K1', nev: 'Kapcsoló', desc: 'Tervezett', tipus: 'KAP', aramkor: 1, pos: [1, 2] }],
-    });
-    expect(doc.data.name).toBe('Marina · imported plan');
-    expect(doc.data.sheets[0].name).toBe('Marina · floor plan');
-    expect(doc.data.sheets[0].annotations[0].text).toBe('Helyiség');
-    expect(doc.data.devices[0]).toMatchObject({ code: 'ÁK1-K1', name: 'Kapcsoló', notes: 'Tervezett\nOriginal type: KAP' });
-    expect(doc.data.circuits[0]).toMatchObject({ code: 'ÁK1', name: 'Circuit 1' });
-    expect(doc.revisions.at(-1)?.note).toBe('Marina JSON import');
-    const snapshot = structuredClone(doc);
-    setLanguage('hu');
-    expect(doc).toEqual(snapshot);
   });
 
   it('localizes import and Drive errors and only generates a filename when the name is empty', async () => {

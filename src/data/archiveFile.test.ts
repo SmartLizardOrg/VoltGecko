@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { APP, isProjectFilename, stripProjectExtension } from '../config';
 import { setLanguage } from '../i18n';
-import { decodeProject, encodeProject, saveProjectFile } from './archive';
+import { decodeProject, encodeProject, saveProjectFile, PROJECT_FILE_FORMAT } from './archive';
+import { strFromU8, unzipSync, zipSync, strToU8 } from 'fflate';
 import { createDemoProject } from './project';
 
 afterEach(() => {
@@ -11,10 +12,10 @@ afterEach(() => {
   setLanguage('hu');
 });
 
-describe('VoltGecko project filenames and legacy backups', () => {
+describe('native VoltGecko project archives', () => {
   it('saves a complete .vgecko file through the native picker without changing the working project', async () => {
     const original = createDemoProject();
-    original.data.name = 'Lakás.EPLAN';
+    original.data.name = 'Lakás.VGECKO';
     const before = structuredClone(original);
     const write = vi.fn<(blob: Blob) => Promise<void>>().mockResolvedValue(undefined);
     const close = vi.fn().mockResolvedValue(undefined);
@@ -25,6 +26,7 @@ describe('VoltGecko project filenames and legacy backups', () => {
 
     expect(picker).toHaveBeenCalledWith({
       suggestedName: 'Lakás.vgecko',
+      excludeAcceptAllOption:true,
       types: [{ description: 'VoltGecko projekt', accept: { 'application/zip': ['.vgecko'] } }],
     });
     expect(close).toHaveBeenCalledOnce();
@@ -56,7 +58,7 @@ describe('VoltGecko project filenames and legacy backups', () => {
     expect(revokeUrl).toHaveBeenCalledWith('blob:project');
   });
 
-  it.each(['old.eplan', 'OLD.EPLAN', 'new.vgecko', 'NEW.VGECKO'])(
+  it.each(['new.vgecko', 'NEW.VGECKO'])(
     'opens %s without changing the archive schema, assets or history', async name => {
       const original = createDemoProject();
       const file = new File([await encodeProject(original)], name, { type: 'application/zip' });
@@ -65,12 +67,24 @@ describe('VoltGecko project filenames and legacy backups', () => {
     },
   );
 
-  it('recognizes only complete old/new suffixes and keeps dots inside project names', () => {
+  it('recognizes only the native suffix and keeps dots inside project names', () => {
     expect(APP.extension).toBe('.vgecko');
-    expect(stripProjectExtension(' Version.2.EPLAN ')).toBe('Version.2');
+    expect(stripProjectExtension(' Version.2.EPLAN ')).toBe('Version.2.EPLAN');
     expect(stripProjectExtension('Version.2')).toBe('Version.2');
     expect(stripProjectExtension('Version.2.VGECKO')).toBe('Version.2');
     expect(isProjectFilename('backup.vgecko.zip')).toBe(false);
     expect(isProjectFilename('backup.eplan.txt')).toBe(false);
+  });
+  it.each(['old.eplan','project.json','project.zip'])('rejects %s even when renamed from a valid archive',async name=>{
+    const file=new File([await encodeProject(createDemoProject())],name,{type:'application/zip'});
+    expect(isProjectFilename(name)).toBe(false);await expect(decodeProject(file)).rejects.toThrow('.vgecko');
+  });
+  it('identifies its native ZIP manifest and rejects raw JSON or an unmarked archive',async()=>{
+    const doc=createDemoProject(),blob=await encodeProject(doc),files=unzipSync(new Uint8Array(await blob.arrayBuffer()));
+    const manifest=JSON.parse(strFromU8(files['project.json']));expect(manifest.format).toBe(PROJECT_FILE_FORMAT);
+    expect(Object.keys(files).filter(name=>name.startsWith('assets/'))).toHaveLength(Object.keys(doc.assets).length);
+    await expect(decodeProject(new Blob([JSON.stringify(doc)]))).rejects.toThrow('ZIP');
+    delete manifest.format;files['project.json']=strToU8(JSON.stringify(manifest));
+    await expect(decodeProject(new Blob([new Uint8Array(zipSync(files)).buffer]))).rejects.toThrow('nem VoltGecko');
   });
 });

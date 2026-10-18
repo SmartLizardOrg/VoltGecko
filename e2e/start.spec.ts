@@ -82,6 +82,7 @@ test('imports a project from the welcome screen and reports invalid files there'
   await download.saveAs(file);
   await page.getByRole('button', { name: 'Kezdőképernyő', exact: true }).click();
   await page.getByRole('button', { name: /^Projekt megnyitása / }).click();
+  await expect(page.locator('input[accept*=".vgecko"]')).toHaveAttribute('accept', '.vgecko');
   const chooserPromise = page.waitForEvent('filechooser');
   await page.getByRole('button', { name: 'Projektfájl kiválasztása', exact: true }).click();
   await (await chooserPromise).setFiles({ name: 'broken.vgecko', mimeType: 'application/zip', buffer: Buffer.from('invalid project') });

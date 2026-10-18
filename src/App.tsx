@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from 'react';
-import { ArrowDownToLine, ArrowUpRight, BookOpen, Check, ChevronDown, ChevronRight, CircleHelp, Cloud, Download, FileImage, FileText, FolderOpen, GitBranch, History, Home, LayoutGrid, LoaderCircle, Menu, MousePointer2, PencilRuler, Plus, Redo2, Save, Search, Settings2, SlidersHorizontal, Undo2, Upload, WifiOff, X, Zap } from 'lucide-react';
-import { APP } from './config';
+import { ArrowDownToLine, ArrowUpRight, BookOpen, Check, ChevronDown, ChevronRight, CircleHelp, Cloud, Download, FileImage, FileText, FolderOpen, GitBranch, History, Home, LayoutGrid, LoaderCircle, Menu, MousePointer2, PencilRuler, Plus, Redo2, Save, Search, Settings2, SlidersHorizontal, Undo2, WifiOff, X, Zap } from 'lucide-react';
+import { APP, isProjectFilename } from './config';
 import { t, useLanguage, getLocale, type Language } from './i18n';
 import { CATALOG, makeDevice, uid, kindLabel } from './catalog';
 import type { DeviceKind, Point, ProjectData, ProjectDocument, ProjectSummary } from './types';
@@ -16,9 +16,9 @@ import { SingleLine } from './components/SingleLine';
 import { Brand } from './components/Brand';
 import { AppearanceControls } from './components/AppearanceControls';
 import { StartScreen, NewProjectForm } from './components/StartScreen';
+import { ReleaseInfo } from './components/ReleaseInfo';
 import { LinkedFileControl, type LinkedFileActions } from './components/LinkedFileControl';
 import { projectFilePicker } from './services/linkedFile';
-import { isLegacyBoard, importLegacyBoard } from './services/legacyBoard';
 import { ProductLibrary } from './components/ProductLibrary';
 import { SCHNEIDER_PRODUCTS } from './products/schneider';
 import { addProductToProject } from './products/factory';
@@ -30,7 +30,6 @@ type Tool = DeviceKind | 'select' | 'route' | 'control' | 'note' | 'scale';
 const fmt = (s?: string) => s ? new Intl.DateTimeFormat(getLocale(), { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }).format(new Date(s)) : t("még nincs");
 const errorMessage = (e: unknown) => e instanceof Error ? e.message : t("A művelet nem sikerült.");
 const importBackground: typeof import('./services/import').importBackground = async (file) => (await import('./services/import')).importBackground(file);
-const importMarina: typeof import('./services/import').importMarina = async (file, background) => (await import('./services/import')).importMarina(file, background);
 const exportPdf: typeof import('./services/pdf').exportPdf = async (doc, audience) => (await import('./services/pdf')).exportPdf(doc, audience);
 export default function App() {
     const { language, setLanguage } = useLanguage();
@@ -60,8 +59,6 @@ export default function App() {
         modifiedTime: string;
     }[]>([]);
     const [driveConnected, setDriveConnected] = useState(false);
-    const [marinaJson, setMarinaJson] = useState<File | null>(null);
-    const [marinaBackground, setMarinaBackground] = useState<File | null>(null);
     const [updateAvailable, setUpdateAvailable] = useState(false);
     const [fatal, setFatal] = useState('');
     const undo = useRef<ProjectData[]>([]), redo = useRef<ProjectData[]>([]);
@@ -179,10 +176,7 @@ export default function App() {
     const loadImported = async (incoming: ProjectDocument) => { const current = docRef.current; if (current)
         await saveProject(current); const existing = await loadProject(incoming.data.id); const result = resolveImport(incoming, existing); await saveProject(result.document); switchDocument(result.document); setView('floor'); await refreshProjects(); notify(result.message); };
     const importFile = (file: File) => perform(t("Projekt megnyitása…"), async () => {
-      if (/\.json$/i.test(file.name) && file.size <= 30 * 1024 * 1024) {
-        let raw: unknown; try { raw = JSON.parse(await file.text()); } catch { /* The standard decoder supplies the file error. */ }
-        if (isLegacyBoard(raw)) { await loadImported(importLegacyBoard(raw)); setView('board'); return; }
-      }
+      if (!isProjectFilename(file.name)) throw new Error(t('Csak .vgecko projektfájl nyitható meg.'));
       await loadImported(await decodeProject(file));
     });
     const exportFile = () => { if (!doc)
@@ -281,11 +275,11 @@ export default function App() {
         notify(t("Új változat készült a visszaállított állapotból."));
     } }}><History size={15}/>{t("Visszaállítás")}</button></article>)}</div></div>}
       </div>
-      <footer className="statusbar"><span className={saveState === 'error' ? 'danger-text' : ''}>{saveState === 'saving' ? <LoaderCircle size={13} className="spin"/> : <Check size={13}/>} {saveState === 'saving' ? t("Helyi mentés…") : saveState === 'error' ? t("Mentési hiba") : t("Ezen az eszközön mentve")}</span><span className="external-status">{t("Fájl:")}{" "}{fmt(doc.lastExternalSaveAt)} <span>·</span>{t("Drive:")}{" "}{fmt(doc.lastDriveSaveAt)}</span><span>{!online ? <><WifiOff size={13}/>{t("Offline")}</> : <><span className="local-dot"/>{offlineReady ? t("Offline használatra kész") : t("Helyi fejlesztés")}</>}</span></footer>
+      <footer className="statusbar"><span className={saveState === 'error' ? 'danger-text' : ''}>{saveState === 'saving' ? <LoaderCircle size={13} className="spin"/> : <Check size={13}/>} {saveState === 'saving' ? t("Helyi mentés…") : saveState === 'error' ? t("Mentési hiba") : t("Ezen az eszközön mentve")}</span><span className="external-status">{t("Fájl:")}{" "}{fmt(doc.lastExternalSaveAt)} <span>·</span>{t("Drive:")}{" "}{fmt(doc.lastDriveSaveAt)}</span><span>{!online ? <><WifiOff size={13}/>{t("Offline")}</> : <><span className="local-dot"/>{offlineReady ? t("Offline használatra kész") : t("Helyi fejlesztés")}</>}</span><ReleaseInfo compact/></footer>
     </main>
     <Inspector data={data} assets={doc.assets} device={device} onChange={changeData} onClose={() => setSelectedId(null)} onDelete={removeDevice} onPhoto={addPhoto} onLocate={locate}/>
     </div>}
-    <input ref={fileInput} className="hidden" type="file" accept=".vgecko,.eplan,.json,.zip" onChange={e => { const f = e.target.files?.[0]; if (f)
+    <input ref={fileInput} className="hidden" type="file" accept=".vgecko" onChange={e => { const f = e.target.files?.[0]; if (f)
         void importFile(f); e.target.value = ''; }}/>
     <input ref={backgroundInput} className="hidden" type="file" accept="application/pdf,image/png,image/jpeg" multiple onChange={e => { if (e.target.files)
         addBackground(e.target.files); e.target.value = ''; }}/>
@@ -297,8 +291,7 @@ export default function App() {
       {modal === 'new-project' && <NewProjectForm onCreate={name => void perform(t('Új projekt…'), () => newProject(name))} onCancel={() => setModal('projects')} disabled={Boolean(busy)}/>}
       {modal === 'projects' && <><p className="subtle">{t("Ezeket a projekteket ezen az eszközön tárolod.")}</p><div className="modal-button-row"><button className="primary" onClick={() => setModal("new-project")}><Plus size={16}/>{t("Új projekt")}</button><button className="quiet" onClick={() => setModal('files')}><FolderOpen size={16}/>{t("Fájl megnyitása")}</button><button className="quiet" onClick={() => void perform(t('Mintaprojekt…'), tryDemo)}>{t("Új mintaprojekt")}</button></div><div className="project-list">{projects.map(p => <article key={p.id}><button onClick={() => void perform(t("Projekt megnyitása…"), () => openLocalProject(p.id))}><span className="project-file-icon"><PencilRuler size={22}/></span><span><strong>{p.name}</strong><small>{p.site || t('Helyi projekt')} · {fmt(p.updatedAt)}</small></span><ChevronRight size={17}/></button>{p.id !== data?.id && <button className="icon-button danger-hover" aria-label={t("{p0} projekt törlése", { p0: p.name })} onClick={() => { if (confirm(t("Végleg törlöd a helyi projektet és annak előzményeit? A külső fájlok megmaradnak.")))
             void perform(t("Projekt törlése…"), async () => { await deleteProject(p.id); await refreshProjects(); }); }}><X size={16}/></button>}</article>)}</div></>}
-      {modal === 'files' && <><div className="import-options"><button onClick={() => fileInput.current?.click()}><FolderOpen size={27}/><strong>{t("Projektfájl megnyitása")}</strong><span>{t(".vgecko, korábbi .eplan vagy elosztó JSON v2/v3")}</span></button><button onClick={() => backgroundInput.current?.click()}><FileImage size={27}/><strong>{t("Alaprajz betöltése")}</strong><span>{t("PDF, PNG vagy JPG · új tervlapként")}</span></button></div><div className="marina-import"><h3>{t("Korábbi Marina terv átvétele")}</h3><p>{t("A régi szerkesztő JSON-fájlját és a hozzá tartozó háttérképet külön választhatod ki.")}</p><label>{t("Marina JSON")}<input type="file" accept=".json" onChange={e => setMarinaJson(e.target.files?.[0] ?? null)}/></label><label>{t("Alaprajzi háttérkép (választható)")}<input type="file" accept="image/png,image/jpeg" onChange={e => setMarinaBackground(e.target.files?.[0] ?? null)}/></label><button className="quiet" disabled={!marinaJson} onClick={() => void perform(t("Marina terv importálása…"), async () => { if (marinaJson)
-            await loadImported(await importMarina(marinaJson, marinaBackground ?? undefined)); })}><Upload size={16}/>{t("Marina terv importálása")}</button></div></>}
+      {modal === 'files' && <div className="import-options"><button onClick={() => fileInput.current?.click()}><FolderOpen size={27}/><strong>{t("Projektfájl megnyitása")}</strong><span>{t(".vgecko · teljes projektarchívum")}</span></button><button onClick={() => backgroundInput.current?.click()}><FileImage size={27}/><strong>{t("Alaprajz betöltése")}</strong><span>{t("PDF, PNG vagy JPG · új tervlapként")}</span></button></div>}
       {modal === 'settings' && doc && data && <div className="settings-fields"><label>{t("Projekt neve")}<input value={data.name} onChange={e => changeData({ ...data, name: e.target.value })}/></label><label>{t("Helyszín")}<input value={data.site} onChange={e => changeData({ ...data, site: e.target.value })}/></label><label>{t("Megrendelő")}<input value={data.client} onChange={e => changeData({ ...data, client: e.target.value })}/></label><label>{t("Projekt megjegyzése")}<textarea rows={3} value={data.notes} onChange={e => changeData({ ...data, notes: e.target.value })}/></label>{sheet && <><hr /><label>{t("Aktív tervlap neve")}<input value={sheet.name} onChange={e => changeData({ ...data, sheets: data.sheets.map(s => s.id === sheet.id ? { ...s, name: e.target.value } : s) })}/></label><button className="danger-button" onClick={() => { if (confirm(t("Törlöd az aktív tervlapot? Az eszközadatok megmaradnak."))) {
             changeData({ ...data, sheets: data.sheets.filter(s => s.id !== sheet.id) });
             setSheetId(data.sheets.find(s => s.id !== sheet.id)?.id ?? '');

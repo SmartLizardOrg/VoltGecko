@@ -123,10 +123,7 @@ export function getWiringIssues(data: ProjectData, board: Board): WiringIssue[] 
     for (const wire of candidate.wiring?.wires ?? []) {
       const a = conductorAt(wire.from), b = conductorAt(wire.to);
       if (!a || !b) {
-        const unresolved = [wire.from, wire.to].filter(endpoint => !conductorAt(endpoint)).every(endpoint => endpoint.kind === 'device' && endpoint.pole === undefined && ['top', 'bottom'].includes(endpoint.side) && devices.has(endpoint.deviceId));
-        if (candidate.id === board.id) issues.push(unresolved
-          ? { code: 'unresolved-pole', severity: 'warning', wireId: wire.id, message: t('{wire}: az importált kapcsolat készülékpólusa nincs megadva; válassz konkrét kapcsot.', { wire: wire.label || wire.id }) }
-          : { code: 'endpoint', severity: 'error', wireId: wire.id, message: t('{wire}: hiányzó készülék, sín, betáplálás vagy érvénytelen kapocsszám.', { wire: wire.label || wire.id }) });
+        if (candidate.id === board.id) issues.push({ code: 'endpoint', severity: 'error', wireId: wire.id, message: t('{wire}: hiányzó készülék, sín, betáplálás vagy érvénytelen kapocsszám.', { wire: wire.label || wire.id }) });
         continue;
       }
       const ak = register(wire.from), bk = register(wire.to);

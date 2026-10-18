@@ -2,7 +2,7 @@ import 'fake-indexeddb/auto';
 import { afterEach, describe, expect, it } from 'vitest';
 import { strToU8, zipSync } from 'fflate';
 import { makeDevice } from './catalog';
-import { ARCHIVE_LIMITS, assetFromFile, decodeProject, encodeProject, validateProject } from './data/archive';
+import { ARCHIVE_LIMITS, PROJECT_FILE_FORMAT, assetFromFile, decodeProject, encodeProject, validateProject } from './data/archive';
 import { checkpoint, createDemoProject, createProject, deleteDevice, getBoardIssues, resolveImport, restoreRevision } from './data/project';
 import { deleteProject, listProjects, loadProject, projectDatabase, saveProject } from './data/storage';
 import { setLanguage } from './i18n';
@@ -164,11 +164,11 @@ describe('hordozható archívum', () => {
     await expect(encodeProject(document)).rejects.toThrow('körkörös');
     const nested = createDemoProject();
     nested.data.sheets[0].placements[0].deviceId = 'ismeretlen';
-    await expect(decodeProject(new Blob([JSON.stringify(nested)]))).rejects.toThrow('hiányzó hivatkozás');
+    expect(()=>validateProject(nested)).toThrow('hiányzó hivatkozás');
   });
 
   it('ismeretlen sémát és aktív SVG-mellékletet elutasít', async () => {
-    await expect(decodeProject(new Blob([JSON.stringify({ ...createProject(), schemaVersion: 99 })]))).rejects.toThrow('nem támogatott formátumverzió');
+    await expect(encodeProject({ ...createProject(), schemaVersion: 99 } as never)).rejects.toThrow('nem támogatott formátumverzió');
     await expect(assetFromFile(new File(['<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>'], 'active.svg', { type: 'image/svg+xml' }))).rejects.toThrow('aktív');
   });
 
@@ -187,7 +187,7 @@ describe('hordozható archívum', () => {
   ])('rosszindulatú ZIP SVG-t is elutasít: %s', async content => {
     const document = createProject();
     const svg = `<svg xmlns="http://www.w3.org/2000/svg">${content}</svg>`;
-    const manifest = { ...document, assets: { svg: { id: 'svg', name: 'import.svg', mime: 'image/svg+xml', path: 'assets/00001.bin' } } };
+    const manifest = { ...document, format:PROJECT_FILE_FORMAT, assets: { svg: { id: 'svg', name: 'import.svg', mime: 'image/svg+xml', path: 'assets/00001.bin' } } };
     const zip = zipSync({ 'project.json': strToU8(JSON.stringify(manifest)), 'assets/00001.bin': strToU8(svg) });
     await expect(decodeProject(new Blob([new Uint8Array(zip).buffer]))).rejects.toThrow('SVG aktív');
   });
@@ -216,7 +216,7 @@ describe('hordozható archívum', () => {
   it('a sérült és a hiányos mellékletes ZIP-et elutasítja', async () => {
     await expect(decodeProject(new Blob(['ez nem projekt']))).rejects.toThrow('ZIP sérült');
     const document = createProject();
-    const incomplete = { ...document, assets: { image: { id: 'image', name: 'hianyzik.png', mime: 'image/png', path: 'assets/00001.bin' } } };
+    const incomplete = { ...document, format:PROJECT_FILE_FORMAT, assets: { image: { id: 'image', name: 'hianyzik.png', mime: 'image/png', path: 'assets/00001.bin' } } };
     const archive = zipSync({ 'project.json': strToU8(JSON.stringify(incomplete)) });
     await expect(decodeProject(new Blob([new Uint8Array(archive).buffer]))).rejects.toThrow('hiányzó vagy ismétlődő mellékletfájl');
   });

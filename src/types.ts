@@ -26,7 +26,7 @@ export type Conductor = 'L'|'L1'|'L2'|'L3'|'N'|'PE'|'PEN';
 export interface DeviceElectrical {
   poles: Conductor[]; role?:'supply'|'main'|'mcb'|'rccb'|'rcbo'|'spd'|'contactor'|'meter'|'terminal'|'mpcb'|'outlet';
   phase?:Phase; currentA?:number; curve?:string; residualCurrentMa?:number; residualType?:string; spdClass?:string;
-  group?:string; originalId?:string; circuitNumbers?:string; consumers?:string;
+  group?:string;
   /** Screw indices known to be electrically common inside a terminal block. */
   commonPoleGroups?:number[][];
 }
@@ -36,14 +36,12 @@ export interface CableDetails {
   resistanceOhmPerKm?:number;
 }
 export type WiringEndpoint =
-  | {kind:'device'; deviceId:string; side:'top'|'bottom'; pole?:number}
+  | {kind:'device'; deviceId:string; side:'top'|'bottom'; pole:number}
   | {kind:'bus'; busId:string; terminal:number}
   | {kind:'infeed'; infeedId:string; pole:number};
 export interface BoardWire {
   id:string; from:WiringEndpoint; to:WiringEndpoint; color?:string; cable?:CableDetails;
   points?:Point[]; label?:string; labelOffset?:Point;
-  /** Retain original routing hints without executing or reinterpreting them. */
-  sourceRoute?:Record<string,unknown>;
 }
 export interface BoardBus {
   id:string; name:string; conductor:Conductor; capacity:number; rowId?:string; position:'top'|'bottom';
@@ -54,9 +52,6 @@ export interface BoardInfeed {
 }
 export interface BoardWiring {
   buses:BoardBus[]; wires:BoardWire[]; infeeds:BoardInfeed[]; demandFactor?:number;
-  labelOffsets?:Record<string,Point>;
-  /** Passive source snapshot allows lossless archival of fields not rendered by this app. */
-  source?:Record<string,unknown>;
 }
 export interface Asset { id: string; name: string; mime: string; data: string }
 export interface ProjectData { id: string; name: string; site: string; client: string; notes: string; sheets: PlanSheet[]; devices: Device[]; circuits: Circuit[]; boards: Board[] }

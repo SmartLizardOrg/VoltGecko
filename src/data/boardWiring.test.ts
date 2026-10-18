@@ -80,14 +80,13 @@ describe('detailed wiring documentation', () => {
     expect(getWiringIssues(doc.data, board).map(issue => issue.code)).toContain('multiple-sources');
   });
 
-  it('reports unresolved, missing and out-of-range endpoints without inventing pole zero', () => {
+  it('reports missing and out-of-range endpoints without inventing terminals', () => {
     const { doc, board, wiring } = fixture();
-    wiring.wires = [w('missing', d('missing'), b('phase')), w('pole', d('a', 2), b('phase')), w('terminal', b('phase', 12), d('a')), w('old', { kind: 'device', deviceId: 'a', side: 'top' }, d('b'))];
+    wiring.wires = [w('missing', d('missing'), b('phase')), w('pole', d('a', 2), b('phase')), w('terminal', b('phase', 12), d('a'))];
     const issues = getWiringIssues(doc.data, board);
     expect(issues.filter(issue => issue.code === 'endpoint')).toHaveLength(3);
-    expect(issues).toContainEqual(expect.objectContaining({ code: 'unresolved-pole', wireId: 'old', severity: 'warning' }));
-    expect(endpointConductor(doc.data, wiring.wires[3].from)).toBeUndefined();
-    expect(wiringEndpointLabel(doc.data, wiring.wires[3].from)).toContain('?');
+    expect(endpointConductor(doc.data, wiring.wires[1].from)).toBeUndefined();
+    expect(wiringEndpointLabel(doc.data, wiring.wires[1].from)).toContain('?');
   });
 
   it('sums every circuit once, shares three-phase loads, preserves assigned phases while balancing', () => {
@@ -157,11 +156,10 @@ describe('detailed wiring documentation', () => {
     expect(estimateVoltageDrop({ lengthM: -1, resistanceOhmPerKm: 7.41 }, 16)).toBeUndefined();
   });
 
-  it('round-trips every wire, cross-board endpoint, source metadata and history while retaining loops', async () => {
+  it('round-trips every wire, cross-board endpoint, cable data and history while retaining loops', async () => {
     const { doc, board, wiring } = fixture();
     wiring.wires = [w('a', d('a'), d('b')), w('b', d('b'), d('c')), w('c', d('c'), d('a'))];
-    wiring.wires[0] = { ...wiring.wires[0], color: '#abcdef', cable: { cores: 1, material: 'Cu', crossSectionMm2: 2.5, resistanceOhmPerKm: 7.41, lengthM: 0 }, points: [{ x: 1, y: 2 }], labelOffset: { x: -2, y: 4 }, sourceRoute: { oldShape: [1, false, null, 'keep'] } };
-    wiring.source = { revision: 9, privateFields: [{ arbitrary: 'preserved' }] };
+    wiring.wires[0] = { ...wiring.wires[0], color: '#abcdef', cable: { cores: 1, material: 'Cu', crossSectionMm2: 2.5, resistanceOhmPerKm: 7.41, lengthM: 0 }, points: [{ x: 1, y: 2 }], labelOffset: { x: -2, y: 4 } };
     doc.data.boards.push({ id: 'remote', name: 'Remote', rows: [], wiring: { buses: [], infeeds: [], wires: [w('cross', b('phase'), d('c'))] } });
     doc.data.circuits = [{ id: 'c1', code: '1', name: '', notes: '', color: '#123456', phase: 'L2', cableDetails: { cores: 5, designation: 'NYM', material: 'Cu', crossSectionMm2: 2.5, lengthM: 30 } }];
     const saved = checkpoint(doc, 'Wiring');
@@ -175,7 +173,7 @@ describe('detailed wiring documentation', () => {
     expect(board.wiring!.wires).toHaveLength(3);
   });
 
-  it.each(['missing', 'pole', 'terminal', 'infeed', 'role', 'phase', 'cable', 'source', 'common-overlap', 'common-range', 'common-conductor'])(
+  it.each(['missing', 'pole', 'terminal', 'infeed', 'role', 'phase', 'cable', 'common-overlap', 'common-range', 'common-conductor'])(
     'rejects corrupt %s in new fields including revision snapshots', async kind => {
       const { doc, wiring } = fixture(); wiring.wires = [w('a', d('a'), b('phase'))];
       const saved = checkpoint(doc, 'valid'), snapshot = saved.revisions[0].data, wire = snapshot.boards[0].wiring!.wires[0];
@@ -186,7 +184,6 @@ describe('detailed wiring documentation', () => {
       if (kind === 'role') snapshot.devices[0].electrical!.role = 'bad' as never;
       if (kind === 'phase') snapshot.circuits.push({ id: 'bad', code: '', name: '', notes: '', color: '#123456', phase: 'L4' as never });
       if (kind === 'cable') wire.cable = { cores: 2.5 };
-      if (kind === 'source') snapshot.boards[0].wiring!.source = { nested: () => 'active' };
       if (kind === 'common-overlap') snapshot.devices[0].electrical = { poles: ['L', 'L', 'L'], commonPoleGroups: [[0, 1], [1, 2]] };
       if (kind === 'common-range') snapshot.devices[0].electrical!.commonPoleGroups = [[0, 2]];
       if (kind === 'common-conductor') snapshot.devices[0].electrical!.commonPoleGroups = [[0, 1]];
@@ -194,9 +191,8 @@ describe('detailed wiring documentation', () => {
     },
   );
 
-  it('accepts unresolved imported poles and old projects without adding inferred wiring', async () => {
-    const { doc, wiring } = fixture(); wiring.wires = [w('a', { kind: 'device', deviceId: 'a', side: 'top' }, d('b'))];
-    expect(await decodeProject(await encodeProject(doc))).toEqual(doc);
-    const old = createProject(); expect((await decodeProject(await encodeProject(old))).data.boards[0].wiring).toBeUndefined();
+  it('requires a concrete pole for every device wire endpoint', async () => {
+    const { doc, wiring } = fixture(); wiring.wires = [w('missing-pole', {kind:'device',deviceId:'a',side:'top'} as WiringEndpoint, d('b'))];
+    await expect(encodeProject(doc)).rejects.toThrow('Kapocsszám');
   });
 });

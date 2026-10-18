@@ -186,7 +186,7 @@ export function buildSingleLineSvg(data: ProjectData, board: Board, combined=fal
   const ordered = [...nodes.values()].sort((a, b) => Number(!!b.supply) - Number(!!a.supply));
   // Physical conductors have no entered direction. Rank them from their nearest
   // source solely for layout; reversing click order cannot move a supply below
-  // its consumers. Explicit legacy feed directions remain authoritative.
+  // its consumers. Explicit device-level feed directions remain authoritative.
   const adjacency=new Map(ordered.map(node=>[node.key,[] as string[]]));
   for(const edge of edges){adjacency.get(edge.from)!.push(edge.to);if(edge.undirected)adjacency.get(edge.to)!.push(edge.from);}
   const distances=new Map<string,number>(),queue:string[]=[];
