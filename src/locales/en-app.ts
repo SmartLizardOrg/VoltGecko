@@ -1,4 +1,7 @@
 const messages:Record<string,string> = {
+  'Betöltés…':'Loading…',
+  'A nézet nem tölthető be. A folytatáshoz töltsd újra az oldalt.':'This view could not be loaded. Reload the page to continue.',
+  'Újratöltés':'Reload',
   'VoltGecko':'VoltGecko',
   'Tervezz. Szerelj. Add át.':'Plan. Install. Hand over.',
   ' · AKTUÁLIS ELŐZMÉNY':' · CURRENT CHECKPOINT',

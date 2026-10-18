@@ -2,6 +2,7 @@ import { t, getLanguage } from '../i18n';
 import type { ProjectDocument } from '../types';
 import { decodeProject, encodeProject } from '../data/archive';
 import { APP, isProjectFilename, stripProjectExtension } from '../config';
+import { safeFilename } from './files';
 
 const CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID?.trim() || '';
 const API_KEY = import.meta.env.VITE_GOOGLE_API_KEY?.trim() || '';
@@ -111,10 +112,6 @@ async function listFiles(query: string, fields = 'files(id,name,modifiedTime),ne
     result.push(...body.files || []); nextPageToken = body.nextPageToken;
   } while (nextPageToken);
   return result;
-}
-
-export function safeFilename(value: string): string {
-  return value.replace(/[<>:"/\\|?*\u0000-\u001f]/g, '-').trim().replace(/[. ]+$/, '').slice(0, 100) || t('villamos-terv');
 }
 
 async function ensureFolder(): Promise<string> {

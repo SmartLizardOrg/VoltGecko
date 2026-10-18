@@ -1,7 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { makeDevice } from '../catalog';
 import { decodeProject, encodeProject, validateProject } from '../data/archive';
-import { checkpoint, createProject, getBoardIssues, restoreRevision } from '../data/project';
+import { checkpoint, createProject, restoreRevision } from '../data/project';
+import { getBoardIssues } from '../data/boardPlacement';
 import { setLanguage } from '../i18n';
 import { addProductToProject, createDeviceFromProduct } from './factory';
 import type { CatalogProduct } from './types';
@@ -74,6 +75,18 @@ describe('adding catalog products to distribution boards', () => {
     data.boards[0].rows[0].placements.push({ deviceId: occupied.id, start: 0 });
     const result = addProductToProject(data, fixture({ category: 'control', kind: 'custom', moduleWidth: 0.5 }));
     expect(result.data.boards[0].rows[0].placements[1]).toEqual({ deviceId: result.selectedId, start: 0.5 });
+    expect(getBoardIssues(result.data.boards[0], result.data.devices)).toEqual([]);
+  });
+
+  it('fits catalog devices immediately after exact fractional widths without half-module rounding', () => {
+    const data = createProject().data;
+    const occupied = makeDevice('custom', []); occupied.moduleWidth = 0.75;
+    data.devices.push(occupied);
+    data.boards[0].rows[0].capacity = 1.25;
+    data.boards[0].rows[0].placements.push({ deviceId: occupied.id, start: 0 });
+    const result = addProductToProject(data, fixture({ moduleWidth: 0.5 }));
+    expect(result.placed).toBe(true);
+    expect(result.data.boards[0].rows[0].placements[1]).toEqual({ deviceId: result.selectedId, start: 0.75 });
     expect(getBoardIssues(result.data.boards[0], result.data.devices)).toEqual([]);
   });
 

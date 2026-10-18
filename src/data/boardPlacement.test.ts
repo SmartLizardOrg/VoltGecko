@@ -2,8 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { makeDevice } from '../catalog';
 import { decodeProject, encodeProject } from './archive';
 import { getBoardDevices } from './boardConnections';
-import { getAvailableBoardDevices, placeBoardDevice } from './boardPlacement';
-import { createProject, getBoardIssues } from './project';
+import { getAvailableBoardDevices, getBoardIssues, placeBoardDevice } from './boardPlacement';
+import { createProject } from './project';
 
 function fixture() {
   const document = createProject();

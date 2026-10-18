@@ -5,9 +5,9 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { SymbolGlyph } from '../components/Symbol';
 import { APP } from '../config';
 import { kindLabel } from '../catalog';
-import { getBoardIssues } from '../data/project';
+import { getBoardIssues } from '../data/boardPlacement';
 import type { Asset, DeviceKind, PlanSheet, ProjectDocument } from '../types';
-import { safeFilename } from './drive';
+import { downloadBlob, safeFilename } from './files';
 import { buildSingleLineSvg, cableLabel, circuitCableLabel } from './singleLine';
 import { getBoardConnectionIssues } from '../data/boardConnections';
 import { getWiringIssues, wiringEndpointLabel, getPhaseLoads } from '../data/boardWiring';
@@ -324,9 +324,5 @@ export async function buildPdf(doc: ProjectDocument, audience: Audience): Promis
 
 export async function exportPdf(doc: ProjectDocument, audience: Audience): Promise<void> {
   const blob = await buildPdf(doc, audience);
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement('a');
-  anchor.href = url; anchor.download = `${safeFilename(doc.data.name)}-${audience === 'professional' ? t('reszletes') : t('ugyfel')}.pdf`;
-  document.body.appendChild(anchor); anchor.click(); anchor.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 60000);
+  downloadBlob(blob, `${safeFilename(doc.data.name)}-${audience === 'professional' ? t('reszletes') : t('ugyfel')}.pdf`);
 }

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { importBackground } from './import';
-import { isDriveConnected, listDriveProjects, safeFilename } from './drive';
+import { isDriveConnected, listDriveProjects } from './drive';
+import { safeFilename } from './files';
 
 describe('Integrációs hibahatárok', () => {
   it('does not attempt a Drive request without an explicit connection', async () => {

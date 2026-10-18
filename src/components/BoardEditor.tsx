@@ -2,10 +2,9 @@ import { t, getLocale } from '../i18n';
 import { Plus, Trash2, AlertTriangle, LayoutGrid, ArrowRight } from 'lucide-react';
 import type { Board, Device, ProjectData } from '../types';
 import { uid, kindLabel } from '../catalog';
-import { getBoardIssues } from '../data/project';
 import { BoardConnections } from './BoardConnections';
 import { BoardWiringEditor } from './BoardWiringEditor';
-import { getAvailableBoardDevices, placeBoardDevice } from '../data/boardPlacement';
+import { getAvailableBoardDevices, getBoardIssues, placeBoardDevice } from '../data/boardPlacement';
 
 interface Props { data: ProjectData; boardId:string; onBoardChange:(id:string)=>void; selectedId: string | null; onSelect: (id: string | null) => void; onChange: (data: ProjectData) => void; onNotify: (text: string) => void }
 export function BoardEditor({ data, boardId:active, onBoardChange:setActive, selectedId, onSelect, onChange, onNotify }: Props) {

@@ -42,6 +42,10 @@ npm run preview
 
 Open [localhost:4173](http://localhost:4173) and wait for **Ready for offline use**. The production build contains the service worker and local PDF resources. After the first successful load, the app can reopen offline with its saved photos and projects. Updates are applied through the app's update prompt.
 
+Editors, the manufacturer catalogue, sample data and Drive panel load when first used. PDF import and export also load separately; the PDF-only React server renderer has its own build chunk. The service worker still precaches every JavaScript/CSS chunk, font and PDF resource before reporting offline readiness, so a feature can be opened for the first time without a network connection. This reduces startup parsing and execution; the complete offline download still includes all features. Browser tests use the Vite build manifest to check these boundaries and the default 500 kB JavaScript chunk budget.
+
+Editor base styles are imported centrally in `main.tsx`, before the shared appearance overrides. Keep this order when adding a lazy editor: loading its base CSS later would change the cascade and could undo readability and mobile layout fixes.
+
 Browser storage is tied to the exact origin: localhost, a LAN address, a production domain and preview deployment URLs each have separate data. Export a project file to move work between them. Keep external `.vgecko` backups; clearing browser storage or losing the device can remove the local copy. Project files are ZIP archives and are not encrypted.
 
 ### Cloudflare Pages with Git integration
@@ -86,6 +90,19 @@ For WebKit, install `webkit` and set `PLAYWRIGHT_BROWSER=webkit` before running 
 The displayed brand and `.vgecko` filename extension are configured in `src/config.ts`; translations are in `src/locales/en-*.ts`. The native `.vgecko` project format uses ZIP compression to keep the plan, photographs, attachments and complete revision history together. Local opening and Google Drive use this same format.
 
 The welcome screen and editor footer show the source commit date in Europe/Budapest time. Clicking it opens the exact GitHub commit embedded in that build. Offline copies retain their own date and commit link. Local builds with uncommitted changes are labelled as local and do not claim an exact commit.
+
+### Code structure
+
+| Location | Responsibility |
+| --- | --- |
+| `src/App.tsx`, `src/app/` | Workspace coordination, document session/autosave/undo, navigation and project panels. Panel-specific state stays in its panel. |
+| `src/components/` | Floor-plan, board, circuit and device editors. `board-wiring/` separates diagram interaction, wire editing and supply/bus editing. |
+| `src/data/` | Project operations, board placement, wiring rules and floor-plan geometry; `storage.ts` owns IndexedDB access. |
+| `src/data/archive/` | The project-file format, validation, assets, ZIP integrity, encoding and file saving. `data/archive.ts` is its public API. |
+| `src/services/` | Background import, PDF/diagram export, Google Drive and linked-file integrations. Shared browser downloads and filename handling live in `files.ts`. |
+| `src/products/`, `src/locales/` | Manufacturer source data and product creation; interface translations. |
+
+Keep electrical and placement rules in `data/`, so every editor and export uses the same behavior. Pass changes to the document session rather than keeping separate project copies in each view. Existing revisions and assets are immutable and may be shared between checkpoints; replace them when editing. The sample generator lives separately in `data/demo.ts`. Add a module for a distinct responsibility, without generic repositories, event buses or compatibility wrappers. Test domain edge cases with Vitest and cross-view, file and offline workflows with Playwright.
 
 ### Scope
 

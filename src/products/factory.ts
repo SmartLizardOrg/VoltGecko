@@ -1,4 +1,5 @@
-import { CATALOG, makeDevice, uid } from '../catalog';
+import { makeDevice, uid } from '../catalog';
+import { findFreeBoardSlot } from '../data/boardPlacement';
 import { getLanguage, t } from '../i18n';
 import type { Board, Device, ProjectData } from '../types';
 import type { CatalogProduct, ProductSnapshot } from './types';
@@ -91,20 +92,8 @@ export function addProductToProject(data: ProjectData, product: CatalogProduct, 
   const width = device.moduleWidth!;
   const lookup = new Map(next.devices.map(item => [item.id, item]));
   for (const row of board.rows) {
-    if (!Number.isFinite(row.capacity) || row.capacity <= 0) continue;
-    // A corrupt/unknown occupied position is not evidence of free capacity.
-    const occupied = row.placements.map(placement => {
-      const existing = lookup.get(placement.deviceId);
-      const size = existing?.moduleWidth ?? CATALOG.find(item => item.kind === existing?.kind)?.moduleWidth;
-      return { start: placement.start, width: size };
-    });
-    if (occupied.some(item => !Number.isFinite(item.start) || item.start < 0 || !Number.isFinite(item.width) || item.width! <= 0)) continue;
-    let start = 0;
-    for (const other of occupied.sort((a, b) => a.start - b.start)) {
-      if (start + width <= other.start + 1e-8) break;
-      if (start < other.start + other.width! - 1e-8) start = Math.ceil((other.start + other.width! - 1e-8) * 2) / 2;
-    }
-    if (start + width <= row.capacity + 1e-8) {
+    const start = findFreeBoardSlot(row, lookup, width);
+    if (start !== undefined) {
       row.placements.push({ deviceId: device.id, start });
       return { data: next, selectedId: device.id, boardId: board.id, placed: true };
     }

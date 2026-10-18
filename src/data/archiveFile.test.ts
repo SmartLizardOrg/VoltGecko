@@ -1,11 +1,15 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { APP, isProjectFilename, stripProjectExtension } from '../config';
 import { setLanguage } from '../i18n';
-import { decodeProject, encodeProject, saveProjectFile, PROJECT_FILE_FORMAT } from './archive';
+import { ARCHIVE_LIMITS, decodeProject, encodeProject, saveProjectFile, validateProject, PROJECT_FILE_FORMAT } from './archive';
 import { strFromU8, unzipSync, zipSync, strToU8 } from 'fflate';
-import { createDemoProject } from './project';
+import { createProject } from './project';
+import { createDemoProject } from './demo';
+
+const defaultLimits = { ...ARCHIVE_LIMITS };
 
 afterEach(() => {
+  Object.assign(ARCHIVE_LIMITS, defaultLimits);
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
   vi.useRealTimers();
@@ -86,5 +90,39 @@ describe('native VoltGecko project archives', () => {
     await expect(decodeProject(new Blob([JSON.stringify(doc)]))).rejects.toThrow('ZIP');
     delete manifest.format;files['project.json']=strToU8(JSON.stringify(manifest));
     await expect(decodeProject(new Blob([new Uint8Array(zipSync(files)).buffer]))).rejects.toThrow('nem VoltGecko');
+  });
+
+  it('applies the same expanded-size boundary to export and import, including the manifest', async () => {
+    const document = createDemoProject();
+    const files = unzipSync(new Uint8Array(await (await encodeProject(document)).arrayBuffer()));
+    const expandedBytes = Object.values(files).reduce((total, bytes) => total + bytes.length, 0);
+
+    Object.assign(ARCHIVE_LIMITS, { expandedBytes: expandedBytes - 1 });
+    await expect(encodeProject(document)).rejects.toThrow('a kicsomagolt projekt túl nagy');
+
+    Object.assign(ARCHIVE_LIMITS, { expandedBytes });
+    expect(await decodeProject(await encodeProject(document))).toEqual(document);
+  });
+
+  it('rejects an asset whose decoded size exceeds the limit by a single byte', async () => {
+    Object.assign(ARCHIVE_LIMITS, { assetBytes: 4 });
+    const document = createProject();
+    document.assets.photo = { id: 'photo', name: 'photo.png', mime: 'image/png', data: `data:image/png;base64,${btoa('12345')}` };
+
+    await expect(encodeProject(document)).rejects.toThrow('egy melléklet meghaladja');
+  });
+
+  it('validates shared history ancestors and detects a cycle in a later branch', () => {
+    const document = createProject();
+    document.revisions = [
+      { id: 'root', data: document.data, createdAt: document.updatedAt, note: '' },
+      { id: 'first', parentId: 'root', data: document.data, createdAt: document.updatedAt, note: '' },
+      { id: 'second', parentId: 'root', data: document.data, createdAt: document.updatedAt, note: '' },
+    ];
+    expect(() => validateProject(document)).not.toThrow();
+
+    document.revisions[1].parentId = 'second';
+    document.revisions[2].parentId = 'first';
+    expect(() => validateProject(document)).toThrow('körkörös előzményhivatkozás');
   });
 });

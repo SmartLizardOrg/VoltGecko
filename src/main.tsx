@@ -2,6 +2,12 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { registerSW } from 'virtual:pwa-register';
 import App from './App';
+// Keep editor base styles before the shared appearance overrides, even when
+// their JavaScript is first opened later in the session.
+import './components/floorplan.css';
+import './components/board-wiring.css';
+import './components/single-line.css';
+import './components/product-library.css';
 import './styles.css';
 import './appearance.css';
 import './theme';

@@ -4,7 +4,8 @@ import { createProject } from '../data/project';
 import { makeDevice } from '../catalog';
 import { buildPdf } from './pdf';
 import { importBackground } from './import';
-import { listDriveProjects, safeFilename } from './drive';
+import { listDriveProjects } from './drive';
+import { safeFilename } from './files';
 
 const pdfCalls = vi.hoisted(() => ({ text: [] as string[], language: '' }));
 vi.mock('jspdf', () => ({

@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createDemoProject } from '../data/project';
+import { createDemoProject } from '../data/demo';
 import { decodeProject, encodeProject } from '../data/archive';
 
 type PickerSelection = { id: string; name: string };

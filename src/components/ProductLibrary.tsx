@@ -2,7 +2,6 @@ import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { ArrowUpRight, BookOpen, Package, Plus, Search, X } from 'lucide-react';
 import { getLocale, t, useLanguage } from '../i18n';
 import type { CatalogProduct } from '../products/types';
-import './product-library.css';
 
 interface Props {
   products: CatalogProduct[];

@@ -216,6 +216,23 @@ test('exports a complete archive and imports an older state as a preserved separ
   await expect(page.locator('.project-list > article')).toHaveCount(2);
 });
 
+test('checkpoints the current undo result when undo and quick save occur in the same event turn', async ({ page }) => {
+  await openPlanner(page);
+  const initial = await readDocument(page);
+  const original = initial.data.devices.find(device => device.code === 'D1')!;
+  await clickDevice(page, 'D1');
+  await page.getByLabel('Eszköz neve', { exact: true }).fill('Temporary device name');
+  await expect.poll(async () => (await readDocument(page)).data.devices.find(device => device.id === original.id)?.name).toBe('Temporary device name');
+  await page.evaluate(() => {
+    document.querySelector<HTMLButtonElement>('button[aria-label="Visszavonás"]')!.click();
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 's', ctrlKey: true, bubbles: true, cancelable: true }));
+  });
+  await expect.poll(async () => (await readDocument(page)).revisions.at(-1)?.note).toBe('Gyors mentés');
+  const saved = await readDocument(page);
+  expect(saved.data.devices.find(device => device.id === original.id)?.name).toBe(original.name);
+  expect(saved.revisions.at(-1)?.data.devices.find(device => device.id === original.id)?.name).toBe(original.name);
+});
+
 test.describe('phone field editing', () => {
   test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
   test('draws a connection with touch while keeping the inspector out of the way',async({page})=>{

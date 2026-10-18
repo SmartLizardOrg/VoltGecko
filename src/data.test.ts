@@ -3,7 +3,9 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { strToU8, zipSync } from 'fflate';
 import { makeDevice } from './catalog';
 import { ARCHIVE_LIMITS, PROJECT_FILE_FORMAT, assetFromFile, decodeProject, encodeProject, validateProject } from './data/archive';
-import { checkpoint, createDemoProject, createProject, deleteDevice, getBoardIssues, resolveImport, restoreRevision } from './data/project';
+import { checkpoint, createProject, deleteDevice, resolveImport, restoreRevision } from './data/project';
+import { createDemoProject } from './data/demo';
+import { getBoardIssues } from './data/boardPlacement';
 import { deleteProject, listProjects, loadProject, projectDatabase, saveProject } from './data/storage';
 import { setLanguage } from './i18n';
 
@@ -54,6 +56,24 @@ describe('a projektadatok nyelve', () => {
 });
 
 describe('projektelőzmények és import', () => {
+  it('a checkpoint elkülöníti az új munkapéldányt és pillanatképet, az állandó előzményeket és mellékleteket megosztja', () => {
+    const original = createDemoProject();
+    const before = structuredClone(original);
+    const saved = checkpoint(original, 'Új változat');
+    expect(original).toEqual(before);
+    expect(saved.assets).toBe(original.assets);
+    expect(saved.revisions).not.toBe(original.revisions);
+    expect(saved.revisions[0]).toBe(original.revisions[0]);
+    expect(saved.data).not.toBe(original.data);
+    const snapshot = saved.revisions.at(-1)!.data;
+    expect(snapshot).not.toBe(original.data);
+    expect(snapshot).not.toBe(saved.data);
+    original.data.devices[0].name = 'Eredeti munkapéldány';
+    saved.data.devices[0].name = 'Új munkapéldány';
+    expect(snapshot.devices[0].name).toBe(before.data.devices[0].name);
+    expect(saved.revisions[0].data).toEqual(before.revisions[0].data);
+  });
+
   it('a mintaterv nyomvonalainak végei a kapcsolt készülékekhez illeszkednek', () => {
     const document = createDemoProject();
     for (const sheet of document.data.sheets) {

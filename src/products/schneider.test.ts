@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { decodeProject, encodeProject } from '../data/archive';
-import { checkpoint, createProject, getBoardIssues } from '../data/project';
+import { checkpoint, createProject } from '../data/project';
+import { getBoardIssues } from '../data/boardPlacement';
 import { setLanguage } from '../i18n';
 import { addProductToProject } from './factory';
 import { SCHNEIDER_PRODUCTS, SCHNEIDER_SOURCE } from './schneider';
