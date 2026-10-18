@@ -1,12 +1,16 @@
 import { kindLabel } from '../catalog';
 import { getLocale, t } from '../i18n';
 import { getBoardConnectionIssues, getBoardDevices } from '../data/boardConnections';
-import type { Board, Circuit, Device, ProjectData } from '../types';
+import { wiringEndpointLabel, getWiringIssues } from '../data/boardWiring';
+import type { Board, Circuit, Device, ProjectData, WiringEndpoint, CableDetails } from '../types';
 
 interface GraphNode {
   key: string;
   device?: Device;
   supply?: boolean;
+  label?: string;
+  detail?: string;
+  bus?: boolean;
   missingId?: string;
   incoming: number;
   circuits: Circuit[];
@@ -15,7 +19,7 @@ interface GraphNode {
   height: number;
   rank: number;
 }
-interface GraphEdge { from: string; to: string; id: string; index: number }
+interface GraphEdge { from: string; to: string; id: string; index: number; label?:string; undirected?:boolean; color?:string }
 export interface SingleLineDrawing {
   svg: string;
   width: number;
@@ -32,6 +36,12 @@ const HEADER_HEIGHT = 170;
 /** All user text is XML text, including attributes and titles; SVG has no HTML. */
 const xml = (value: unknown): string => String(value ?? '').replace(/[\x00-\x08\x0b\x0c\x0e-\x1f\ufffe\uffff]/g, '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' })[character]!);
 const safeColor = (color: string): string => /^#[a-f\d]{6}$/i.test(color) ? color : '#287c68';
+export const cableLabel = (cable?:CableDetails):string => cable ? [cable.material, cable.designation, cable.crossSectionMm2 !== undefined ? `${cable.cores ? `${cable.cores}×` : ''}${cable.crossSectionMm2} mm²` : '', cable.lengthM !== undefined ? `${cable.lengthM} m` : ''].filter(Boolean).join(' · ') : '';
+export const circuitCableLabel=(circuit:Circuit):string=>{
+  const details=circuit.cableDetails;
+  if(!details)return circuit.cable??'';
+  return details.designation||details.crossSectionMm2!==undefined ? cableLabel(details) : [circuit.cable,cableLabel(details)].filter(Boolean).join(' · ');
+};
 const deviceKey = (id: string): string => `device:${id}`;
 const words = (value: string, maxLength: number, maxLines: number): string[] => {
   const remaining = Array.from(value.trim().replace(/\s+/g, ' '));
@@ -123,7 +133,7 @@ function symbol(device?: Device, supply = false): string {
 }
 
 /** Pure, self-contained SVG shared by the offline view, download and PDF export. */
-export function buildSingleLineSvg(data: ProjectData, board: Board): SingleLineDrawing {
+export function buildSingleLineSvg(data: ProjectData, board: Board, combined=false): SingleLineDrawing {
   const devices = new Map(data.devices.map(device => [device.id, device]));
   const nodes = new Map<string, GraphNode>();
   const ensureDevice = (id: string) => {
@@ -149,9 +159,42 @@ export function buildSingleLineSvg(data: ProjectData, board: Board): SingleLineD
     nodes.get(to)!.incoming++;
     return { from, to, id: connection.id, index };
   });
+  const ensureEndpoint = (endpoint:WiringEndpoint):string => {
+    if(endpoint.kind==='device') return ensureDevice(endpoint.deviceId);
+    const key = endpoint.kind==='bus' ? `bus:${endpoint.busId}` : `infeed:${endpoint.infeedId}`;
+    if(!nodes.has(key)) {
+      const bus=endpoint.kind==='bus' ? data.boards.flatMap(item=>item.wiring?.buses??[]).find(item=>item.id===endpoint.busId) : undefined;
+      const infeed=endpoint.kind==='infeed' ? data.boards.flatMap(item=>item.wiring?.infeeds??[]).find(item=>item.id===endpoint.infeedId) : undefined;
+      const label=bus?.name??infeed?.name??t('Hiányzó végpont');
+      const owner=data.boards.find(item=>item.wiring?.buses.some(value=>value.id===bus?.id)||item.wiring?.infeeds.some(value=>value.id===infeed?.id));
+      const detail=[owner?.name,bus ? `${bus.conductor} · ${bus.capacity} ${t('kapocs')}` : infeed ? `${infeed.poles.join(' / ')} · ${cableLabel(infeed.cable)}` : t('A kapcsolat végpontja nem található a projektben.')].filter(Boolean).join(' · ');
+      nodes.set(key,{key,label,detail,bus:!!bus,supply:infeed?.kind==='supply',incoming:0,circuits:[],x:0,y:0,height:132,rank:0});
+    }
+    return key;
+  };
+  for(const bus of board.wiring?.buses??[]) ensureEndpoint({kind:'bus',busId:bus.id,terminal:0});
+  for(const infeed of board.wiring?.infeeds??[]) ensureEndpoint({kind:'infeed',infeedId:infeed.id,pole:0});
+  for(const wire of board.wiring?.wires??[]) {
+    const from=ensureEndpoint(wire.from),to=ensureEndpoint(wire.to);
+    // Physical wire order never asserts a supply direction. Keep every conductor,
+    // same-device bridge and repeated edge; no spanning-tree inference occurs.
+    nodes.get(from)!.incoming++; nodes.get(to)!.incoming++;
+    edges.push({from,to,id:wire.id,index:edges.length,undirected:true,color:wire.color,
+      label:[`${wiringEndpointLabel(data,wire.from)} ↔ ${wiringEndpointLabel(data,wire.to)}`,cableLabel(wire.cable),wire.label].filter(Boolean).join(' · ')});
+  }
   // Place the supply first regardless of the order in which a connection was entered.
   const ordered = [...nodes.values()].sort((a, b) => Number(!!b.supply) - Number(!!a.supply));
-  rankGraph(ordered, edges);
+  // Physical conductors have no entered direction. Rank them from their nearest
+  // source solely for layout; reversing click order cannot move a supply below
+  // its consumers. Explicit legacy feed directions remain authoritative.
+  const adjacency=new Map(ordered.map(node=>[node.key,[] as string[]]));
+  for(const edge of edges){adjacency.get(edge.from)!.push(edge.to);if(edge.undirected)adjacency.get(edge.to)!.push(edge.from);}
+  const distances=new Map<string,number>(),queue:string[]=[];
+  const visit=()=>{for(let index=0;index<queue.length;index++){const key=queue[index];for(const target of adjacency.get(key)??[])if(!distances.has(target)){distances.set(target,distances.get(key)!+1);queue.push(target);}}queue.length=0;};
+  for(const node of ordered.filter(node=>node.supply)){distances.set(node.key,0);queue.push(node.key);}visit();
+  for(const node of ordered)if(!distances.has(node.key)){distances.set(node.key,0);queue.push(node.key);visit();}
+  const rankingEdges=edges.map(edge=>edge.undirected&&((distances.get(edge.from)!>distances.get(edge.to)!)||(distances.get(edge.from)===distances.get(edge.to)&&edge.from>edge.to))?{...edge,from:edge.to,to:edge.from}:edge);
+  rankGraph(ordered, rankingEdges);
   const layers = new Map<number, GraphNode[]>();
   for (const node of ordered) { const layer = layers.get(node.rank) ?? []; layer.push(node); layers.set(node.rank, layer); }
   const maxColumns = 6;
@@ -188,11 +231,12 @@ export function buildSingleLineSvg(data: ProjectData, board: Board): SingleLineD
       path = `M${sx} ${sy}V${startY}H${lane}V${topY}H${tx}V${ty - 5}`;
       labelX = lane + 4; labelY = startY - 5;
     }
-    const fromName = from.supply ? board.supplyLabel || t('Betáplálás') : from.device?.code || from.missingId || '—';
-    const toName = to.device?.code || to.missingId || '—';
-    return `<g data-connection-id="${xml(edge.id)}" data-connection-index="${edge.index}"><title>${xml(t('Kapcsolat: {from} → {to}', { from: fromName, to: toName }))}</title><path d="${path}" fill="none" stroke="#698379" stroke-width="1.8" marker-end="url(#single-line-arrow)"/>${text(labelX, labelY, String(edge.index + 1), 10, '#667d72')}</g>`;
+    const fromName = from.label || (from.supply ? board.supplyLabel || t('Betáplálás') : from.device?.code || from.missingId || '—');
+    const toName = to.label || to.device?.code || to.missingId || '—';
+    const title=edge.label || t('Kapcsolat: {from} → {to}', { from: fromName, to: toName });
+    return `<g data-connection-id="${xml(edge.id)}" data-connection-index="${edge.index}"><title>${xml(title)}</title><path d="${path}" fill="none" stroke="${edge.color==='gy'?'#26833b':safeColor(edge.color??'#698379')}" stroke-width="1.8"${edge.undirected?'':' marker-end="url(#single-line-arrow)"'}/>${text(labelX, labelY, String(edge.index + 1), 10, '#667d72')}</g>`;
   }).join('');
-  const issues = getBoardConnectionIssues(board, data.devices);
+  const issues = [...getBoardConnectionIssues(board, data.devices).filter(issue=>!combined||issue.kind!=='other-board'), ...(combined?data.boards.flatMap(item=>getWiringIssues(data,item)):getWiringIssues(data,board))];
   const noticeLines = issues.slice(0, 8).flatMap(issue => words(issue.message, Math.floor(contentWidth / 7), 2));
   if (issues.length > 8) noticeLines.push(t('{count} további jelzés az alkalmazásban.', { count: issues.length - 8 }));
   const footerY = bottom + 5;
@@ -202,22 +246,24 @@ export function buildSingleLineSvg(data: ProjectData, board: Board): SingleLineD
     const x = node.x; const y = node.y; const device = node.device;
     const isMissing = node.missingId !== undefined;
     const outline = isMissing ? '#c57a52' : '#c6d9cf';
-    const label = node.supply ? board.supplyLabel || t('Elosztó betáplálása') : device?.name || t('Hiányzó készülék');
-    const title = node.supply ? label : [device?.code || node.missingId, label, device?.rating, device?.product?.reference || device?.model, ...node.circuits.map(circuit => `${circuit.code} · ${circuit.name} · ${circuit.cable || ''}${circuit.powerW !== undefined ? ` · ${circuit.powerW} W` : ''}`)].filter(Boolean).join('\n');
+    const label = node.label || (node.supply ? board.supplyLabel || t('Elosztó betáplálása') : device?.name || t('Hiányzó készülék'));
+    const title = [device?.code || node.missingId, label, node.detail, device?.rating, device?.product?.reference || device?.model, ...node.circuits.map(circuit => `${circuit.code} · ${circuit.name} · ${circuit.cable || ''}${circuit.powerW !== undefined ? ` · ${circuit.powerW} W` : ''}`)].filter(Boolean).join('\n');
     const dataAttribute = device ? ` data-device-id="${xml(device.id)}" tabindex="0" role="button" aria-label="${xml(`${device.code} · ${device.name}`)}"` : '';
     let content = `<g${dataAttribute}><title>${xml(title)}</title><rect x="${x}" y="${y}" width="${CARD_WIDTH}" height="${node.height}" rx="8" fill="#fff" stroke="${outline}" stroke-width="1.5"/><path d="M${x + 10} ${y}H${x + CARD_WIDTH - 10}" stroke="${isMissing ? '#bd714d' : '#287c68'}" stroke-width="3"/><g transform="translate(${x + 33} ${y + 17})">${symbol(device, node.supply)}</g>`;
-    content += wrapped(x + 59, y + 29, node.supply ? t('Betáplálás') : device?.code || t('Hiányzó készülék'), 23, 1, 14, '#1c5c49', 700);
+    content += wrapped(x + 59, y + 29, node.bus ? t('Sín') : node.supply ? t('Betáplálás') : device?.code || (node.label ? t('Külső bekötés') : t('Hiányzó készülék')), 23, 1, 14, '#1c5c49', 700);
     content += wrapped(x + 59, y + 49, label, 26, 2, 12, '#354c41', 500);
-    if (node.supply) content += text(x + 18, y + 95, t('A nyilak a megadott kapcsolat irányát jelzik.'), 10, '#647d70');
+    if (node.detail) content += wrapped(x+17,y+96,node.detail,36,2,11,'#526b5d');
+    else if (node.supply) content += text(x + 18, y + 95, t('A nyilak a megadott kapcsolat irányát jelzik.'), 10, '#647d70');
     else if (device) {
       content += wrapped(x + 17, y + 93, device.rating || kindLabel(device.kind), 37, 2, 11, '#526b5d');
       content += wrapped(x + 17, y + 126, device.product?.reference || device.model || '—', 37, 1, 11, '#526b5d', 500);
       if (!node.incoming) content += text(x + 17, y + 151, t('Nincs megadva a bemenet'), 10, '#9c6d28');
+      else if(combined) content += wrapped(x+17,y+151,data.boards.find(item=>item.id===device.boardId||item.rows.some(row=>row.placements.some(p=>p.deviceId===device.id)))?.name??'',37,1,10,'#526b5d');
     } else content += wrapped(x + 17, y + 100, t('A kapcsolat végpontja nem található a projektben.'), 35, 3, 11, '#a16a44');
     node.circuits.forEach((circuit, index) => {
       const cy = y + 166 + index * 70;
       const color = safeColor(circuit.color);
-      const metadata = [circuit.cable, circuit.powerW !== undefined ? `${circuit.powerW.toLocaleString(getLocale())} W` : ''].filter(Boolean).join(' · ');
+      const metadata = [circuitCableLabel(circuit), circuit.powerW !== undefined ? `${circuit.powerW.toLocaleString(getLocale())} W` : '',circuit.phase].filter(Boolean).join(' · ');
       content += `<g><title>${xml(`${t('Áramkör-hozzárendelés')}: ${circuit.code} · ${circuit.name}\n${metadata}`)}</title><path d="M${x + 1} ${cy}H${x + CARD_WIDTH - 1}" stroke="#e2ebe5"/><rect x="${x + 11}" y="${cy + 12}" width="3" height="44" rx="1.5" fill="${color}"/>`;
       content += wrapped(x + 23, cy + 22, `${circuit.code} · ${circuit.name}`, 32, 2, 11, color, 600);
       content += wrapped(x + 23, cy + 56, metadata || '—', 34, 1, 10, '#647b6e');
@@ -234,4 +280,11 @@ export function buildSingleLineSvg(data: ProjectData, board: Board): SingleLineD
   }
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="single-line-title single-line-description"><title id="single-line-title">${xml(`${board.name} · ${t('Egyvonalas rajz')}`)}</title><desc id="single-line-description">${xml(t('Az elosztó ténylegesen megadott kapcsolatai, irányjelöléssel.'))}</desc><defs><marker id="single-line-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#698379"/></marker></defs><rect width="${width}" height="${height}" fill="#fff"/><g font-family="Arial, Helvetica, sans-serif">${text(MARGIN, 36, t('Egyvonalas rajz').toLocaleUpperCase(getLocale()), 10, '#70877b', 600, 'letter-spacing="1.8"')}${wrapped(MARGIN, 66, board.name, Math.floor((width - MARGIN * 2) / 12), 1, 22, '#214f3d', 600)}${text(MARGIN, 93, t('{devices} készülék · {connections} kapcsolat', { devices: ordered.filter(node => node.device).length, connections: edges.length }), 11, '#6c8376')}${paths}${cards}${empty}${text(MARGIN, footerY + 15, t('A sín sorrendje nem határozza meg a villamos kapcsolatokat.'), 11, '#647b6e')}${text(MARGIN, footerY + 35, t('A rajz a megadott kapcsolatokat mutatja; a jelölések sematikusak.'), 11, '#647b6e')}${notices}</g></svg>`;
   return { svg, width, height, blocks: ordered.map(node => ({ x: node.x, y: node.y, width: CARD_WIDTH, height: node.height })) };
+}
+
+/** Shared-project overview preserves cross-board wiring without duplicating edges. */
+export function buildProjectSingleLineSvg(data:ProjectData):SingleLineDrawing {
+  const board:Board={id:'combined-project-view',name:data.name,rows:data.boards.flatMap(item=>item.rows),connections:data.boards.flatMap(item=>item.connections??[]),
+    wiring:{buses:data.boards.flatMap(item=>item.wiring?.buses??[]),infeeds:data.boards.flatMap(item=>item.wiring?.infeeds??[]),wires:data.boards.flatMap(item=>item.wiring?.wires??[])}};
+  return buildSingleLineSvg(data,board,true);
 }

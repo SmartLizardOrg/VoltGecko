@@ -45,6 +45,7 @@ export function deleteDevice(data: ProjectData, id: string): ProjectData {
   for (const board of next.boards) {
     for (const row of board.rows) row.placements = row.placements.filter(placement => placement.deviceId !== id);
     if (board.connections) board.connections = board.connections.filter(connection => connection.fromDeviceId !== id && connection.toDeviceId !== id);
+    if (board.wiring) board.wiring.wires = board.wiring.wires.filter(wire => ![wire.from, wire.to].some(endpoint => endpoint.kind === 'device' && endpoint.deviceId === id));
   }
   for (const circuit of next.circuits) {
     if (circuit.protectionDeviceId === id) delete circuit.protectionDeviceId;
@@ -55,6 +56,8 @@ export function deleteDevice(data: ProjectData, id: string): ProjectData {
 export interface BoardIssue { rowId: string; deviceId?: string; message: string }
 
 export function getBoardIssues(board: Board, devices: Device[]): BoardIssue[] {
+  // Imported generic geometry is rounded to six decimal module places.
+  const epsilon=1e-6;
   const result: BoardIssue[] = [];
   const lookup = new Map(devices.map(device => [device.id, device]));
   const placed = new Set<string>();
@@ -81,11 +84,11 @@ export function getBoardIssues(board: Board, devices: Device[]): BoardIssue[] {
         continue;
       }
       const end = placement.start + width;
-      if (end > row.capacity + 1e-8) {
+      if (end > row.capacity + epsilon) {
         result.push({ rowId: row.id, deviceId: device.id, message: t('{code}: túllóg a sor {capacity} modulos kapacitásán.', { code: device.code, capacity: row.capacity }) });
       }
       for (const other of occupied) {
-        if (placement.start < other.end - 1e-8 && end > other.start + 1e-8) {
+        if (placement.start < other.end - epsilon && end > other.start + epsilon) {
           result.push({ rowId: row.id, deviceId: device.id, message: t('{code} és {other}: ütköző modulfoglalás.', { code: device.code, other: other.code }) });
         }
       }

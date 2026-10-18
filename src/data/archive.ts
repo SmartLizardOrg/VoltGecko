@@ -3,6 +3,8 @@ import { uid } from '../catalog';
 import { APP, stripProjectExtension } from '../config';
 import { t } from '../i18n';
 import type { Asset, ProjectDocument } from '../types';
+import { effectiveDevicePoles } from './boardWiring';
+import type { Device } from '../types';
 
 // Limits are checked before ZIP extraction as well as after JSON parsing.
 // Files are read in memory on phones, so failures should be explicit and early.
@@ -49,12 +51,140 @@ function uniqueIds(values: unknown[], label: string): Set<string> {
   }
   return ids;
 }
-function reference(value: unknown, ids: Set<string>, label: string, optional = false) {
+function reference(value: unknown, ids: ReadonlySet<string> | ReadonlyMap<string, unknown>, label: string, optional = false) {
   if (value === undefined && optional) return;
   identifier(value, label);
   if (!ids.has(value)) fail(t('{label}: hiányzó hivatkozás ({id}).', { label: t(label), id: value }));
 }
 function point(value: JsonObject, label: string) { finite(value.x, `${t(label)}.x`); finite(value.y, `${t(label)}.y`); }
+
+const conductors = new Set(['L', 'L1', 'L2', 'L3', 'N', 'PE', 'PEN']);
+function positive(value: unknown, label: string, max = 1_000_000_000, zero = false): asserts value is number {
+  finite(value, label, max);
+  if (zero ? value < 0 : value <= 0) fail('a villamos adat a megengedett tartományon kívül esik.');
+}
+function poles(value: unknown) {
+  array(value, 'Készülékpólusok', 64);
+  for (const conductor of value) if (typeof conductor !== 'string' || !conductors.has(conductor)) fail('ismeretlen vezetőfunkció.');
+}
+function cableDetails(value: unknown) {
+  if (value === undefined) return;
+  object(value, 'Kábeladatok');
+  if (value.designation !== undefined) text(value.designation, 'Kábel megnevezése', 5000);
+  if (value.cores !== undefined) { positive(value.cores, 'Érszám', 1000); if (!Number.isInteger(value.cores)) fail('az érszám pozitív egész szám legyen.'); }
+  for (const key of ['crossSectionMm2', 'resistanceOhmPerKm']) if (value[key] !== undefined) positive(value[key], 'Kábeladatok', 1_000_000);
+  if (value.lengthM !== undefined) positive(value.lengthM, 'Kábelhossz', 10_000_000, true);
+  if (value.material !== undefined && value.material !== 'Cu' && value.material !== 'Al') fail('ismeretlen kábelanyag.');
+}
+/** Retained source metadata is plain bounded JSON, never executable state. */
+function passiveJson(value: unknown, label: string) {
+  object(value, label);
+  let nodes = 0;
+  const walk = (item: unknown, depth: number) => {
+    if (++nodes > 100_000 || depth > 30) fail('a megőrzött forrásadat túl nagy vagy túl mély.');
+    if (item === null || typeof item === 'boolean') return;
+    if (typeof item === 'string') { text(item, label); return; }
+    if (typeof item === 'number') { finite(item, label, 1e15); return; }
+    if (Array.isArray(item)) { array(item, label, 100_000); item.forEach(child => walk(child, depth + 1)); return; }
+    object(item, label);
+    if (Object.getPrototypeOf(item) !== Object.prototype && Object.getPrototypeOf(item) !== null) fail('a megőrzött forrásadat csak egyszerű JSON lehet.');
+    for (const [key, child] of Object.entries(item)) { text(key, label, 2000); walk(child, depth + 1); }
+  };
+  walk(value, 0);
+}
+
+function electrical(value: unknown) {
+  if (value === undefined) return;
+  object(value, 'Villamos adatok'); poles(value.poles);
+  if (value.commonPoleGroups !== undefined) {
+    array(value.commonPoleGroups, 'Közös kapocscsoportok', 64);
+    const grouped = new Set<number>();
+    for (const group of value.commonPoleGroups) {
+      array(group, 'Közös kapocscsoport', 64);
+      if (group.length < 2) fail('egy közös kapocscsoport legalább két kapcsot tartalmazzon.');
+      let conductor: unknown;
+      for (const index of group) {
+        finite(index, 'Kapocsszám', 63);
+        if (!Number.isInteger(index) || index < 0 || index >= (value.poles as unknown[]).length || grouped.has(index)) fail('hibás vagy átfedő közös kapocscsoport.');
+        grouped.add(index);
+        const current = (value.poles as unknown[])[index];
+        if (conductor !== undefined && current !== conductor) fail('a közös kapcsok vezetőfunkciója legyen azonos.');
+        conductor = current;
+      }
+    }
+  }
+  if (value.role !== undefined && !['supply', 'main', 'mcb', 'rccb', 'rcbo', 'spd', 'contactor', 'meter', 'terminal', 'mpcb', 'outlet'].includes(value.role as string)) fail('ismeretlen villamos készülékszerep.');
+  if (value.phase !== undefined && !['L1', 'L2', 'L3'].includes(value.phase as string)) fail('ismeretlen fázis.');
+  for (const key of ['currentA', 'residualCurrentMa']) if (value[key] !== undefined) positive(value[key], 'Villamos adatok', 1_000_000);
+  for (const key of ['curve', 'residualType', 'spdClass', 'group', 'originalId', 'circuitNumbers', 'consumers']) if (value[key] !== undefined) text(value[key], 'Villamos adatok', 20_000);
+}
+
+function validateWiring(value: JsonObject, devices: unknown[]) {
+  const deviceLookup = new Map(devices.map(item => { object(item, 'Készülék'); return [item.id as string, item] as const; }));
+  const busLookup = new Map<string, JsonObject>(), infeedLookup = new Map<string, JsonObject>();
+  const boardValues = value.boards as JsonObject[];
+  for (const board of boardValues) {
+    if (board.wiring === undefined) continue;
+    object(board.wiring, 'Huzalozás');
+    const wiring = board.wiring;
+    array(wiring.buses, 'Sínek', 20_000); array(wiring.infeeds, 'Betáplálások', 1000); array(wiring.wires, 'Vezetékek', 50_000);
+    uniqueIds(wiring.wires, 'Vezeték');
+    for (const bus of wiring.buses) {
+      object(bus, 'Sín'); identifier(bus.id, 'Sínazonosító');
+      if (busLookup.has(bus.id)) fail('ismétlődő sínazonosító.'); busLookup.set(bus.id, bus);
+      text(bus.name, 'Sín neve', 1000); positive(bus.capacity, 'Sín kapacitása', 10_000);
+      if (!Number.isInteger(bus.capacity)) fail('a sín kapacitása pozitív egész szám legyen.');
+      if (!conductors.has(bus.conductor as string)) fail('ismeretlen vezetőfunkció.');
+      if (bus.position !== 'top' && bus.position !== 'bottom') fail('ismeretlen sínpozíció.');
+      if (bus.rowId !== undefined) reference(bus.rowId, new Set((board.rows as JsonObject[]).map(row => row.id as string)), 'Sín sora');
+      array(bus.terminalLabels, 'Kapocsfeliratok', 10_000); for (const label of bus.terminalLabels) text(label, 'Kapocsfelirat', 1000);
+      if (bus.terminalLabels.length > bus.capacity) fail('több kapocsfelirat van, mint sínkapocs.');
+      if (bus.offset !== undefined) { object(bus.offset, 'Sín eltolása'); point(bus.offset, 'Sín eltolása'); }
+    }
+    for (const infeed of wiring.infeeds) {
+      object(infeed, 'Betáplálás'); identifier(infeed.id, 'Betáplálás-azonosító');
+      if (infeedLookup.has(infeed.id)) fail('ismétlődő betáplálás-azonosító.'); infeedLookup.set(infeed.id, infeed);
+      text(infeed.name, 'Betáplálás neve', 1000); poles(infeed.poles); cableDetails(infeed.cable);
+      if (infeed.kind !== 'supply' && infeed.kind !== 'earth') fail('ismeretlen betáplálástípus.');
+      for (const key of ['position', 'labelOffset']) if (infeed[key] !== undefined) { object(infeed[key], 'Betáplálás pozíciója'); point(infeed[key], 'Betáplálás pozíciója'); }
+    }
+    if (wiring.demandFactor !== undefined) { positive(wiring.demandFactor, 'Egyidejűségi tényező', 1, true); }
+    if (wiring.labelOffsets !== undefined) { object(wiring.labelOffsets, 'Felirateltolások'); if (Object.keys(wiring.labelOffsets).length > 50_000) fail('túl sok felirateltolás.'); for (const offset of Object.values(wiring.labelOffsets)) { object(offset, 'Felirateltolás'); point(offset, 'Felirateltolás'); } }
+    if (wiring.source !== undefined) passiveJson(wiring.source, 'Megőrzött forrásadat');
+  }
+  const endpoint = (item: unknown) => {
+    object(item, 'Vezetékvégpont');
+    let count: number;
+    if (item.kind === 'device') {
+      reference(item.deviceId, deviceLookup, 'Vezetékvégpont készüléke');
+      if (item.side !== 'top' && item.side !== 'bottom') fail('ismeretlen készülékoldal.');
+      // An unresolved imported whole-device endpoint stays explicitly unresolved.
+      if (item.pole === undefined) return;
+      count = effectiveDevicePoles(deviceLookup.get(item.deviceId as string) as unknown as Device).length;
+    } else if (item.kind === 'bus') {
+      reference(item.busId, busLookup, 'Vezetékvégpont sínje');
+      count = busLookup.get(item.busId as string)!.capacity as number;
+    } else if (item.kind === 'infeed') {
+      reference(item.infeedId, infeedLookup, 'Vezetékvégpont betáplálása');
+      count = (infeedLookup.get(item.infeedId as string)!.poles as unknown[]).length;
+    } else return fail('ismeretlen vezetékvégpont-típus.');
+    const index = item.kind === 'bus' ? item.terminal : item.pole;
+    finite(index, 'Kapocsszám', 10_000);
+    if (!Number.isInteger(index) || index < 0 || index >= count) fail('a vezetékvégpont kapocsszáma tartományon kívüli.');
+  };
+  for (const board of boardValues) if (board.wiring) {
+    const wiring = board.wiring as JsonObject;
+    for (const wire of wiring.wires as unknown[]) {
+      object(wire, 'Vezeték'); endpoint(wire.from); endpoint(wire.to);
+      if (wire.color !== undefined) { text(wire.color, 'Vezetékszín', 100); if (!/^#[0-9a-fA-F]{6}$/.test(wire.color)) fail('a vezetékszín nem hatjegyű hexadecimális szín.'); }
+      if (wire.label !== undefined) text(wire.label, 'Vezetékfelirat', 5000);
+      cableDetails(wire.cable);
+      if (wire.points !== undefined) { array(wire.points, 'Vezeték nyomvonalpontjai', 10_000); for (const entry of wire.points) { object(entry, 'Vezeték nyomvonalpontja'); point(entry, 'Vezeték nyomvonalpontja'); } }
+      if (wire.labelOffset !== undefined) { object(wire.labelOffset, 'Vezetékfelirat eltolása'); point(wire.labelOffset, 'Vezetékfelirat eltolása'); }
+      if (wire.sourceRoute !== undefined) passiveJson(wire.sourceRoute, 'Megőrzött nyomvonal');
+    }
+  }
+}
 
 function manufacturerSource(value: unknown) {
   text(value, 'Gyártói forrás', 5000);
@@ -109,6 +239,7 @@ function validateData(value: unknown, assets: Set<string>, projectId?: string) {
     if (entry.moduleWidth !== undefined) finite(entry.moduleWidth, 'Modulszélesség', 100_000);
     if (entry.rating !== undefined) text(entry.rating, 'Névleges adat');
     productSnapshot(entry.product);
+    electrical(entry.electrical);
     reference(entry.boardId, boards, 'Készülék elosztója', true);
     if (entry.quantity !== undefined) {
       finite(entry.quantity, 'Darabszám', 1_000_000);
@@ -129,6 +260,8 @@ function validateData(value: unknown, assets: Set<string>, projectId?: string) {
       if (entry.powerW < 0) fail('a rögzített teljesítmény nem lehet negatív.');
     }
     if (entry.loadType !== undefined && !['socket', 'lamp', 'motor', 'other'].includes(entry.loadType as string)) fail('ismeretlen fogyasztótípus.');
+    if (entry.phase !== undefined && !['L1', 'L2', 'L3'].includes(entry.phase as string)) fail('ismeretlen fázis.');
+    cableDetails(entry.cableDetails);
   }
   for (const sheet of value.sheets) {
     object(sheet, 'Tervlap'); text(sheet.name, 'Tervlap neve', 1000);
@@ -178,6 +311,7 @@ function validateData(value: unknown, assets: Set<string>, projectId?: string) {
       }
     }
   }
+  validateWiring(value, value.devices);
 }
 
 const passiveSvgTags = new Set(['svg', 'g', 'path', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon', 'text', 'tspan', 'defs', 'linearGradient', 'radialGradient', 'stop', 'clipPath', 'mask', 'pattern', 'title', 'desc', 'symbol', 'use', 'image']);

@@ -7,17 +7,57 @@ export interface Device {
   heightMm: number; model: string; notes: string; status: DeviceStatus;
   circuitId?: string; moduleWidth?: number; rating?: string; photoIds: string[];
   product?: ProductSnapshot; boardId?:string; quantity?:number;
+  electrical?: DeviceElectrical;
 }
 export interface Placement extends Point { deviceId: string; rotation: number }
 export interface Route { id: string; fromDeviceId: string; toDeviceId: string; kind: 'power' | 'control'; circuitId?: string; points: Point[] }
 export interface Annotation extends Point { id: string; text: string }
 export interface PlanSheet { id: string; name: string; width: number; height: number; backgroundAssetId?: string; mmPerUnit?: number; placements: Placement[]; routes: Route[]; annotations: Annotation[] }
-export interface Circuit { id: string; code: string; name: string; color: string; protectionDeviceId?: string; notes: string; cable?:string; powerW?:number; loadType?:'socket'|'lamp'|'motor'|'other' }
+export interface Circuit { id: string; code: string; name: string; color: string; protectionDeviceId?: string; notes: string; cable?:string; powerW?:number; loadType?:'socket'|'lamp'|'motor'|'other'; phase?:Phase; cableDetails?:CableDetails }
 export interface BoardPlacement { deviceId: string; start: number }
 export interface BoardRow { id: string; name: string; capacity: number; placements: BoardPlacement[] }
 /** Device-level supply links, independent of floor-plan routes; no individual terminals. */
 export interface BoardConnection { id:string; fromDeviceId?:string; toDeviceId:string }
-export interface Board { id: string; name: string; rows: BoardRow[]; product?:ProductSnapshot; connections?:BoardConnection[]; supplyLabel?:string }
+export interface Board { id: string; name: string; rows: BoardRow[]; product?:ProductSnapshot; connections?:BoardConnection[]; supplyLabel?:string; wiring?:BoardWiring }
+
+export type Phase = 'L1'|'L2'|'L3';
+export type Conductor = 'L'|'L1'|'L2'|'L3'|'N'|'PE'|'PEN';
+/** Structured electrical data supplements existing names, ratings and product snapshots. */
+export interface DeviceElectrical {
+  poles: Conductor[]; role?:'supply'|'main'|'mcb'|'rccb'|'rcbo'|'spd'|'contactor'|'meter'|'terminal'|'mpcb'|'outlet';
+  phase?:Phase; currentA?:number; curve?:string; residualCurrentMa?:number; residualType?:string; spdClass?:string;
+  group?:string; originalId?:string; circuitNumbers?:string; consumers?:string;
+  /** Screw indices known to be electrically common inside a terminal block. */
+  commonPoleGroups?:number[][];
+}
+export interface CableDetails {
+  designation?:string; cores?:number; crossSectionMm2?:number; material?:'Cu'|'Al'; lengthM?:number;
+  /** Optional manufacturer resistance; estimates are calculated only when supplied. */
+  resistanceOhmPerKm?:number;
+}
+export type WiringEndpoint =
+  | {kind:'device'; deviceId:string; side:'top'|'bottom'; pole?:number}
+  | {kind:'bus'; busId:string; terminal:number}
+  | {kind:'infeed'; infeedId:string; pole:number};
+export interface BoardWire {
+  id:string; from:WiringEndpoint; to:WiringEndpoint; color?:string; cable?:CableDetails;
+  points?:Point[]; label?:string; labelOffset?:Point;
+  /** Retain original routing hints without executing or reinterpreting them. */
+  sourceRoute?:Record<string,unknown>;
+}
+export interface BoardBus {
+  id:string; name:string; conductor:Conductor; capacity:number; rowId?:string; position:'top'|'bottom';
+  terminalLabels:string[]; offset?:Point;
+}
+export interface BoardInfeed {
+  id:string; name:string; kind:'supply'|'earth'; poles:Conductor[]; cable?:CableDetails; position?:Point; labelOffset?:Point;
+}
+export interface BoardWiring {
+  buses:BoardBus[]; wires:BoardWire[]; infeeds:BoardInfeed[]; demandFactor?:number;
+  labelOffsets?:Record<string,Point>;
+  /** Passive source snapshot allows lossless archival of fields not rendered by this app. */
+  source?:Record<string,unknown>;
+}
 export interface Asset { id: string; name: string; mime: string; data: string }
 export interface ProjectData { id: string; name: string; site: string; client: string; notes: string; sheets: PlanSheet[]; devices: Device[]; circuits: Circuit[]; boards: Board[] }
 export interface Revision { id: string; parentId?: string; createdAt: string; note: string; data: ProjectData; restoredFrom?: string }

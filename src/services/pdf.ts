@@ -8,8 +8,9 @@ import { kindLabel } from '../catalog';
 import { getBoardIssues } from '../data/project';
 import type { Asset, DeviceKind, PlanSheet, ProjectDocument } from '../types';
 import { safeFilename } from './drive';
-import { buildSingleLineSvg } from './singleLine';
+import { buildSingleLineSvg, cableLabel, circuitCableLabel } from './singleLine';
 import { getBoardConnectionIssues } from '../data/boardConnections';
+import { getWiringIssues, wiringEndpointLabel, getPhaseLoads } from '../data/boardWiring';
 import { diagramTiles } from './diagramPages';
 
 type Audience = 'client' | 'professional';
@@ -250,7 +251,7 @@ export async function buildPdf(doc: ProjectDocument, audience: Audience): Promis
     const accessories = doc.data.devices.filter(device => device.boardId === board.id && device.product?.mounting === 'accessory');
     if (accessories.length) table(t('{board} · tartozékjegyzék', { board: board.name }), ['Azonosító', 'Cikkszám', 'Készülék', 'Mennyiség', 'Megjegyzés'], [35, 45, 104, 30, 170], accessories.map(device => [device.code, device.product!.reference, device.name, `${(device.quantity ?? 1).toLocaleString(locale)} ${t('db')}`, [device.product?.description?.[getLanguage()], device.notes].filter(Boolean).join('\n')]), board.product?.reference);
     if (issues.length) table(t('{board} · ellenőrzendő jelzések', { board: board.name }), ['Sor', 'Jelzés'], [55, WIDTH - 55], issues.map(issue => [board.rows.find(row => row.id === issue.rowId)?.name || '', issue.message]));
-    if (board.connections?.length) {
+    if (board.connections?.length || board.wiring?.wires.length) {
       const drawing=buildSingleLineSvg(doc.data,board);
       // Keep schematic text readable on A3, tiling large diagrams instead of shrinking them.
       const mmPerUnit=.26, tileWidth=WIDTH/mmPerUnit, tileHeight=210/mmPerUnit;
@@ -267,19 +268,28 @@ export async function buildPdf(doc: ProjectDocument, audience: Audience): Promis
         page(t('{board} · egyvonalas rajz',{board:board.name}),tiles.length>1?t('Rajzrészlet: {column}/{columns}. oszlop · {row}/{rows}. sor',{column,columns,row,rows}):'');
         pdf.addImage(canvas,'PNG',MARGIN,60,w*mmPerUnit,h*mmPerUnit,undefined,'FAST');canvas.width=0;canvas.height=0;
       }
-      table(t('{board} · elosztókapcsolatok',{board:board.name}),['Kiinduló eszköz','Cél eszköz'],[WIDTH/2,WIDTH/2],board.connections.map(connection=>[
+      if(board.connections?.length) table(t('{board} · elosztókapcsolatok',{board:board.name}),['Kiinduló eszköz','Cél eszköz'],[WIDTH/2,WIDTH/2],board.connections.map(connection=>[
         connection.fromDeviceId?`${deviceMap.get(connection.fromDeviceId)?.code??'?'} · ${deviceMap.get(connection.fromDeviceId)?.name??'?'}`:board.supplyLabel||t('Külső betáplálás'),
         `${deviceMap.get(connection.toDeviceId)?.code??'?'} · ${deviceMap.get(connection.toDeviceId)?.name??'?'}`,
       ]));
       const connectionIssues=getBoardConnectionIssues(board,doc.data.devices);
       if(connectionIssues.length)table(t('Kapcsolati jelzések'),['Jelzés'],[WIDTH],connectionIssues.map(issue=>[issue.message]));
     }
+    if(board.wiring){
+      if(board.wiring.wires.length)table(t('{board} · kapocshuzalozás',{board:board.name}),['Azonosító','Végpont A','Végpont B','Kábel / vezeték','Megjegyzés'],[35,95,95,89,70],board.wiring.wires.map(wire=>[wire.id,wiringEndpointLabel(doc.data,wire.from),wiringEndpointLabel(doc.data,wire.to),cableLabel(wire.cable),wire.label??'']));
+      if(board.wiring.buses.length)table(t('{board} · sínkiosztás',{board:board.name}),['Sín','Vezető','Kapcsok','Kapocskiosztás'],[70,35,30,249],board.wiring.buses.map(bus=>[bus.name,bus.conductor,String(bus.capacity),bus.terminalLabels.map((label,index)=>label?`${index+1}: ${label}`:'').filter(Boolean).join('\n')]));
+      if(board.wiring.infeeds.length)table(t('{board} · betáplálások',{board:board.name}),['Megnevezés','Pólusok','Kábel / vezeték'],[100,80,204],board.wiring.infeeds.map(infeed=>[infeed.name,infeed.poles.join(' / '),cableLabel(infeed.cable)]));
+      const loads=getPhaseLoads(doc.data,board),factor=board.wiring.demandFactor??1;
+      table(t('{board} · fázisterhelés',{board:board.name}),['L1 (W)','L2 (W)','L3 (W)','Nincs kiosztva (W)','Egyidejű teljesítmény (W)'],[60,60,60,90,114],[[loads.L1,loads.L2,loads.L3,loads.unassignedW,loads.totalW*factor].map(value=>value.toLocaleString(locale,{maximumFractionDigits:1}))],t('A rögzített fogyasztói adatok összege; a tényező nem módosítja az egyedi áramköröket.'));
+      const wiringIssues=getWiringIssues(doc.data,board);
+      if(wiringIssues.length)table(t('Huzalozási jelzések'),['Jelzés'],[WIDTH],wiringIssues.map(issue=>[issue.message]));
+    }
   }
 
   if (audience === 'professional') {
     table(t('Eszközjegyzék'), ['Azonosító', 'Eszköz', 'Helyiség', 'Áramkör', 'Mag. mm', 'Modell', 'Állapot', 'Megjegyzés'], [43, 54, 30, 24, 20, 47, 27, 139], doc.data.devices.map(device => [device.code, `${device.name}\n${kindLabel(device.kind)}`, device.room, device.circuitId ? circuitMap.get(device.circuitId)?.code || '' : '', String(device.heightMm), [device.model, device.product && !device.model.includes(device.product.reference) ? device.product.reference : ''].filter(Boolean).join('\n'), t(statuses[device.status]), [device.product?.description?.[getLanguage()], device.notes].filter(Boolean).join('\n')]));
     const loadLabels={socket:'Dugalj',lamp:'Világítás',motor:'Motor',other:'Egyéb fogyasztó'};
-    table(t('Áramkörjegyzék'), ['Áramkör', 'Megnevezés', 'Védelem', 'Hozzárendelt fogyasztók', 'Kábel', 'Telj. W', 'Megjegyzés'], [25, 65, 35, 74, 60, 25, 100], doc.data.circuits.map(circuit => [circuit.code, [circuit.name,circuit.loadType?t(loadLabels[circuit.loadType]):''].filter(Boolean).join('\n'), circuit.protectionDeviceId ? deviceMap.get(circuit.protectionDeviceId)?.code || '' : '', doc.data.devices.filter(device => device.circuitId === circuit.id).map(device => `${device.code} · ${device.name}`).join('\n'), circuit.cable??'',circuit.powerW===undefined?'':circuit.powerW.toLocaleString(locale),circuit.notes]));
+    table(t('Áramkörjegyzék'), ['Áramkör', 'Megnevezés', 'Védelem', 'Hozzárendelt fogyasztók', 'Kábel', 'Telj. W', 'Megjegyzés'], [25, 65, 35, 74, 60, 25, 100], doc.data.circuits.map(circuit => [circuit.code, [circuit.name,circuit.loadType?t(loadLabels[circuit.loadType]):''].filter(Boolean).join('\n'), circuit.protectionDeviceId ? deviceMap.get(circuit.protectionDeviceId)?.code || '' : '', doc.data.devices.filter(device => device.circuitId === circuit.id).map(device => `${device.code} · ${device.name}`).join('\n'), circuitCableLabel(circuit),circuit.powerW===undefined?'':circuit.powerW.toLocaleString(locale),circuit.notes]));
     const routes = doc.data.sheets.flatMap(sheet => sheet.routes.map(route => [sheet.name, route.kind === 'control' ? t('Vezérlés') : t('Tápellátás'), deviceMap.get(route.fromDeviceId)?.code || '', deviceMap.get(route.toDeviceId)?.code || '', route.circuitId ? circuitMap.get(route.circuitId)?.code || '' : '']));
     table(t('Kapcsolatjegyzék'), ['Tervlap', 'Kapcsolat', 'Kiinduló eszköz', 'Cél eszköz', 'Áramkör'], [90, 55, 90, 90, 59], routes);
   } else {

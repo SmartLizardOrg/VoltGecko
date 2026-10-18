@@ -16,7 +16,7 @@ Offline-first electrical floor-plan and distribution-board planner, in **English
 - Choose light or dark appearance and standard or large text. The interface uses larger controls and high-contrast colors; your appearance settings stay on the device.
 - Import PDF pages, PNG and JPG floor plans; use multiple sheets, layers, scale calibration, zoom, device placement and rotation.
 - Share device identities and properties across floor plans, circuits, distribution boards and single-line diagrams. Record room, mounting height, product details, notes and site photos.
-- Draw circuit and control connections, edit routes, arrange DIN devices by row and module width, and see collisions and overcapacity.
+- Draw circuit and control connections, edit routes, arrange DIN devices by row and module width, and see collisions and overcapacity. The detailed cabinet editor adds per-pole terminals, phase/N/PE busbars, incoming supplies, cross-board wires, cable data and movable wire routes and labels.
 - Search the bundled Schneider catalogue offline: 260 references from the Hungarian Easy9 Pro catalogue, including DIN devices, enclosures and accessories. Each entry retains its manufacturer source.
 - Export customer and detailed PDF documents, including legends, circuit lists and board layouts. Export the single-line drawing as SVG.
 - Save automatically to IndexedDB, save named versions, restore without overwriting history, and transfer a complete project as one `.vgecko` archive with photos and attachments. Legacy `.eplan` backups can still be opened.
@@ -87,7 +87,7 @@ The displayed brand and `.vgecko` filename extension are configured in `src/conf
 
 ### Scope
 
-VoltGecko documents devices and circuits. It does not calculate cable sizing, protective-device coordination or compliance, and it does not model terminal-by-terminal wiring. The original drawing-symbol library is documented in [SYMBOLS.md](SYMBOLS.md); it is not IEC-certified. Manufacturer catalogue data does not imply automatic electrical or mechanical compatibility checking.
+VoltGecko documents devices, circuits and explicitly entered terminal wiring. Connectivity checks and phase-load summaries do not certify electrical compliance. Voltage drop is a resistive estimate available only with user-supplied manufacturer resistance, length and load current; it omits reactance and operating-temperature corrections. The app does not select cable sizes or calculate protective-device coordination. The original drawing-symbol library is documented in [SYMBOLS.md](SYMBOLS.md); it is not IEC-certified. Manufacturer catalogue data does not imply automatic electrical or mechanical compatibility checking.
 
 The application source is MIT licensed. Fonts, PDF resources and other dependencies retain their original licenses; see [third-party notices](THIRD_PARTY_NOTICES.md). The sample project is fictional.
 
@@ -113,7 +113,15 @@ A beépített terméktár a Schneider Electric **Easy9 Pro Katalógus 2025., 2.0
 
 A DIN-készülék az első szabad helyre kerül, a szekrény új elosztót hoz létre, a sínhelyet nem foglaló tartozék az anyaglistába kerül. A modulszélesség alapja 18 mm. A projektben a kiválasztott termékadatok önálló másolatként megmaradnak; későbbi katalógusfrissítés nem módosítja a kész terveket.
 
-Korábbi önálló HTML-elosztótervező 2-es verziójú JSON-mentése (`{v:2, project, rows, comps, wires, nid}`) a projektmegnyitással importálható. Az import a JSON-adatokat veszi át új projektbe; HTML-t nem futtat. A generikus szélességek ellenőrizendő adatként maradnak meg.
+Korábbi önálló HTML-elosztótervező v2 és v3 JSON-mentése a projektmegnyitással importálható. A v3 import több dobozt, pólusokat, síneket, betáplálásokat és kábeladatokat is átvesz. Az eredeti JSON passzív másolata megmarad az archívumban. Az import HTML-t és forrásprogrambeli migrációt nem futtat: nincs automatikus átkötés, földelés-hozzáadás, érszámcsere vagy készülékátrendezés. A nem egyértelmű kapocs külön jelzést kap; a régi nyomvonalparaméterek forrásadatként megmaradnak, az új rajz saját elrendezést használ. A generikus szélességek ellenőrizendő adatként maradnak meg.
+
+### Részletes huzalozás
+
+Az elosztónézet **Részletes huzalozás** szakaszában két csatlakozópont kiválasztásával és a vezeték hozzáadásával köthetők a készülékek. A pontok a rajzon és billentyűzettel kezelhető listákból is kiválaszthatók; a sorrend nem módosítja a pólust. Másik elosztó végpontja is választható. A régi DIN-elhelyező és készülékszintű táplálási kapcsolatok továbbra is használhatók.
+
+A sínek kapocsszáma, vezetője, sorhoz rendelése és kapocsfeliratai szerkeszthetők. A vezetéken szín, kábelmegnevezés, érszám, keresztmetszet, anyag, hossz és gyártói ellenállás rögzíthető. A nyomvonal töréspontjai és feliratai húzással vagy számértékkel mozgathatók. A készülék adatlapján külön villamos szerep, póluskiosztás, névleges áram és ÁVK-adatok adhatók meg.
+
+A fázisterhelés a rögzített áramköri teljesítmények összege. A kiegyensúlyozás csak a kiosztatlan egyfázisú áramköröket módosítja. Az egyvonalas nézetben egy elosztó vagy az összes elosztó együtt választható; minden megadott kapcsolat megmarad. A fizikai vezeték rajzolási sorrendje nem állít táplálási irányt. SVG, PNG és böngészős nyomtatás is elérhető; a részletes PDF külön huzalozási és sínjegyzéket tartalmaz.
 
 ### Mentés és adatkezelés
 
@@ -122,6 +130,8 @@ Az automatikus mentés az adott böngészőprofil IndexedDB-tárába kerül. A *
 A **Verzió mentése**, **Előzmények** és **Visszaállítás** funkciók megőrzik az állapotokat; visszaállításkor a jelenlegi állapot is megmarad. Azonos azonosítójú, eltérő projektimport külön másolatként nyílik meg. Automatikus összefésülés nincs.
 
 A böngészőadatok törlése vagy az eszköz elvesztése a helyi példányt is eltávolíthatja. A localhost, a telefonos LAN-cím, a nyilvános domain és az előnézeti URL külön tárhelyet használ: projektfájllal vihető át a munka. A PDF átadási dokumentum; szerkesztésre a projektfájl szolgál.
+
+A támogató böngészőkben az **Automatikus mentés fájlba…** gombbal teljes `.vgecko` archívum kapcsolható a projekthez az adott munkamenetre. A fájlt újranyitáskor ismét ki kell választani. A mentések sorban futnak; a fájl tartalmának külső változása szünetelteti a mentést. Az IndexedDB-mentés eközben is megmarad.
 
 ### Google Drive
 
@@ -150,4 +160,4 @@ iPhone: Safari → Megosztás → Főképernyőhöz adás. Android: Chrome → T
 
 Az alkalmazás forráskódja [MIT licencű](LICENSE). A saját SVG-jelek CC0 felajánlása és szakmai ellenőrzésük állapota a [SYMBOLS.md](SYMBOLS.md) fájlban olvasható. A függőségek és betűk eredeti licence megmarad: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-A program eszköz- és áramkörszintű tervezést, dokumentálást támogat. Vezetékméretezést, védelmi megfelelőségvizsgálatot és kapcsonkénti huzalozást nem számít. A rajzjelek szakmai megfeleltetése még szükséges; a könyvtár nem IEC-tanúsított. A mintaprojekt fiktív.
+A program eszköz-, áramkör- és kapocsszintű dokumentálást támogat. A huzalozási ellenőrzések és fázisterhelések nem megfelelőségvizsgálatok. A feszültségesés csak megadott gyártói ellenállás, hossz és terhelőáram alapján becsülhető, reaktancia és üzemi hőmérséklet korrekciója nélkül. Automatikus vezetékméretezést és védelmi koordinációt nem végez. A rajzjelek szakmai megfeleltetése még szükséges; a könyvtár nem IEC-tanúsított. A mintaprojekt fiktív.

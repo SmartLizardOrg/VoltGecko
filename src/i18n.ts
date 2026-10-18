@@ -11,12 +11,16 @@ import enLegacyBoard from './locales/en-legacy-board';
 import enBoardPlacement from './locales/en-board-placement';
 import enStart from './locales/en-start';
 import enAppearance from './locales/en-appearance';
+import enWiringData from './locales/en-wiring-data';
+import enWiringUi from './locales/en-wiring-ui';
+import enLegacyBoardV3 from './locales/en-legacy-board-v3';
+import enWiringExtra from './locales/en-wiring-extra';
 import { APP } from './config';
 
 export type Language = 'hu' | 'en';
 export type TranslationParams = Record<string, string | number>;
 export const LANGUAGE_STORAGE_KEY = 'planner.language';
-export const englishMessages: Readonly<Record<string,string>> = { ...enData, ...enServices, ...enComponents, ...enApp, ...enProducts, ...enProductData, ...enConnections, ...enSingleLine, ...enLegacyBoard, ...enBoardPlacement, ...enStart, ...enAppearance };
+export const englishMessages: Readonly<Record<string,string>> = { ...enData, ...enServices, ...enComponents, ...enApp, ...enProducts, ...enProductData, ...enConnections, ...enSingleLine, ...enLegacyBoard, ...enBoardPlacement, ...enStart, ...enAppearance, ...enWiringData,...enWiringUi,...enLegacyBoardV3,...enWiringExtra };
 const subscribers = new Set<()=>void>();
 function initialLanguage():Language {
   try { return typeof localStorage !== 'undefined' && localStorage.getItem(LANGUAGE_STORAGE_KEY) === 'en' ? 'en' : 'hu'; }

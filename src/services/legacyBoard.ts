@@ -2,6 +2,7 @@ import { makeDevice, uid } from '../catalog';
 import { checkpoint, createProject } from '../data/project';
 import { t } from '../i18n';
 import type { Board, Circuit, DeviceKind, ProjectDocument } from '../types';
+import { importLegacyBoardV3 } from './legacyBoardV3';
 
 type RecordValue = Record<string, unknown>;
 type LegacyType = 'supply' | 'main' | 'mcb' | 'rccb' | 'rcbo' | 'spd' | 'contactor' | 'meter';
@@ -109,14 +110,15 @@ function validate(value: unknown): asserts value is LegacyBoard {
   });
 }
 
-/** Recognition is deliberately separate from validation, so malformed v2 files receive the right error. */
+/** Recognition is separate from validation, so malformed supported files receive the right error. */
 export function isLegacyBoard(value: unknown): boolean {
-  return !!value && typeof value === 'object' && !Array.isArray(value) && (value as RecordValue).v === 2
+  return !!value && typeof value === 'object' && !Array.isArray(value) && [2, 3].includes((value as RecordValue).v as number)
     && ['rows', 'comps', 'wires'].some(key => Object.hasOwn(value, key));
 }
 
 /** Imports only inert JSON data. The original HTML is never evaluated or embedded. */
 export function importLegacyBoard(value: unknown): ProjectDocument {
+  if (value && typeof value === 'object' && !Array.isArray(value) && (value as RecordValue).v === 3) return importLegacyBoardV3(value);
   validate(value);
   const doc = createProject(value.project.name);
   const board: Board = {

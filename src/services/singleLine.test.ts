@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it } from 'vitest';
 import { makeDevice } from '../catalog';
 import { createProject } from '../data/project';
 import { setLanguage } from '../i18n';
-import { buildSingleLineSvg } from './singleLine';
+import { buildSingleLineSvg, buildProjectSingleLineSvg, circuitCableLabel } from './singleLine';
 import type { Device } from '../types';
 
 afterEach(() => setLanguage('hu'));
@@ -24,6 +24,28 @@ function fixture() {
 }
 
 describe('single-line SVG', () => {
+  it('retains manual circuit cable descriptions when only structured length is added',()=>{
+    expect(circuitCableLabel({id:'c',code:'C',name:'Load',notes:'',color:'#123456',cable:'Existing NYM-J 3×2.5',cableDetails:{lengthM:10}})).toBe('Existing NYM-J 3×2.5 · 10 m');
+  });
+  it('preserves every pole wire, same-device bridge, bus, infeed and cross-board endpoint without inventing direction',()=>{
+    const {data,board,devices}=fixture();board.connections=[];
+    devices[0].electrical={poles:['L1','L2','L3','N']};devices[1].electrical={poles:['N','PE']};
+    const other={id:'other',name:'Garden',rows:[],connections:[],wiring:{buses:[{id:'pe',name:'PE <bus>',conductor:'PE' as const,capacity:6,terminalLabels:[],position:'top' as const}],infeeds:[],wires:[]}};
+    data.boards.push(other);
+    board.wiring={buses:[],infeeds:[{id:'grid',name:'Grid & supply',kind:'supply',poles:['L1','N']}],wires:[
+      {id:'feed-phase',from:{kind:'infeed',infeedId:'grid',pole:0},to:{kind:'device',deviceId:devices[0].id,side:'bottom',pole:0},cable:{designation:'H07V-K',cores:1,crossSectionMm2:6,lengthM:3}},
+      {id:'neutral-wire',from:{kind:'infeed',infeedId:'grid',pole:1},to:{kind:'device',deviceId:devices[0].id,side:'bottom',pole:3}},
+      {id:'same-device',from:{kind:'device',deviceId:devices[1].id,side:'top',pole:0},to:{kind:'device',deviceId:devices[1].id,side:'top',pole:1}},
+      {id:'cross-board',from:{kind:'device',deviceId:devices[1].id,side:'bottom',pole:1},to:{kind:'bus',busId:'pe',terminal:2}},
+    ]};
+    const before=structuredClone(data),drawing=buildSingleLineSvg(data,board);
+    for(const wire of board.wiring.wires)expect(drawing.svg).toContain(`data-connection-id="${wire.id}"`);
+    expect(drawing.svg.match(/data-connection-id=/g)).toHaveLength(4);
+    expect(drawing.svg).toContain('PE &lt;bus&gt;');expect(drawing.svg).toContain('Grid &amp; supply');expect(drawing.svg).toContain('H07V-K');expect(drawing.svg).toContain('6 mm²');
+    expect(drawing.svg).toContain('alsó 4 (N)');expect(drawing.svg).not.toContain('marker-end="url(#single-line-arrow)"');
+    const combined=buildProjectSingleLineSvg(data);expect(combined.svg.match(/data-connection-id=/g)).toHaveLength(4);expect(combined.svg).toContain('Garden');
+    expect(data).toEqual(before);
+  });
   it('shows explicit supply, all graph edges, ratings, manufacturer references and circuit data', () => {
     const { data, board, devices } = fixture();
     devices[2].model = 'Schneider EZ9F57116';

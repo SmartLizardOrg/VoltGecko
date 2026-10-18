@@ -70,4 +70,11 @@ describe('physical board placement ownership', () => {
     expect(() => placeBoardDevice(data, 'a', 'a1', 'missing')).toThrow();
     expect(() => placeBoardDevice(data, 'a', 'a1', 'd2', NaN)).toThrow();
   });
+
+  it('packs manufacturer fractional widths without rounding into the preceding module', () => {
+    const { data } = fixture(); data.devices[0].moduleWidth = 0.75;
+    const placed = placeBoardDevice(data, 'a', 'a1', 'd2');
+    expect(placed.boards[0].rows[0].placements).toContainEqual({ deviceId: 'd2', start: 0.75 });
+    expect(getBoardIssues(placed.boards[0], placed.devices)).toEqual([]);
+  });
 });

@@ -118,6 +118,12 @@ describe('projektelőzmények és import', () => {
 });
 
 describe('modulkiosztás', () => {
+  it('does not report collisions caused only by six-decimal source rounding',()=>{
+    const first=makeDevice('custom',[]),second=makeDevice('custom',[first]);first.moduleWidth=29/17.5;second.moduleWidth=29/17.5;
+    const board={id:'b',name:'Imported terminals',rows:[{id:'r',name:'Row',capacity:18,placements:[{deviceId:first.id,start:4.971429},{deviceId:second.id,start:6.628571}]}]};
+    expect(getBoardIssues(board,[first,second])).toEqual([]);
+    board.rows[0].placements[1].start-=.01;expect(getBoardIssues(board,[first,second])).toHaveLength(1);
+  });
   it('félmodulos készülékek egymás mellé helyezhetők', () => {
     const first = makeDevice('custom', []); first.moduleWidth = 0.5;
     const second = makeDevice('custom', [first]); second.moduleWidth = 1.5;

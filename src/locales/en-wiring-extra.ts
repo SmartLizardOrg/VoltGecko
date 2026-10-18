@@ -1,0 +1,17 @@
+const messages:Record<string,string>={
+  'kapocs':'terminals','Sín':'Busbar','Hiányzó végpont':'Missing endpoint','Külső bekötés':'External connection',
+  'Minden elosztó':'All distribution boards','PNG letöltése':'Download PNG','Rajz nyomtatása / PDF':'Print drawing / PDF','A PNG-export nem érhető el.':'PNG export is unavailable.',
+  'Részletes kábeladatok':'Detailed cable data','{code} fázisa':'{code} phase',
+  '.vgecko, korábbi .eplan vagy elosztó JSON v2/v3':'.vgecko, legacy .eplan or board JSON v2/v3',
+  'A kapcsolt fájl kívülről megváltozott. Az automatikus mentés szünetel.':'The linked file was changed externally. Automatic saving is paused.',
+  'A kapcsolt fájl másik projekthez tartozik.':'The linked file belongs to another project.',
+  'Fájlba mentve: {name}':'Saved to file: {name}','Fájlmentés szünetel':'File saving paused','Teljes projektarchívum':'Complete project archive',
+  'Automatikus fájlmentés bekapcsolva erre a munkamenetre.':'Automatic file saving is enabled for this session.',
+  'Másik mentési fájl…':'Choose another save file…','Automatikus mentés fájlba…':'Automatically save to file…','Fájl leválasztása':'Unlink file',
+  'Teljes .vgecko mentés, mellékletekkel; újranyitáskor válaszd ki újra.':'Complete .vgecko archive with attachments; choose the file again after reopening.',
+  '{board} · kapocshuzalozás':'{board} · terminal wiring','{board} · sínkiosztás':'{board} · busbar schedule','{board} · betáplálások':'{board} · incoming supplies',
+  '{board} · fázisterhelés':'{board} · phase loads','Végpont A':'Endpoint A','Végpont B':'Endpoint B','Kapcsok':'Terminals','Kapocskiosztás':'Terminal schedule',
+  'Nincs kiosztva (W)':'Unassigned (W)','Egyidejű teljesítmény (W)':'Diversified power (W)',
+  'A rögzített fogyasztói adatok összege; a tényező nem módosítja az egyedi áramköröket.':'Sum of recorded load data; the factor does not change individual circuits.',
+};
+export default messages;

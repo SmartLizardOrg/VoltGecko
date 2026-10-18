@@ -25,13 +25,16 @@ export function placeBoardDevice(data: ProjectData, boardId: string, rowId: stri
   const width = device.moduleWidth ?? 1;
   let slot = start ?? 0;
   if (start === undefined) {
-    while (slot + width <= row.capacity && row.placements.some(placement => {
-      const otherWidth = data.devices.find(candidate => candidate.id === placement.deviceId)?.moduleWidth ?? 1;
-      return slot < placement.start + otherWidth && placement.start < slot + width;
-    })) slot += 0.5;
+    const occupied = row.placements.map(placement => ({ start: placement.start, end: placement.start + (data.devices.find(candidate => candidate.id === placement.deviceId)?.moduleWidth ?? 1) }))
+      .filter(item => Number.isFinite(item.start) && Number.isFinite(item.end) && item.end > item.start);
+    // Manufacturer widths and imported positions may be fractional beyond 0.5 M.
+    // Free-space search must retain those boundaries instead of rounding into a neighbour.
+    const candidates = [...new Set([0, ...occupied.map(item => Math.max(0, item.end))])].sort((a, b) => a - b);
+    slot = candidates.find(candidate => candidate + width <= row.capacity + 1e-8 && !occupied.some(item => candidate < item.end - 1e-8 && item.start < candidate + width - 1e-8))
+      ?? Math.max(0, ...occupied.map(item => item.end));
   }
-  // Preserve the existing half-module snapping and visible overcapacity issues.
-  row.placements.push({ deviceId, start: Math.max(0, Math.round(slot * 2) / 2) });
+  // Explicit dragging keeps half-module snapping; automatic packing keeps exact widths.
+  row.placements.push({ deviceId, start: Math.max(0, start === undefined ? slot : Math.round(slot * 2) / 2) });
   next.devices.find(candidate => candidate.id === deviceId)!.boardId = boardId;
   return next;
 }

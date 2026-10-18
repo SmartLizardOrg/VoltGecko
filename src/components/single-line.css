@@ -19,5 +19,16 @@
 .single-line-issues h3{display:flex;align-items:center;gap:8px;margin:0 0 9px;font-size:0.875rem;font-weight:600}
 .single-line-issues ul{margin:0;padding-left:18px;display:grid;gap:5px}
 .single-line-issues button{background:none;border:0;padding:0;color:inherit;font:inherit;text-align:left;line-height:inherit;text-decoration:underline;text-underline-offset:3px}
+@media print{
+  @page{size:A3 landscape;margin:8mm}
+  body:has(.single-line-view),body:has(.single-line-view) #root{height:auto;overflow:visible;background:#fff}
+  body:has(.single-line-view) .app-shell,body:has(.single-line-view) .workspace,body:has(.single-line-view) .editor-area{display:block;height:auto;overflow:visible;width:100%;min-height:0}
+  body:has(.single-line-view) :is(.sidebar,.inspector,.workspace-header,.workspace-toolbar,.linked-file-control,.statusbar,.single-line-heading,.single-line-toolbar,.single-line-caption,.single-line-issues,.toast,.update-banner){display:none!important}
+  .single-line-view{padding:0;display:block;min-height:0}
+  .single-line-stage{padding:0;height:auto;min-height:0;overflow:visible;border:0;background:#fff}
+  .single-line-paper{width:100%!important;height:auto!important;box-shadow:none;margin:0}
+  .single-line-svg{position:static;transform:none!important;width:100%!important;height:auto!important}
+  .single-line-svg>svg{width:100%;height:auto}
+}
 @media(max-width:1250px){.single-line-view{padding:25px 20px}}
 @media(max-width:760px){.single-line-view{padding:22px 15px;gap:13px}.single-line-heading{gap:13px}.single-line-heading h2{font-size:1.4375rem}.single-line-heading p{font-size:0.875rem}.single-line-heading>select{font-size:0.875rem;min-height:42px;max-width:100%}.single-line-toolbar{padding:7px;gap:8px}.single-line-toolbar .quiet{min-height:40px;font-size:0.875rem}.single-line-toolbar .icon-button{min-width:38px;height:40px}.single-line-zoom{gap:2px}.single-line-zoom .quiet{padding:7px}.single-line-stage{height:55dvh;min-height:330px;padding:10px}.single-line-caption{font-size:0.875rem}.single-line-issues{font-size:0.875rem;padding:13px}.single-line-issues h3{font-size:0.875rem}}
