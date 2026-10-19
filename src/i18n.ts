@@ -15,12 +15,14 @@ import enWiringUi from './locales/en-wiring-ui';
 import enWiringExtra from './locales/en-wiring-extra';
 import enRelease from './locales/en-release';
 import enProjectFile from './locales/en-project-file';
+import enContinuousWiring from './locales/en-continuous-wiring';
+import enWireColors from './locales/en-wire-colors';
 import { APP } from './config';
 
 export type Language = 'hu' | 'en';
 export type TranslationParams = Record<string, string | number>;
 export const LANGUAGE_STORAGE_KEY = 'planner.language';
-export const englishMessages: Readonly<Record<string,string>> = { ...enData, ...enServices, ...enComponents, ...enApp, ...enProducts, ...enProductData, ...enConnections, ...enSingleLine, ...enBoardPlacement, ...enStart, ...enAppearance, ...enWiringData,...enWiringUi,...enWiringExtra,...enRelease,...enProjectFile };
+export const englishMessages: Readonly<Record<string,string>> = { ...enData, ...enServices, ...enComponents, ...enApp, ...enProducts, ...enProductData, ...enConnections, ...enSingleLine, ...enBoardPlacement, ...enStart, ...enAppearance, ...enWiringData,...enWiringUi,...enWiringExtra,...enRelease,...enProjectFile,...enContinuousWiring,...enWireColors };
 const subscribers = new Set<()=>void>();
 function initialLanguage():Language {
   try { return typeof localStorage !== 'undefined' && localStorage.getItem(LANGUAGE_STORAGE_KEY) === 'en' ? 'en' : 'hu'; }

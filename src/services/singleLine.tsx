@@ -1,7 +1,8 @@
 import { kindLabel } from '../catalog';
 import { getLocale, t } from '../i18n';
 import { getBoardConnectionIssues, getBoardDevices } from '../data/boardConnections';
-import { wiringEndpointLabel, getWiringIssues } from '../data/boardWiring';
+import { endpointConductor, wiringEndpointLabel, getWiringIssues } from '../data/boardWiring';
+import { wireColorAppearance } from '../data/wireColors';
 import type { Board, Circuit, Device, ProjectData, WiringEndpoint, CableDetails } from '../types';
 
 interface GraphNode {
@@ -19,7 +20,7 @@ interface GraphNode {
   height: number;
   rank: number;
 }
-interface GraphEdge { from: string; to: string; id: string; index: number; label?:string; undirected?:boolean; color?:string }
+interface GraphEdge { from: string; to: string; id: string; index: number; label?:string; undirected?:boolean; color?:string; stripe?:string }
 export interface SingleLineDrawing {
   svg: string;
   width: number;
@@ -176,10 +177,11 @@ export function buildSingleLineSvg(data: ProjectData, board: Board, combined=fal
   for(const infeed of board.wiring?.infeeds??[]) ensureEndpoint({kind:'infeed',infeedId:infeed.id,pole:0});
   for(const wire of board.wiring?.wires??[]) {
     const from=ensureEndpoint(wire.from),to=ensureEndpoint(wire.to);
+    const appearance=wireColorAppearance(wire,endpointConductor(data,wire.from)??'L');
     // Physical wire order never asserts a supply direction. Keep every conductor,
     // same-device bridge and repeated edge; no spanning-tree inference occurs.
     nodes.get(from)!.incoming++; nodes.get(to)!.incoming++;
-    edges.push({from,to,id:wire.id,index:edges.length,undirected:true,color:wire.color,
+    edges.push({from,to,id:wire.id,index:edges.length,undirected:true,color:appearance.color,stripe:appearance.stripe,
       label:[`${wiringEndpointLabel(data,wire.from)} ↔ ${wiringEndpointLabel(data,wire.to)}`,cableLabel(wire.cable),wire.label].filter(Boolean).join(' · ')});
   }
   // Place the supply first regardless of the order in which a connection was entered.
@@ -234,7 +236,8 @@ export function buildSingleLineSvg(data: ProjectData, board: Board, combined=fal
     const fromName = from.label || (from.supply ? board.supplyLabel || t('Betáplálás') : from.device?.code || from.missingId || '—');
     const toName = to.label || to.device?.code || to.missingId || '—';
     const title=edge.label || t('Kapcsolat: {from} → {to}', { from: fromName, to: toName });
-    return `<g data-connection-id="${xml(edge.id)}" data-connection-index="${edge.index}"><title>${xml(title)}</title><path d="${path}" fill="none" stroke="${edge.color==='gy'?'#26833b':safeColor(edge.color??'#698379')}" stroke-width="1.8"${edge.undirected?'':' marker-end="url(#single-line-arrow)"'}/>${text(labelX, labelY, String(edge.index + 1), 10, '#667d72')}</g>`;
+    const stripe=edge.stripe?`<path d="${path}" fill="none" stroke="${safeColor(edge.stripe)}" stroke-width="1.8" stroke-dasharray="7 7"/>`:'';
+    return `<g data-connection-id="${xml(edge.id)}" data-connection-index="${edge.index}"><title>${xml(title)}</title><path d="${path}" fill="none" stroke="${safeColor(edge.color??'#698379')}" stroke-width="1.8"${edge.undirected?'':' marker-end="url(#single-line-arrow)"'}/>${stripe}${text(labelX, labelY, String(edge.index + 1), 10, '#667d72')}</g>`;
   }).join('');
   const issues = [...getBoardConnectionIssues(board, data.devices).filter(issue=>!combined||issue.kind!=='other-board'), ...(combined?data.boards.flatMap(item=>getWiringIssues(data,item)):getWiringIssues(data,board))];
   const noticeLines = issues.slice(0, 8).flatMap(issue => words(issue.message, Math.floor(contentWidth / 7), 2));

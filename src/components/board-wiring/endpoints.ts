@@ -1,5 +1,7 @@
 import { effectiveDevicePoles, wiringEndpointLabel } from '../../data/boardWiring';
-import type { Conductor, ProjectData, WiringEndpoint } from '../../types';
+import type { ProjectData, WiringEndpoint } from '../../types';
+
+export { conductorColors } from '../../data/wireColors';
 
 export const encodeEndpoint = (endpoint: WiringEndpoint) =>
   JSON.stringify(
@@ -11,15 +13,6 @@ export const encodeEndpoint = (endpoint: WiringEndpoint) =>
   );
 export const parseEndpoint = (value: string): WiringEndpoint | undefined =>
   value ? (JSON.parse(value) as WiringEndpoint) : undefined;
-export const conductorColors: Record<Conductor, string> = {
-  L: '#86613d',
-  L1: '#86613d',
-  L2: '#263b49',
-  L3: '#81909a',
-  N: '#278ad4',
-  PE: '#70a029',
-  PEN: '#539d77'
-};
 export function sameEndpoint(a: WiringEndpoint, b: WiringEndpoint): boolean {
   if (a.kind === 'device' && b.kind === 'device')
     return a.deviceId === b.deviceId && a.side === b.side && a.pole === b.pole;

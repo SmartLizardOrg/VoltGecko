@@ -3,6 +3,7 @@ import { AlertTriangle, Cable, Plus } from 'lucide-react';
 import { t, getLocale } from '../i18n';
 import { uid, makeDevice } from '../catalog';
 import { placeBoardDevice } from '../data/boardPlacement';
+import { defaultWireColor } from '../data/wireColors';
 import {
   assignConnectedPhase,
   endpointConductor,
@@ -12,7 +13,6 @@ import {
 } from '../data/boardWiring';
 import type { Board, BoardBus, BoardInfeed, BoardWire, BoardWiring, ProjectData, WiringEndpoint } from '../types';
 import {
-  conductorColors,
   encodeEndpoint,
   getEndpointOptions,
   parseEndpoint,
@@ -36,6 +36,7 @@ export function BoardWiringEditor({ data, board, onChange, onNotify, onSelect }:
   const [open, setOpen] = useState(false);
   const [fromValue, setFromValue] = useState('');
   const [toValue, setToValue] = useState('');
+  const [continuousWiring, setContinuousWiring] = useState(false);
   const [wireId, setWireId] = useState<string>();
   const [error, setError] = useState('');
   const [estimate, setEstimate] = useState<WireEstimate>();
@@ -67,7 +68,7 @@ export function BoardWiringEditor({ data, board, onChange, onNotify, onSelect }:
     });
   const selectEndpoint = (endpoint: WiringEndpoint) => {
     setError('');
-    if (!fromValue || toValue) {
+    if (!fromValue || (toValue && !continuousWiring)) {
       setFromValue(encodeEndpoint(endpoint));
       setToValue('');
     } else setToValue(encodeEndpoint(endpoint));
@@ -122,10 +123,10 @@ export function BoardWiringEditor({ data, board, onChange, onNotify, onSelect }:
     update((value, next) => {
       assignConnectedPhase(next, from, to);
       const conductor = endpointConductor(next, from);
-      value.wires.push({ id, from, to, color: conductor ? conductorColors[conductor] : conductorColors.L });
+      value.wires.push({ id, from, to, ...defaultWireColor(conductor) });
     });
     setWireId(id);
-    setFromValue('');
+    if (!continuousWiring) setFromValue('');
     setToValue('');
     setError('');
   };
@@ -178,6 +179,23 @@ export function BoardWiringEditor({ data, board, onChange, onNotify, onSelect }:
               'Válassz két konkrét csatlakozópontot a rajzon vagy a listákban, majd hozd létre a vezetéket. A kattintási sorrend szabad.'
             )}
           </p>
+          <div className="row-actions">
+            <button
+              className="quiet wiring-mode-toggle"
+              aria-pressed={continuousWiring}
+              onClick={() => {
+                setContinuousWiring((value) => !value);
+                setError('');
+              }}
+            >
+              {t('Folyamatos bekötés')}
+            </button>
+            {continuousWiring && (
+              <span className="subtle">
+                {t('A kezdőpont megmarad a vezeték létrehozása után. Válassz új végpontot a következő bekötéshez.')}
+              </span>
+            )}
+          </div>
           <div className="wiring-connect-form">
             {endpointSelect(fromValue, setFromValue, t('Vezeték kezdőpontja'))}
             {endpointSelect(toValue, setToValue, t('Vezeték végpontja'))}

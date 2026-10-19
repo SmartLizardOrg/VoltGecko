@@ -17,6 +17,7 @@ Offline-first electrical floor-plan and distribution-board planner, in **English
 - Import PDF pages, PNG and JPG floor plans; use multiple sheets, layers, scale calibration, zoom, device placement and rotation.
 - Share device identities and properties across floor plans, circuits, distribution boards and single-line diagrams. Record room, mounting height, product details, notes and site photos.
 - Draw circuit and control connections, edit routes, arrange DIN devices by row and module width, and see collisions and overcapacity. The detailed cabinet editor adds per-pole terminals, phase/N/PE busbars, incoming supplies, cross-board wires, cable data and movable wire routes and labels.
+- Reuse a selected source with continuous wiring, choose named wire colours or a custom colour, and document green-yellow PE wires in the editor and single-line exports. Automatic routes leave each terminal on its selected side and use available gaps and outer gutters; saved manual routes remain editable.
 - Search the bundled Schneider catalogue offline: 260 references from the Hungarian Easy9 Pro catalogue, including DIN devices, enclosures and accessories. Each entry retains its manufacturer source.
 - Export customer and detailed PDF documents, including legends, circuit lists and board layouts. Export the single-line drawing as SVG or PNG.
 - Save automatically to IndexedDB, save named versions, restore without overwriting history, and transfer a complete project as one compressed `.vgecko` archive with photos and attachments.
@@ -135,6 +136,8 @@ A DIN-készülék az első szabad helyre kerül, a szekrény új elosztót hoz l
 ### Részletes huzalozás
 
 Az elosztónézet **Részletes huzalozás** szakaszában két csatlakozópont kiválasztásával és a vezeték hozzáadásával köthetők a készülékek. A pontok a rajzon és billentyűzettel kezelhető listákból is kiválaszthatók; a sorrend nem módosítja a pólust. Másik elosztó végpontja is választható. A DIN-elhelyező és a készülékszintű táplálási kapcsolatok ugyanennek a tervnek a részei.
+
+A **Folyamatos bekötés** megtartja a kezdőpontot, így egymás után több végponthoz köthetsz vezetéket. A vezeték színe barna, fekete, szürke, kék, zöld-sárga vagy egyéni szín lehet; a zöld-sárga jelölés az egyvonalas exportban is megmarad. Az automatikus nyomvonal a kapocs oldalának megfelelően indul, és a készülékek közötti vagy melletti helyet használja. A kézzel beállított töréspontokat a program megőrzi.
 
 A sínek kapocsszáma, vezetője, sorhoz rendelése és kapocsfeliratai szerkeszthetők. A vezetéken szín, kábelmegnevezés, érszám, keresztmetszet, anyag, hossz és gyártói ellenállás rögzíthető. A nyomvonal töréspontjai és feliratai húzással vagy számértékkel mozgathatók. A készülék adatlapján külön villamos szerep, póluskiosztás, névleges áram és ÁVK-adatok adhatók meg.
 

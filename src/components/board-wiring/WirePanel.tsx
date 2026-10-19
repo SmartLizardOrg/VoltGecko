@@ -1,9 +1,10 @@
 import { Plus, RotateCcw, Trash2 } from 'lucide-react';
 import { t, getLocale } from '../../i18n';
-import { estimateVoltageDrop, wiringEndpointLabel } from '../../data/boardWiring';
+import { endpointConductor, estimateVoltageDrop, wiringEndpointLabel } from '../../data/boardWiring';
+import { wireColorAppearance, wireColorPresets } from '../../data/wireColors';
 import type { BoardWire, Point, ProjectData, WiringEndpoint } from '../../types';
 import { CableFields } from '../ElectricalDeviceFields';
-import { conductorColors, encodeEndpoint, parseEndpoint } from './endpoints';
+import { encodeEndpoint, parseEndpoint } from './endpoints';
 import type { EndpointOption } from './endpoints';
 
 interface EndpointSelectProps {
@@ -79,6 +80,9 @@ export function WirePanel({
   onEstimateChange
 }: Props) {
   const selectedWire = wires.find((wire) => wire.id === selectedWireId);
+  const selectedColor = selectedWire
+    ? wireColorAppearance(selectedWire, endpointConductor(data, selectedWire.from) ?? 'L')
+    : undefined;
   const label = (endpoint: WiringEndpoint) => wiringEndpointLabel(data, endpoint);
   const endpointSelect = (value: string, onChange: (value: string) => void, title: string) => (
     <EndpointSelect
@@ -128,7 +132,10 @@ export function WirePanel({
             aria-pressed={selectedWireId === wire.id}
             onClick={() => onSelectWire(wire.id)}
           >
-            <i style={{ background: wire.color ?? conductorColors.L }} />
+            <i
+              aria-hidden="true"
+              style={{ background: wireColorAppearance(wire, endpointConductor(data, wire.from) ?? 'L').swatch }}
+            />
             <span>{wire.label || `${label(wire.from)} → ${label(wire.to)}`}</span>
           </button>
         ))}
@@ -160,15 +167,37 @@ export function WirePanel({
               onChange={(e) => onPatchWire(selectedWire.id, { label: e.target.value })}
             />
           </label>
-          <label className="wiring-color-field">
-            {t('Vezeték színe')}
-            <input
-              aria-label={t('Vezeték színe')}
-              type="color"
-              value={/^#[0-9a-f]{6}$/i.test(selectedWire.color ?? '') ? selectedWire.color : conductorColors.L}
-              onChange={(e) => onPatchWire(selectedWire.id, { color: e.target.value })}
-            />
-          </label>
+          <fieldset className="wiring-color-palette">
+            <legend>{t('Vezeték színe')}</legend>
+            <div className="wiring-color-presets">
+              {wireColorPresets.map((preset) => {
+                const pattern = 'colorPattern' in preset ? preset.colorPattern : undefined;
+                const appearance = wireColorAppearance({ color: preset.color, colorPattern: pattern });
+                return (
+                  <button
+                    type="button"
+                    key={preset.label}
+                    aria-label={t('Vezetékszín: {color}', { color: t(preset.label) })}
+                    aria-pressed={selectedColor?.color.toLowerCase() === preset.color && !!selectedColor?.stripe === !!appearance.stripe}
+                    title={t(preset.label)}
+                    onClick={() => onPatchWire(selectedWire.id, { color: preset.color, colorPattern: pattern })}
+                  >
+                    <i aria-hidden="true" style={{ background: appearance.swatch }} />
+                    {t(preset.label)}
+                  </button>
+                );
+              })}
+            </div>
+            <label className="wiring-color-field">
+              {t('Egyéni vezetékszín')}
+              <input
+                aria-label={t('Egyéni vezetékszín')}
+                type="color"
+                value={selectedColor?.color}
+                onChange={(e) => onPatchWire(selectedWire.id, { color: e.target.value, colorPattern: undefined })}
+              />
+            </label>
+          </fieldset>
           <CableFields cable={selectedWire.cable} onChange={(cable) => onPatchWire(selectedWire.id, { cable })} />
           <fieldset className="wiring-cable">
             <legend>{t('Feszültségesés-becslés')}</legend>

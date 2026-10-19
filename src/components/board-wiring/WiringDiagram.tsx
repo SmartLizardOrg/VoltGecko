@@ -1,7 +1,10 @@
-import { useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import type { PointerEvent } from 'react';
 import { t } from '../../i18n';
 import { effectiveDevicePoles, endpointConductor, wiringEndpointLabel } from '../../data/boardWiring';
+import { automaticWireRoute } from '../../data/boardWireRouting';
+import type { RoutingTerminal, WiringObstacle } from '../../data/boardWireRouting';
+import { defaultWireColor, GREEN_YELLOW, wireColorAppearance } from '../../data/wireColors';
 import type {
   Board,
   BoardBus,
@@ -12,7 +15,7 @@ import type {
   ProjectData,
   WiringEndpoint
 } from '../../types';
-import { conductorColors, encodeEndpoint, sameEndpoint } from './endpoints';
+import { encodeEndpoint, sameEndpoint } from './endpoints';
 
 type Drag = {
   kind: 'point' | 'label' | 'bus' | 'infeed' | 'infeed-label';
@@ -35,14 +38,14 @@ export function useWiringDiagram(
 ) {
   const [drag, setDrag] = useState<Drag>();
   const svgRef = useRef<SVGSVGElement>(null);
-  const width = Math.max(
+  const layoutWidth = Math.max(
     920,
     ...board.rows.map((row) => row.capacity * 46 + 220),
     ...wiring.buses.map((bus) => (bus.offset?.x ?? 80) + bus.capacity * 26 + 100),
     ...wiring.infeeds.map((source) => (source.position?.x ?? 0) + source.poles.length * 26 + 80),
     ...wiring.wires.flatMap((wire) => wire.points?.map((point) => point.x + 70) ?? [])
   );
-  const height = Math.max(
+  const layoutHeight = Math.max(
     450,
     board.rows.length * 230 + 230,
     wiring.infeeds.length * 145 + 110,
@@ -74,14 +77,14 @@ export function useWiringDiagram(
           ? 130 + index * 230 + (bus.position === 'top' ? -56 : 154)
           : bus.position === 'top'
             ? 55
-            : height - 48
+            : layoutHeight - 48
     };
     return drag?.kind === 'bus' && drag.id === bus.id ? drag.point : (bus.offset ?? original);
   };
   const sourceOrigin = (source: BoardInfeed, index: number): Point =>
     drag?.kind === 'infeed' && drag.id === source.id
       ? drag.point
-      : (source.position ?? { x: width - 160, y: 110 + index * 145 });
+      : (source.position ?? { x: layoutWidth - 160, y: 110 + index * 145 });
   const externalEndpoints = new Map<string, WiringEndpoint>();
   for (const wire of wiring.wires)
     for (const endpoint of [wire.from, wire.to]) {
@@ -118,23 +121,45 @@ export function useWiringDiagram(
         return { x: origin.x + endpoint.pole * 26 + 13, y: origin.y + 42 };
       }
     }
-    return { x: width - 35, y: 60 + externalKeys.indexOf(encodeEndpoint(endpoint)) * 45 };
+    return { x: layoutWidth - 35, y: 60 + externalKeys.indexOf(encodeEndpoint(endpoint)) * 45 };
   };
-  const route = (wire: BoardWire, index: number): Point[] => {
-    const first = endpointPoint(wire.from),
-      last = endpointPoint(wire.to),
-      mid = (first.y + last.y) / 2 + (index % 7) * 5;
-    const points = wire.points ?? [
-      { x: first.x, y: mid },
-      { x: last.x, y: mid }
-    ];
-    return [
+  const obstacles: WiringObstacle[] = [
+    ...[...devicePositions.values()].map((position) => ({
+      x: position.x, y: position.y, width: position.w, height: 100
+    })),
+    ...wiring.infeeds.map((source, index) => {
+      const origin = sourceOrigin(source, index);
+      return { x: origin.x - 5, y: origin.y - 8, width: Math.max(90, source.poles.length * 26 + 10), height: 58 };
+    })
+  ];
+  const routingTerminal = (endpoint: WiringEndpoint, other: Point): RoutingTerminal => {
+    const point = endpointPoint(endpoint);
+    const local = endpoint.kind === 'device' ? devicePositions.has(endpoint.deviceId)
+      : endpoint.kind === 'bus' ? busesById.has(endpoint.busId) : infeedsById.has(endpoint.infeedId);
+    const direction = !local ? 'left'
+      : endpoint.kind === 'device' ? (endpoint.side === 'top' ? 'up' : 'down')
+        : endpoint.kind === 'infeed' ? 'down'
+          : point.y === other.y ? (point.x < other.x ? 'right' : 'left')
+            : point.y < other.y ? 'down' : 'up';
+    return { point, direction };
+  };
+  const routes = new Map<string, Point[]>();
+  const route = (wire: BoardWire, _index: number): Point[] => {
+    const cached = routes.get(wire.id);
+    if (cached) return cached;
+    const first = endpointPoint(wire.from), last = endpointPoint(wire.to);
+    const points = wire.points ?? automaticWireRoute(
+      routingTerminal(wire.from, last), routingTerminal(wire.to, first), obstacles, wire.id
+    ).slice(1, -1);
+    const result = [
       first,
       ...points.map((point, i) =>
         drag?.kind === 'point' && drag.id === wire.id && drag.index === i ? drag.point : point
       ),
       last
     ];
+    routes.set(wire.id, result);
+    return result;
   };
   const wireLabelAnchor = (wire: BoardWire, index: number): Point => {
     const points = route(wire, index),
@@ -188,12 +213,35 @@ export function useWiringDiagram(
       }
     }
   };
+  // Grow the canvas around routes without feeding that size back into default
+  // bus/infeed positions. Side gutters may extend beyond the original layout.
+  let minX = 0, minY = 0, maxX = layoutWidth, maxY = layoutHeight;
+  wiring.wires.forEach((wire, index) => {
+    route(wire, index).forEach((point) => {
+      minX = Math.min(minX, point.x - 18);
+      minY = Math.min(minY, point.y - 18);
+      maxX = Math.max(maxX, point.x + 18);
+      maxY = Math.max(maxY, point.y + 18);
+    });
+    const text = wire.label || wire.cable?.designation;
+    if (text) {
+      const label = wireLabelPoint(wire, index);
+      minX = Math.min(minX, label.x - 8);
+      minY = Math.min(minY, label.y - 18);
+      // Reserve a conservative glyph width before the SVG is mounted, including
+      // for dragged labels and labels next to an outer routing gutter.
+      maxX = Math.max(maxX, label.x + Array.from(text).length * 12 + 8);
+      maxY = Math.max(maxY, label.y + 8);
+    }
+  });
+  const width = maxX - minX, height = maxY - minY;
   return {
     svgRef,
     drag,
     setDrag,
     width,
     height,
+    viewBox: `${minX} ${minY} ${width} ${height}`,
     devicesById,
     devicePositions,
     busOrigin,
@@ -234,12 +282,14 @@ export function WiringDiagram({
   onSelectDevice,
   onSelectEndpoint
 }: Props) {
+  const pePatternId = `wiring-pe-${useId().replace(/:/g, '')}`;
   const {
     svgRef,
     drag,
     setDrag,
     width,
     height,
+    viewBox,
     devicesById,
     devicePositions,
     busOrigin,
@@ -257,7 +307,8 @@ export function WiringDiagram({
   const selectedRoute = selectedWire ? route(selectedWire, wiring.wires.indexOf(selectedWire)) : [];
   const terminal = (endpoint: WiringEndpoint, point: Point, text: string) => {
     const selected = (from && sameEndpoint(from, endpoint)) || (to && sameEndpoint(to, endpoint)),
-      color = conductorColors[endpointConductor(data, endpoint) ?? 'L'];
+      appearance = wireColorAppearance(defaultWireColor(endpointConductor(data, endpoint) ?? 'L')),
+      color = appearance.stripe ? `url(#${pePatternId})` : appearance.color;
     return (
       <g
         key={encodeEndpoint(endpoint)}
@@ -292,7 +343,7 @@ export function WiringDiagram({
         className="wiring-diagram"
         width={width}
         height={height}
-        viewBox={`0 0 ${width} ${height}`}
+        viewBox={viewBox}
         aria-label={t('Elosztó részletes huzalozási rajza')}
         onPointerMove={(event) => {
           if (drag) {
@@ -303,6 +354,12 @@ export function WiringDiagram({
         onPointerUp={commitDrag}
         onPointerCancel={() => setDrag(undefined)}
       >
+        <defs>
+          <pattern id={pePatternId} width={8} height={8} patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <rect width={8} height={8} fill={GREEN_YELLOW.green} />
+            <rect width={4} height={8} fill={GREEN_YELLOW.yellow} />
+          </pattern>
+        </defs>
         {board.rows.map((row, index) => (
           <g key={row.id}>
             <rect
@@ -319,12 +376,13 @@ export function WiringDiagram({
           </g>
         ))}
         {wiring.wires.map((wire, index) => {
-          const points = route(wire, index);
+          const points = route(wire, index).map((point) => `${point.x},${point.y}`).join(' ');
+          const appearance = wireColorAppearance(wire, endpointConductor(data, wire.from) ?? 'L');
           return (
             <g key={wire.id} className={`wiring-wire ${selectedWireId === wire.id ? 'selected' : ''}`}>
               <polyline
                 className="wiring-wire-hit"
-                points={points.map((point) => `${point.x},${point.y}`).join(' ')}
+                points={points}
                 onClick={() => onSelectWire(wire.id)}
                 role="button"
                 tabIndex={0}
@@ -338,9 +396,17 @@ export function WiringDiagram({
               />
               <polyline
                 className="wiring-wire-line"
-                points={points.map((point) => `${point.x},${point.y}`).join(' ')}
-                stroke={wire.color ?? conductorColors[endpointConductor(data, wire.from) ?? 'L']}
+                points={points}
+                stroke={appearance.color}
               />
+              {appearance.stripe && (
+                <polyline
+                  className="wiring-wire-line wiring-wire-stripe"
+                  points={points}
+                  stroke={appearance.stripe}
+                  strokeDasharray="7 7"
+                />
+              )}
             </g>
           );
         })}
@@ -407,7 +473,7 @@ export function WiringDiagram({
                 y={origin.y - 5}
                 width={bus.capacity * 26}
                 height={10}
-                fill={conductorColors[bus.conductor]}
+                fill={bus.conductor === 'PE' ? `url(#${pePatternId})` : defaultWireColor(bus.conductor).color}
               />
               <text
                 className="wiring-move-label"

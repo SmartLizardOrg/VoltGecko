@@ -24,6 +24,27 @@ function fixture() {
 }
 
 describe('single-line SVG', () => {
+  it('exports an explicit green-yellow wire as two strokes while preserving solid custom greens', () => {
+    const { data, board, devices } = fixture();
+    board.connections = [];
+    devices[0].electrical = { poles: ['PE'] };
+    devices[1].electrical = { poles: ['PE'] };
+    const from = { kind: 'device' as const, deviceId: devices[0].id, side: 'bottom' as const, pole: 0 };
+    const to = { kind: 'device' as const, deviceId: devices[1].id, side: 'top' as const, pole: 0 };
+    board.wiring = { buses: [], infeeds: [], wires: [
+      { id: 'striped-earth', from, to, color: '#2f9e44', colorPattern: 'green-yellow' },
+      { id: 'custom-green', from, to, color: '#2f9e44' }
+    ] };
+    const drawing = buildSingleLineSvg(data, board).svg;
+    const striped = drawing.match(/<g data-connection-id="striped-earth"[\s\S]*?<\/g>/)![0];
+    const solid = drawing.match(/<g data-connection-id="custom-green"[\s\S]*?<\/g>/)![0];
+    expect(striped.match(/<path /g)).toHaveLength(2);
+    expect(striped).toContain('stroke="#2f9e44"');
+    expect(striped).toContain('stroke="#f2cf1d"');
+    expect(striped).toContain('stroke-dasharray="7 7"');
+    expect(solid.match(/<path /g)).toHaveLength(1);
+    expect(solid).not.toContain('stroke-dasharray');
+  });
   it('retains manual circuit cable descriptions when only structured length is added',()=>{
     expect(circuitCableLabel({id:'c',code:'C',name:'Load',notes:'',color:'#123456',cable:'Existing NYM-J 3×2.5',cableDetails:{lengthM:10}})).toBe('Existing NYM-J 3×2.5 · 10 m');
   });

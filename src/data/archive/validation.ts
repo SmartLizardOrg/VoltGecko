@@ -208,6 +208,8 @@ function validateWiring(value: JsonObject, devices: unknown[]) {
           text(wire.color, 'Vezetékszín', 100);
           if (!/^#[0-9a-fA-F]{6}$/.test(wire.color)) fail('a vezetékszín nem hatjegyű hexadecimális szín.');
         }
+        if (wire.colorPattern !== undefined && wire.colorPattern !== 'green-yellow')
+          fail('ismeretlen vezetékszínminta.');
         if (wire.label !== undefined) text(wire.label, 'Vezetékfelirat', 5000);
         cableDetails(wire.cable);
         if (wire.points !== undefined) {

@@ -40,7 +40,7 @@ export type WiringEndpoint =
   | {kind:'bus'; busId:string; terminal:number}
   | {kind:'infeed'; infeedId:string; pole:number};
 export interface BoardWire {
-  id:string; from:WiringEndpoint; to:WiringEndpoint; color?:string; cable?:CableDetails;
+  id:string; from:WiringEndpoint; to:WiringEndpoint; color?:string; colorPattern?:'green-yellow'; cable?:CableDetails;
   points?:Point[]; label?:string; labelOffset?:Point;
 }
 export interface BoardBus {
