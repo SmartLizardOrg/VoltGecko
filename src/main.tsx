@@ -5,6 +5,8 @@ import App from './App';
 // Keep editor base styles before the shared appearance overrides, even when
 // their JavaScript is first opened later in the session.
 import './components/floorplan.css';
+import './components/plan-display.css';
+import './components/plan-image-fields.css';
 import './components/board-wiring.css';
 import './components/single-line.css';
 import './components/product-library.css';

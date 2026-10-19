@@ -1,6 +1,7 @@
 import type { ProductSnapshot } from './products/types';
 export type DeviceKind = 'outlet' | 'switch' | 'light' | 'junction' | 'sensor' | 'relay' | 'hub' | 'breaker' | 'rcd' | 'rcbo' | 'spd' | 'main' | 'blank' | 'custom';
 export type DeviceStatus = 'planned' | 'installed' | 'verified';
+export type FloorPlanDisplay = 'symbols' | 'images';
 export interface Point { x: number; y: number }
 export interface Device {
   id: string; code: string; name: string; kind: DeviceKind; room: string;
@@ -8,6 +9,8 @@ export interface Device {
   circuitId?: string; moduleWidth?: number; rating?: string; photoIds: string[];
   product?: ProductSnapshot; boardId?:string; quantity?:number;
   electrical?: DeviceElectrical;
+  /** A dedicated plan image, independent from installation/documentation photos. */
+  planImage?: { assetId: string; size: number; opacity: number };
 }
 export interface Placement extends Point { deviceId: string; rotation: number }
 export interface Route { id: string; fromDeviceId: string; toDeviceId: string; kind: 'power' | 'control'; circuitId?: string; points: Point[] }
@@ -54,7 +57,7 @@ export interface BoardWiring {
   buses:BoardBus[]; wires:BoardWire[]; infeeds:BoardInfeed[]; demandFactor?:number;
 }
 export interface Asset { id: string; name: string; mime: string; data: string }
-export interface ProjectData { id: string; name: string; site: string; client: string; notes: string; sheets: PlanSheet[]; devices: Device[]; circuits: Circuit[]; boards: Board[] }
+export interface ProjectData { id: string; name: string; site: string; client: string; notes: string; sheets: PlanSheet[]; devices: Device[]; circuits: Circuit[]; boards: Board[]; floorPlanDisplay?: FloorPlanDisplay }
 export interface Revision { id: string; parentId?: string; createdAt: string; note: string; data: ProjectData; restoredFrom?: string }
 export interface ProjectDocument { schemaVersion: 1; data: ProjectData; assets: Record<string, Asset>; revisions: Revision[]; headRevisionId?: string; updatedAt: string; lastExternalSaveAt?: string; lastDriveSaveAt?: string }
 export interface ProjectSummary { id: string; name: string; site: string; updatedAt: string }

@@ -1,0 +1,35 @@
+.plan-image-fields {
+  min-width: 0;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  gap: 10px;
+}
+.plan-image-fields p { margin: 0; }
+.plan-image-fields .section-label strong { color: var(--text); font-weight: 600; }
+.plan-image-preview {
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface-subtle);
+}
+.plan-image-preview img { display: block; width: 100%; height: 120px; object-fit: contain; }
+.plan-image-preview span { max-width: 100%; font-size: .875rem; color: var(--text-secondary); overflow-wrap: anywhere; }
+.plan-image-actions { display: flex; flex-wrap: wrap; gap: 5px; }
+.plan-image-actions > button { min-width: 0; flex: 1 1 150px; justify-content: center; padding: 8px; }
+.plan-image-photo-options { display: grid; gap: 8px; min-width: 0; }
+.plan-image-photo-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.plan-image-photo-grid > button { min-width: 0; width: 100%; padding: 3px; aspect-ratio: 1; border: 2px solid var(--line); border-radius: 5px; background: var(--surface); }
+.plan-image-photo-grid > button[aria-pressed='true'] { border-color: var(--accent); background: var(--accent-subtle); }
+.plan-image-photo-grid img { display: block; width: 100%; height: 100%; object-fit: contain; border-radius: 2px; }
+.plan-image-settings { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; }
+.plan-image-settings label { min-width: 0; }
+.plan-image-settings input { width: 100%; min-width: 0; }
+@media (max-width: 760px) {
+  .plan-image-photo-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+}

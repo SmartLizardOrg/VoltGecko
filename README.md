@@ -16,6 +16,7 @@ Offline-first electrical floor-plan and distribution-board planner, in **English
 - Choose light or dark appearance and standard or large text. The interface uses larger controls and high-contrast colors; your appearance settings stay on the device.
 - Import PDF pages, PNG and JPG floor plans; use multiple sheets, layers, scale calibration, zoom, device placement and rotation.
 - Share device identities and properties across floor plans, circuits, distribution boards and single-line diagrams. Record room, mounting height, product details, notes and site photos.
+- Switch the whole floor plan between **Symbols** and **Real images**. Assign a separate image to each device by uploading a PNG/JPG/WebP or choosing a site photo; set its display size, rotation and opacity. Devices without an image show a neutral placeholder in image mode. Both PDF audiences follow the saved display mode, preserving photo proportions and transparency.
 - Draw circuit and control connections, edit routes, arrange DIN devices by row and module width, and see collisions and overcapacity. The detailed cabinet editor adds per-pole terminals, phase/N/PE busbars, incoming supplies, cross-board wires, cable data and movable wire routes and labels.
 - Reuse a selected source with continuous wiring, choose named wire colours or a custom colour, and document green-yellow PE wires in the editor and single-line exports. Automatic routes leave each terminal on its selected side and use available gaps and outer gutters; saved manual routes remain editable.
 - Search the bundled Schneider catalogue offline: 260 references from the Hungarian Easy9 Pro catalogue, including DIN devices, enclosures and accessories. Each entry retains its manufacturer source.
@@ -126,6 +127,8 @@ Node.js 22.13+ (22-es ág) vagy Node.js 24 LTS szükséges. Klónozás után `np
 - Az elosztóban a sor, kezdőhely és modulszélesség szerkeszthető, félmodulos értékekkel is. A program jelzi az ütközést és túlfoglalást. Az egyvonalas nézet a megadott készülékkapcsolatokból épül fel.
 - Az áramkörhöz védelmi készülék, kábelmegnevezés, fogyasztótípus és teljesítmény rögzíthető. Ezek dokumentációs adatok; nem indítanak automatikus villamos méretezést.
 - A fotók, megjegyzések és eszközadatok ugyanahhoz az eszközhöz tartoznak minden nézetben. Az ügyfél- és részletes PDF mellett az egyvonalas rajz SVG-ként is menthető.
+
+Az alaprajz **Rajzjelek / Valós képek** kapcsolója az egész projekt megjelenítését állítja; a választás mentés és újranyitás után is megmarad. Az eszköz adatlapjának **Alaprajzi megjelenítési kép** részében külön PNG/JPG/WebP kép tölthető fel, vagy egy meglévő helyszíni fotó választható. A képméret és fedettség itt, a forgatás a szokásos forgatásvezérlővel állítható. A képes nézetben kép nélküli eszköznél semleges helyőrző jelenik meg. Az ügyfél- és szakmai PDF egyaránt a kiválasztott nézetet használja, a képarány, forgatás és átlátszóság megtartásával.
 
 ### Terméktár
 

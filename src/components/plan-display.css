@@ -1,0 +1,11 @@
+.floor-control-header{flex-wrap:wrap}
+.floor-control-header>.drawing-tools{min-width:min(100%,248px)}
+.floor-display-switch{display:inline-flex;flex-shrink:0;margin-left:auto;border:1px solid var(--control-border);border-radius:7px;background:var(--surface);overflow:hidden}
+.floor-display-switch>button{border:0;background:transparent;color:var(--text-secondary);padding:8px 11px;min-height:42px;font:inherit;font-size:1rem;white-space:nowrap;cursor:pointer}
+.floor-display-switch>button+button{border-left:1px solid var(--line)}
+.floor-display-switch>button[aria-pressed=true]{background:var(--accent-subtle);color:var(--accent);font-weight:600}
+.floor-display-switch>button:focus-visible{outline:3px solid var(--focus);outline-offset:-3px}
+.floor-device:hover .floor-image-frame{stroke:var(--focus)}
+.floor-missing-image-frame{fill:var(--surface-subtle);stroke:var(--text-secondary);stroke-width:1;stroke-dasharray:4 3}
+.floor-missing-image-label{color:var(--text-secondary)}
+.floor-missing-image-label text{fill:var(--text-secondary)}

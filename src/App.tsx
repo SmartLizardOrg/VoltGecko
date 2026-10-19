@@ -38,6 +38,7 @@ import { HistoryView } from './app/HistoryView';
 import { ProjectSettings } from './app/ProjectSettings';
 import { ProjectBrowser } from './app/ProjectBrowser';
 import { placeBoardDevice } from './data/boardPlacement';
+import { DEFAULT_PLAN_IMAGE_SIZE } from './data/planAppearance';
 import { EditorSidebar } from './app/EditorSidebar';
 import { WorkspaceHeader } from './app/WorkspaceHeader';
 import { getNavigation, type View } from './app/navigation';
@@ -332,6 +333,27 @@ export default function App() {
       });
       changeData(data, assets);
       notify(t('A fotók a helyi projekthez kerültek.'));
+    });
+  };
+  const addPlanImage = (file: File) => {
+    const id = selectedId, projectId = docRef.current?.data.id;
+    if (!id || !projectId) return;
+    void perform(t('Alaprajzi kép mentése…'), async () => {
+      if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type))
+        throw new Error(t('PNG, JPG vagy WebP kép választható.'));
+      if (file.size > 15 * 1024 * 1024) throw new Error(t('Egy alaprajzi kép legfeljebb 15 MB lehet.'));
+      const asset = await assetFromFile(file);
+      const { imageSize } = await import('./services/import');
+      const dimensions = await imageSize(asset.data);
+      if (!dimensions.width || !dimensions.height) throw new Error(t('A kép mérete érvénytelen.'));
+      const current = docRef.current;
+      if (!current || current.data.id !== projectId) return;
+      const data = structuredClone(current.data);
+      const device = data.devices.find((item) => item.id === id);
+      if (!device) return;
+      device.planImage = { assetId: asset.id, size: device.planImage?.size ?? DEFAULT_PLAN_IMAGE_SIZE, opacity: device.planImage?.opacity ?? 1 };
+      changeData(data, { ...current.assets, [asset.id]: asset });
+      notify(t('Az alaprajzi kép a projekthez került.'));
     });
   };
   const removeDevice = (id: string) => {
@@ -705,6 +727,7 @@ export default function App() {
               onClose={() => setSelectedId(null)}
               onDelete={removeDevice}
               onPhoto={addPhoto}
+              onPlanImage={addPlanImage}
               onLocate={locate}
             />
           </LazyFeature>

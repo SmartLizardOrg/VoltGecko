@@ -1,6 +1,7 @@
 import { t } from '../../i18n';
-import type { Device, ProjectDocument } from '../../types';
+import type { Asset, Device, ProjectDocument } from '../../types';
 import { effectiveDevicePoles } from '../boardWiring';
+import { isPlanImageAsset } from '../planAppearance';
 import { fail, identifier, object, text, type JsonObject } from './format';
 import { readAssets } from './assets';
 
@@ -281,7 +282,7 @@ function productSnapshot(value: unknown) {
   }
 }
 
-function validateData(value: unknown, assets: Set<string>, projectId?: string) {
+function validateData(value: unknown, assets: ReadonlyMap<string, Asset>, projectId?: string) {
   object(value, 'Projektadatok');
   identifier(value.id, 'Projektazonosító');
   if (projectId && value.id !== projectId) fail('egy előzmény másik projekthez tartozik.');
@@ -289,6 +290,8 @@ function validateData(value: unknown, assets: Set<string>, projectId?: string) {
   text(value.site, 'Helyszín', 5000);
   text(value.client, 'Megrendelő', 5000);
   text(value.notes, 'Projektjegyzet');
+  if (value.floorPlanDisplay !== undefined && value.floorPlanDisplay !== 'symbols' && value.floorPlanDisplay !== 'images')
+    fail('ismeretlen alaprajzi megjelenítés.');
   array(value.devices, 'Készülékek');
   array(value.circuits, 'Áramkörök');
   array(value.sheets, 'Tervlapok', 500);
@@ -316,6 +319,16 @@ function validateData(value: unknown, assets: Set<string>, projectId?: string) {
     reference(entry.circuitId, circuits, 'Készülék áramköre', true);
     array(entry.photoIds, 'Készülékfotók', 1000);
     for (const photo of entry.photoIds) reference(photo, assets, 'Fotó');
+    if (entry.planImage !== undefined) {
+      object(entry.planImage, 'Alaprajzi kép');
+      reference(entry.planImage.assetId, assets, 'Alaprajzi kép');
+      if (!isPlanImageAsset(assets.get(entry.planImage.assetId as string)))
+        fail('az alaprajzi kép PNG, JPG vagy WebP formátumú legyen.');
+      finite(entry.planImage.size, 'Alaprajzi képméret', 240);
+      if (entry.planImage.size < 24) fail('az alaprajzi képméret 24 és 240 közötti szám legyen.');
+      finite(entry.planImage.opacity, 'Alaprajzi kép átlátszatlansága', 1);
+      if (entry.planImage.opacity < 0.1) fail('az alaprajzi kép átlátszatlansága 0,1 és 1 közötti szám legyen.');
+    }
   }
   for (const entry of value.circuits) {
     object(entry, 'Áramkör');
@@ -414,7 +427,8 @@ export function readProjectDocument(value: unknown, options: { collectAssetBytes
   if (value.schemaVersion !== 1)
     fail('nem támogatott formátumverzió. Frissítsd az alkalmazást, ha újabb programmal készült a fájl.');
   // Only ZIP creation retains decoded assets; validation can release each one.
-  const { ids: assets, bytes: assetBytes } = readAssets(value.assets, options.collectAssetBytes);
+  const { bytes: assetBytes } = readAssets(value.assets, options.collectAssetBytes);
+  const assets = new Map(Object.entries(value.assets as Record<string, Asset>));
   validateData(value.data, assets);
   object(value.data, 'Projektadatok');
   const projectId = value.data.id as string;

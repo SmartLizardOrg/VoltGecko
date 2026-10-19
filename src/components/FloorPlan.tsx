@@ -16,7 +16,8 @@ import {
 import type { Asset, DeviceKind, PlanSheet, Point, ProjectData, Route } from '../types';
 import { kindLabel, uid } from '../catalog';
 import { moveSheetDevice } from '../data/floorPlan';
-import { SymbolGlyph } from './Symbol';
+import { getFloorPlanDisplay, getPlanAppearance, getPlanSheetBounds } from '../data/planAppearance';
+import { PlanDeviceGraphic } from './PlanDeviceGraphic';
 
 export interface FloorPlanProps {
   data: ProjectData;
@@ -65,11 +66,13 @@ export function FloorPlan({
   onNotify,
   tools
 }: FloorPlanProps) {
+  const display = getFloorPlanDisplay(data);
   const persistedSheet = data.sheets.find((s) => s.id === sheetId);
   const [draftSheet, setDraftSheet] = useState<PlanSheet | null>(null);
   const draftRef = useRef<PlanSheet | null>(null);
   const sheet = draftSheet?.id === sheetId ? draftSheet : persistedSheet;
-  const fit = (): View => ({ x: -48, y: -48, width: (sheet?.width ?? 1200) + 96, height: (sheet?.height ?? 800) + 96 });
+  const fit = (): View => sheet ? getPlanSheetBounds(sheet, data.devices, assets, display)
+    : { x: -48, y: -48, width: 1296, height: 896 };
   const [view, setView] = useState<View>(fit);
   const [layersOpen, setLayersOpen] = useState(false);
   const [layers, setLayers] = useState({ background: true, devices: true, routes: true, notes: true, grid: false });
@@ -129,7 +132,8 @@ export function FloorPlan({
   const selectedDevice = selectedId ? devices.get(selectedId) : undefined;
   const selectedRoute = sheet.routes.find((r) => r.id === selectedRouteId);
   const fromPlacement = sheet.placements.find((p) => p.deviceId === fromId);
-  const zoomPercent = Math.round(((sheet.width + 96) / view.width) * 100);
+  const fittedWidth = fit().width;
+  const zoomPercent = Math.round((fittedWidth / view.width) * 100);
 
   const updateSheet = (update: (s: PlanSheet) => PlanSheet) => {
     if (drag.current?.moved && drag.current.mode !== 'pan') {
@@ -174,7 +178,7 @@ export function FloorPlan({
   const zoom = (factor: number, point?: Point) => {
     const p = point ?? { x: view.x + view.width / 2, y: view.y + view.height / 2 };
     setView((v) => {
-      const f = Math.max((sheet.width + 96) / 16, Math.min((sheet.width + 96) * 5, v.width * factor)) / v.width;
+      const f = Math.max(fittedWidth / 16, Math.min(fittedWidth * 5, v.width * factor)) / v.width;
       return { x: p.x - (p.x - v.x) * f, y: p.y - (p.y - v.y) * f, width: v.width * f, height: v.height * f };
     });
   };
@@ -416,6 +420,14 @@ export function FloorPlan({
     >
       <div className="floor-control-header">
         {tools}
+        <div className="floor-display-switch" role="group" aria-label={t('Alaprajzi megjelenítés')}>
+          {(['symbols', 'images'] as const).map((mode) => <button
+            type="button" key={mode} aria-pressed={display === mode}
+            onClick={() => {
+              if (mode !== display) onChange({ ...dataRef.current, floorPlanDisplay: mode });
+            }}
+          >{t(mode === 'symbols' ? 'Rajzjelek' : 'Valós képek')}</button>)}
+        </div>
         <div className="floor-sheet-caption visually-hidden">
           <span className="floor-sheet-dot" />
           {sheet.name}
@@ -658,6 +670,10 @@ export function FloorPlan({
             const selected = device.id === selectedId;
             const connected = device.id === fromId;
             const color = colorFor(device.id);
+            const appearance = getPlanAppearance(device, assets, display);
+            const radians = placement.rotation * Math.PI / 180;
+            const halfExtent = appearance.kind === 'symbol' ? 19
+              : appearance.size / 2 * (Math.abs(Math.cos(radians)) + Math.abs(Math.sin(radians)));
             return (
               <g
                 key={device.id}
@@ -683,23 +699,13 @@ export function FloorPlan({
                   {device.code} · {device.name}
                   {device.room ? ` · ${device.room}` : ''}
                 </title>
-                {(selected || connected) && <circle r="25" fill={color} opacity=".12" />}
-                <circle
-                  r="19"
-                  fill="white"
-                  fillOpacity=".94"
-                  stroke={selected || connected ? color : '#e2e8e4'}
-                  strokeWidth={selected || connected ? 1.5 : 0.8}
-                />
-                <g transform={`rotate(${placement.rotation})`}>
-                  <SymbolGlyph kind={device.kind} color={color} />
-                </g>
+                <PlanDeviceGraphic device={device} assets={assets} display={display} rotation={placement.rotation} color={color} highlighted={selected || connected} />
                 {device.status === 'verified' && (
-                  <circle cx="14" cy="-13" r="3.5" fill="#22a76e" stroke="white" strokeWidth="1.5" />
+                  <circle cx={appearance.kind === 'symbol' ? 14 : halfExtent - 3} cy={appearance.kind === 'symbol' ? -13 : -halfExtent + 3} r="3.5" fill="#22a76e" stroke="white" strokeWidth="1.5" />
                 )}
                 <text
                   x="0"
-                  y="33"
+                  y={halfExtent + 14}
                   textAnchor="middle"
                   fontSize="11"
                   fontWeight="600"
