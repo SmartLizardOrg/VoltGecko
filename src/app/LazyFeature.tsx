@@ -6,6 +6,7 @@ import { useFocusTrap } from './useFocusTrap';
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;
+  errorClassName?: string;
   onClose?: () => void;
 }
 
@@ -45,7 +46,10 @@ export class LazyFeature extends Component<Props, { failed: boolean }> {
     return { failed: true };
   }
   render() {
-    if (this.state.failed) return <FeatureStatus failed onClose={this.props.onClose} />;
+    if (this.state.failed) {
+      const status = <FeatureStatus failed onClose={this.props.onClose} />;
+      return this.props.errorClassName ? <div className={this.props.errorClassName}>{status}</div> : status;
+    }
     const fallback =
       this.props.fallback === undefined ? <FeatureStatus onClose={this.props.onClose} /> : this.props.fallback;
     return <Suspense fallback={fallback}>{this.props.children}</Suspense>;

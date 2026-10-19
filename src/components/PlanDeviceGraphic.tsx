@@ -33,7 +33,7 @@ export function PlanDeviceGraphic({ device, assets, display, rotation, color, hi
   if (appearance.kind === 'symbol') return <>
     {highlighted && <circle r="25" fill={color} opacity=".12" />}
     <circle r="19" fill="white" fillOpacity=".94" stroke={highlighted ? color : '#e2e8e4'} strokeWidth={highlighted ? 1.5 : 0.8} />
-    <g transform={`rotate(${rotation})`} data-testid="floor-device-symbol"><SymbolGlyph kind={device.kind} color={color} /></g>
+    <g transform={`rotate(${rotation})`} data-testid="floor-device-symbol"><SymbolGlyph kind={device.kind} variant={device.variant} color={color} /></g>
   </>;
 
   const half = appearance.size / 2;

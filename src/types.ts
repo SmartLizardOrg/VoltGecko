@@ -1,10 +1,13 @@
 import type { ProductSnapshot } from './products/types';
 export type DeviceKind = 'outlet' | 'switch' | 'light' | 'junction' | 'sensor' | 'relay' | 'hub' | 'breaker' | 'rcd' | 'rcbo' | 'spd' | 'main' | 'blank' | 'custom';
+export type DeviceVariant = 'switch-double-pole' | 'switch-series' | 'switch-two-way' | 'switch-intermediate' | 'switch-double-two-way' | 'switch-dimmer' | 'switch-push-button' | 'switch-push-button-lit' | 'outlet-double' | 'outlet-weatherproof' | 'outlet-three-phase' | 'light-wall' | 'light-linear' | 'light-led-strip' | 'sensor-motion' | 'sensor-thermostat' | 'custom-tv' | 'custom-data' | 'custom-phone' | 'custom-bell';
+export type CatalogGroup = 'switches' | 'outlets' | 'lights' | 'control' | 'connections';
 export type DeviceStatus = 'planned' | 'installed' | 'verified';
 export type FloorPlanDisplay = 'symbols' | 'images';
 export interface Point { x: number; y: number }
 export interface Device {
   id: string; code: string; name: string; kind: DeviceKind; room: string;
+  variant?: DeviceVariant;
   heightMm: number; model: string; notes: string; status: DeviceStatus;
   circuitId?: string; moduleWidth?: number; rating?: string; photoIds: string[];
   product?: ProductSnapshot; boardId?:string; quantity?:number;
@@ -61,4 +64,4 @@ export interface ProjectData { id: string; name: string; site: string; client: s
 export interface Revision { id: string; parentId?: string; createdAt: string; note: string; data: ProjectData; restoredFrom?: string }
 export interface ProjectDocument { schemaVersion: 1; data: ProjectData; assets: Record<string, Asset>; revisions: Revision[]; headRevisionId?: string; updatedAt: string; lastExternalSaveAt?: string; lastDriveSaveAt?: string }
 export interface ProjectSummary { id: string; name: string; site: string; updatedAt: string }
-export interface CatalogEntry { kind: DeviceKind; label: string; short: string; category: 'floor' | 'board'; moduleWidth?: number; description: string }
+export interface CatalogEntry { kind: DeviceKind; variant?: DeviceVariant; group?: CatalogGroup; label: string; short: string; category: 'floor' | 'board'; moduleWidth?: number; description: string }

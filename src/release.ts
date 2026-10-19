@@ -14,5 +14,5 @@ export function releaseCommitUrl(release:ReleaseMetadata):string|undefined {
 export function formatReleaseDate(value:string,language:Language):string {
   const timestamp=new Date(value);
   if(!Number.isFinite(timestamp.getTime()))throw new Error('Invalid release commit date.');
-  return `${new Intl.DateTimeFormat(language==='en'?'en-GB':'hu-HU',{timeZone:RELEASE_TIME_ZONE,dateStyle:'medium',timeStyle:'short'}).format(timestamp)} (${RELEASE_TIME_ZONE})`;
+  return new Intl.DateTimeFormat(language==='en'?'en-GB':'hu-HU',{timeZone:RELEASE_TIME_ZONE,dateStyle:'medium',timeStyle:'short'}).format(timestamp);
 }

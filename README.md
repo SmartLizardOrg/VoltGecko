@@ -91,7 +91,7 @@ For WebKit, install `webkit` and set `PLAYWRIGHT_BROWSER=webkit` before running 
 
 The displayed brand and `.vgecko` filename extension are configured in `src/config.ts`; translations are in `src/locales/en-*.ts`. The native `.vgecko` project format uses ZIP compression to keep the plan, photographs, attachments and complete revision history together. Local opening and Google Drive use this same format.
 
-The welcome screen and editor footer show the source commit date in Europe/Budapest time. Clicking it opens the exact GitHub commit embedded in that build. Offline copies retain their own date and commit link. Local builds with uncommitted changes are labelled as local and do not claim an exact commit.
+The welcome screen and editor footer show the source commit date and time, using Europe/Budapest time without a city or timezone suffix. Clicking it opens the exact GitHub commit embedded in that build. Offline copies retain their own date and commit link. Local builds with uncommitted changes are labelled as local and do not claim an exact commit.
 
 ### Code structure
 
@@ -129,6 +129,8 @@ Node.js 22.13+ (22-es ág) vagy Node.js 24 LTS szükséges. Klónozás után `np
 - A fotók, megjegyzések és eszközadatok ugyanahhoz az eszközhöz tartoznak minden nézetben. Az ügyfél- és részletes PDF mellett az egyvonalas rajz SVG-ként is menthető.
 
 Az alaprajz **Rajzjelek / Valós képek** kapcsolója az egész projekt megjelenítését állítja; a választás mentés és újranyitás után is megmarad. Az eszköz adatlapjának **Alaprajzi megjelenítési kép** részében külön PNG/JPG/WebP kép tölthető fel, vagy egy meglévő helyszíni fotó választható. A képméret és fedettség itt, a forgatás a szokásos forgatásvezérlővel állítható. A képes nézetben kép nélküli eszköznél semleges helyőrző jelenik meg. Az ügyfél- és szakmai PDF egyaránt a kiválasztott nézetet használja, a képarány, forgatás és átlátszóság megtartásával.
+
+Az üres tervlapra kattintva vagy PDF/PNG/JPG fájlt ráhúzva alaprajz tölthető fel. Az első oldal az üres lapot tölti ki; a további oldalak, illetve a már rajzot tartalmazó lapra húzott fájlok új tervlapra kerülnek. A kereshető eszköztár öt csoportban 27 alaprajzi típust kínál, köztük kilenc kapcsolóváltozatot. A változatok saját rajzjele és megnevezése a mentett projektben és a PDF jelmagyarázatában is megmarad; hosszú jelmagyarázat esetén külön oldal tartalmazza a teljes listát.
 
 ### Terméktár
 

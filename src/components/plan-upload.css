@@ -1,0 +1,6 @@
+.floor-workspace .floor-upload-empty{position:absolute;z-index:2;top:50%;left:50%;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:10px;max-width:calc(100% - 40px);width:340px;padding:28px 16px;border:1px dashed var(--line);border-radius:14px;background:var(--surface);color:var(--text-secondary);cursor:pointer;font:inherit;text-align:center}
+.floor-upload-empty strong{font-size:1.15rem;color:var(--text)}
+.floor-upload-empty span,.floor-upload-empty small{font-size:.875rem;line-height:1.5}
+.floor-upload-empty:hover,.floor-upload-empty:focus-visible{border-color:var(--accent);background:var(--accent-subtle);outline:2px solid var(--accent);outline-offset:3px}
+.floor-file-over::after{content:'';position:absolute;inset:8px;border:3px dashed var(--accent);border-radius:12px;background:var(--accent-subtle);opacity:.7;z-index:8;pointer-events:none}
+.floor-drop-hint{position:absolute;z-index:9;top:50%;left:50%;transform:translate(-50%,-50%);max-width:calc(100% - 48px);padding:18px 22px;border-radius:10px;background:var(--surface);color:var(--text);box-shadow:0 4px 22px #203e3026;font-weight:650;text-align:center;pointer-events:none}

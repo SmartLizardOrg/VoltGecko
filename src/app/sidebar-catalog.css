@@ -1,0 +1,121 @@
+.sidebar-catalog {
+  flex-shrink: 0;
+  margin-bottom: 18px;
+}
+
+.sidebar .catalog-heading {
+  display: grid;
+  gap: 5px;
+  margin: 0 18px 12px;
+}
+
+.catalog-heading h2,
+.catalog-heading p {
+  margin: 0;
+  line-height: 1.4;
+  color: var(--text-secondary);
+}
+
+.catalog-heading h2 {
+  font-size: .875rem;
+  font-weight: 600;
+  letter-spacing: .03em;
+}
+
+.catalog-heading p {
+  font-size: .75rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  overflow-wrap: anywhere;
+}
+
+.sidebar-catalog .catalog-search {
+  margin: 0 16px 10px;
+}
+
+.catalog-search input {
+  min-width: 0;
+}
+
+.catalog-groups {
+  max-height: min(44vh, 30rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  padding: 0 13px 2px;
+}
+
+.catalog-group + .catalog-group {
+  margin-top: 5px;
+}
+
+.sidebar .catalog-group-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 7px 5px;
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: .875rem;
+  font-weight: 600;
+  text-align: left;
+}
+
+.catalog-group-toggle:hover,
+.catalog-group-toggle:focus-visible {
+  background: var(--surface-subtle);
+}
+
+.catalog-group-toggle > svg {
+  flex-shrink: 0;
+}
+
+.catalog-group-toggle > span {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.catalog-group-toggle > small {
+  font-size: .75rem;
+  font-weight: 400;
+}
+
+.sidebar .catalog-group .catalog-grid {
+  margin: 0 0 9px;
+}
+
+.sidebar .catalog-group .catalog-grid[hidden] {
+  display: none;
+}
+
+.sidebar .catalog-group .catalog-grid > button {
+  min-height: 84px;
+  padding: 9px 5px;
+  gap: 6px;
+}
+
+.sidebar .catalog-group .catalog-grid > button > span {
+  font-size: .8125rem;
+  overflow-wrap: anywhere;
+}
+
+.catalog-no-results {
+  margin: 8px 5px;
+  color: var(--text-secondary);
+  font-size: .875rem;
+}
+
+.sidebar .board-catalog {
+  margin-bottom: 0;
+}
+
+@media (max-width: 700px) {
+  .catalog-groups {
+    max-height: 45vh;
+  }
+}

@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { KeyboardEvent, PointerEvent as ReactPointerEvent, ReactNode, WheelEvent } from 'react';
 import {
   Crosshair,
+  FileImage,
   Layers2,
   Maximize,
   Minus,
@@ -16,6 +17,7 @@ import {
 import type { Asset, DeviceKind, PlanSheet, Point, ProjectData, Route } from '../types';
 import { kindLabel, uid } from '../catalog';
 import { moveSheetDevice } from '../data/floorPlan';
+import { isEmptyPlanSheet } from '../data/planBackground';
 import { getFloorPlanDisplay, getPlanAppearance, getPlanSheetBounds } from '../data/planAppearance';
 import { PlanDeviceGraphic } from './PlanDeviceGraphic';
 
@@ -29,6 +31,9 @@ export interface FloorPlanProps {
   onChange: (data: ProjectData) => void;
   onAddDevice: (kind: DeviceKind, sheetId: string, point: Point) => void;
   onNotify: (message: string) => void;
+  onUploadBackground?: () => void;
+  onDropBackground?: (files: File[]) => void;
+  deviceToolLabel?: string;
   tools?: ReactNode;
 }
 
@@ -64,6 +69,9 @@ export function FloorPlan({
   onChange,
   onAddDevice,
   onNotify,
+  onUploadBackground,
+  onDropBackground,
+  deviceToolLabel,
   tools
 }: FloorPlanProps) {
   const display = getFloorPlanDisplay(data);
@@ -82,6 +90,8 @@ export function FloorPlan({
   const [scaleStart, setScaleStart] = useState<Point | null>(null);
   const [cursor, setCursor] = useState<Point | null>(null);
   const [dragging, setDragging] = useState(false);
+  const [fileOver, setFileOver] = useState(false);
+  const fileDragDepth = useRef(0);
   const svg = useRef<SVGSVGElement>(null);
   const drag = useRef<Drag | null>(null);
   const pointers = useRef(new Map<number, Point>());
@@ -100,7 +110,7 @@ export function FloorPlan({
     setSelectedNoteId(null);
     setDraftSheet(null);
     draftRef.current = null;
-  }, [sheetId]); // A sheet keeps its own document coordinates.
+  }, [sheetId, persistedSheet?.backgroundAssetId]); // Fit a newly imported background once.
   useEffect(() => {
     setFromId(null);
     setScaleStart(null);
@@ -328,6 +338,7 @@ export function FloorPlan({
     if (suppressClick.current) return;
     const p = snapped(worldPoint(e.clientX, e.clientY));
     if (tool === 'select') {
+      if (sheet && isEmptyPlanSheet(sheet)) onUploadBackground?.();
       onSelect(null);
       setSelectedRouteId(null);
       setSelectedNoteId(null);
@@ -408,16 +419,47 @@ export function FloorPlan({
         : tool === 'note'
           ? t('Kattints a megjegyzés helyére')
           : tool !== 'select'
-            ? t('{device} · kattints az elhelyezéshez', { device: kindLabel(tool) })
+            ? t('{device} · kattints az elhelyezéshez', { device: deviceToolLabel || kindLabel(tool) })
             : '';
 
   return (
     <div
-      className={`floor-workspace ${tool !== 'select' ? 'floor-tool-active' : ''} ${dragging ? 'floor-is-dragging' : ''}`}
+      className={`floor-workspace ${tool !== 'select' ? 'floor-tool-active' : ''} ${dragging ? 'floor-is-dragging' : ''} ${fileOver ? 'floor-file-over' : ''}`}
+      onDragEnter={(e) => {
+        if (!e.dataTransfer.types.includes('Files')) return;
+        e.preventDefault();
+        fileDragDepth.current++;
+        setFileOver(true);
+      }}
+      onDragOver={(e) => {
+        if (!e.dataTransfer.types.includes('Files')) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'copy';
+      }}
+      onDragLeave={() => {
+        fileDragDepth.current = Math.max(0, fileDragDepth.current - 1);
+        if (!fileDragDepth.current) setFileOver(false);
+      }}
+      onDrop={(e) => {
+        if (!e.dataTransfer.types.includes('Files')) return;
+        e.preventDefault();
+        fileDragDepth.current = 0;
+        setFileOver(false);
+        onDropBackground?.(Array.from(e.dataTransfer.files));
+      }}
       onKeyDown={onKey}
       tabIndex={0}
       aria-label={t('Alaprajz szerkesztő. A kijelölt eszközt a nyilakkal mozgathatod.')}
     >
+      {isEmptyPlanSheet(sheet) && tool === 'select' && onUploadBackground && <button
+        type="button" className="floor-upload-empty" onClick={onUploadBackground}
+      >
+        <FileImage size={38} strokeWidth={1.2} />
+        <strong>{t('Alaprajz feltöltése')}</strong>
+        <span>{t('Kattints ide, vagy húzz ide egy fájlt.')}</span>
+        <small>PDF · PNG · JPG</small>
+      </button>}
+      {fileOver && <div className="floor-drop-hint" role="status">{t('Engedd el az alaprajz feltöltéséhez')}</div>}
       <div className="floor-control-header">
         {tools}
         <div className="floor-display-switch" role="group" aria-label={t('Alaprajzi megjelenítés')}>
@@ -532,7 +574,7 @@ export function FloorPlan({
           />
         )}
         {layers.grid && <rect width={sheet.width} height={sheet.height} fill="url(#floor-grid)" pointerEvents="none" />}
-        {!background && !sheet.placements.length && (
+        {!background && !sheet.placements.length && !onUploadBackground && (
           <g pointerEvents="none" className="floor-empty-canvas">
             <rect
               x={sheet.width / 2 - 26}

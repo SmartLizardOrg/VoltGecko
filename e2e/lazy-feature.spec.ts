@@ -2,6 +2,23 @@ import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { chooseSample } from './startup';
 
+test('a failed sidebar download keeps the mobile drawing and workspace controls within view', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.route('**/src/app/EditorSidebar.tsx*', route => route.abort('internetdisconnected'));
+  await page.goto('/');
+  await chooseSample(page);
+  await expect(page.locator('.floor-device')).toHaveCount(8);
+  await expect(page.locator('.sidebar [role="alert"]')).toHaveCount(1);
+  const workspace = await page.locator('.workspace').boundingBox();
+  expect(workspace?.y).toBe(0);
+  const floor = await page.locator('.floor-svg').boundingBox();
+  expect(floor!.y).toBeLessThan(844);
+  await page.getByRole('button', { name: 'Eszköztár megnyitása', exact: true }).click();
+  await expect(page.getByRole('button', { name: 'Újratöltés', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Eszköztár bezárása', exact: true }).click();
+  await expect(page.locator('.floor-svg')).toBeVisible();
+});
+
 test('a failed optional view leaves the floor plan and project export usable', async ({ page }) => {
   await page.route('**/src/components/BoardEditor.tsx*', route => route.abort('internetdisconnected'));
   await page.addInitScript(() => Object.defineProperty(window, 'showSaveFilePicker', { value: undefined, configurable: true }));

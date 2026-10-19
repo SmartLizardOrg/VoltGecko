@@ -56,11 +56,12 @@ describe('frozen release metadata',()=>{
 });
 
 describe('release date display',()=>{
-  it('uses Budapest summer and winter time in Hungarian and English',()=>{
+  it('shows the date and Budapest summer or winter time without a city or timezone label',()=>{
     for(const language of ['hu','en'] as const){
       expect(formatReleaseDate('2026-07-01T12:00:00Z',language)).toContain('14:00');
       expect(formatReleaseDate('2026-12-01T12:00:00Z',language)).toContain('13:00');
-      expect(formatReleaseDate('2026-07-01T12:00:00Z',language)).toContain('(Europe/Budapest)');
+      expect(formatReleaseDate('2026-07-01T12:00:00Z',language)).not.toMatch(/Budapest|Europe|\(|\)/);
+      expect(formatReleaseDate('2026-12-01T12:00:00Z',language)).not.toMatch(/Budapest|Europe|\(|\)/);
     }
     expect(formatReleaseDate('2026-07-01T12:00:00Z','hu')).not.toBe(formatReleaseDate('2026-07-01T12:00:00Z','en'));
   });

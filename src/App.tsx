@@ -17,8 +17,8 @@ import {
 } from 'lucide-react';
 import { APP, isProjectFilename } from './config';
 import { t, useLanguage, getLocale } from './i18n';
-import { makeDevice, uid } from './catalog';
-import type { DeviceKind, Point, ProjectDocument } from './types';
+import { catalogEntryId, makeDevice, uid } from './catalog';
+import type { CatalogEntry, DeviceKind, Point, ProjectDocument } from './types';
 import { checkpoint, createProject, deleteDevice, resolveImport } from './data/project';
 import { deleteProject, loadProject, saveProject } from './data/storage';
 import { assetFromFile, decodeProject, saveProjectFile } from './data/archive';
@@ -39,7 +39,7 @@ import { ProjectSettings } from './app/ProjectSettings';
 import { ProjectBrowser } from './app/ProjectBrowser';
 import { placeBoardDevice } from './data/boardPlacement';
 import { DEFAULT_PLAN_IMAGE_SIZE } from './data/planAppearance';
-import { EditorSidebar } from './app/EditorSidebar';
+import { addPlanBackgrounds } from './data/planBackground';
 import { WorkspaceHeader } from './app/WorkspaceHeader';
 import { getNavigation, type View } from './app/navigation';
 import { LazyFeature } from './app/LazyFeature';
@@ -51,6 +51,7 @@ const SingleLine = lazy(() => import('./components/SingleLine').then((module) =>
 const Circuits = lazy(() => import('./components/Circuits').then((module) => ({ default: module.Circuits })));
 const Inspector = lazy(() => import('./components/Inspector').then((module) => ({ default: module.Inspector })));
 const ManufacturerLibrary = lazy(() => import('./app/ManufacturerLibrary'));
+const EditorSidebar = lazy(() => import('./app/EditorSidebar').then((module) => ({ default: module.EditorSidebar })));
 const DrivePanel = lazy(() => import('./app/DrivePanel').then((module) => ({ default: module.DrivePanel })));
 
 const importBackground: typeof import('./services/import').importBackground = async (file) =>
@@ -65,6 +66,7 @@ export default function App() {
   const [productLibraryOpen, setProductLibraryOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [tool, setTool] = useState<Tool>('select');
+  const [catalogEntry, setCatalogEntry] = useState<CatalogEntry>();
   const [modal, setModal] = useState<Modal>(null);
   const [sidebar, setSidebar] = useState(false);
   const [busy, setBusy] = useState('');
@@ -241,23 +243,19 @@ export default function App() {
       notify(t('A teljes projektfájl elkészült, az előzményekkel és mellékletekkel.'));
     });
   };
-  const addBackground = (files: FileList) => {
+  const addBackground = (files: FileList | File[], targetSheetId = sheetId) => {
     const selected = Array.from(files);
+    if (!selected.length) return;
     void perform(t('Alaprajz feldolgozása…'), async () => {
       const results = [];
       for (const file of selected) results.push(...(await importBackground(file)));
       const current = docRef.current;
       if (!current) return;
-      const data = structuredClone(current.data);
-      const assets = { ...current.assets };
-      for (const result of results) {
-        data.sheets.push(result.sheet);
-        result.assets.forEach((asset) => {
-          assets[asset.id] = asset;
-        });
-      }
+      const { data, assets, firstSheetId } = addPlanBackgrounds(current, results, targetSheetId);
       changeData(data, assets);
-      setSheetId(results[0]?.sheet.id ?? sheetId);
+      setSheetId(firstSheetId ?? sheetId);
+      setSelectedId(null);
+      setTool('select');
       setView('floor');
       notify(t('{p0} tervlap hozzáadva.', { p0: results.length }));
     });
@@ -285,7 +283,7 @@ export default function App() {
   const addDevice = (kind: DeviceKind, targetSheetId: string, point: Point) => {
     if (!doc) return;
     const next = structuredClone(doc.data);
-    const d = makeDevice(kind, next.devices);
+    const d = makeDevice(kind, next.devices, catalogEntry?.kind === kind ? catalogEntry.variant : undefined);
     next.devices.push(d);
     const sheet = next.sheets.find((s) => s.id === targetSheetId);
     sheet?.placements.push({ deviceId: d.id, x: point.x, y: point.y, rotation: 0 });
@@ -293,8 +291,10 @@ export default function App() {
     setSelectedId(d.id);
     setTool('select');
   };
-  const chooseCatalog = (kind: DeviceKind) => {
+  const chooseCatalog = (entry: CatalogEntry) => {
     if (!doc) return;
+    const { kind, variant } = entry;
+    setCatalogEntry(entry);
     if (view !== 'board') {
       setView('floor');
       setTool(kind);
@@ -303,7 +303,7 @@ export default function App() {
       return;
     }
     let next = structuredClone(doc.data);
-    const device = makeDevice(kind, next.devices);
+    const device = makeDevice(kind, next.devices, variant);
     next.devices.push(device);
     const board = next.boards.find((candidate) => candidate.id === boardId) ?? next.boards[0];
     if (board?.rows[0]) next = placeBoardDevice(next, board.id, board.rows[0].id, device.id);
@@ -432,10 +432,11 @@ export default function App() {
       )}
       {doc && data && (
         <div className={`app-shell ${sidebar ? 'sidebar-open' : ''} ${selectedId ? 'selection-open' : ''}`}>
-          <EditorSidebar
+          <LazyFeature errorClassName="sidebar" fallback={<aside className="sidebar" role="status">{t('Betöltés…')}</aside>}><EditorSidebar
             document={doc}
             view={view}
             tool={tool}
+            selectedCatalogId={catalogEntry ? catalogEntryId(catalogEntry) : undefined}
             selectedId={selectedId}
             onViewChange={(view) => {
               setView(view);
@@ -454,7 +455,7 @@ export default function App() {
             onHelpOpen={() => setModal('help')}
             onChooseCatalog={chooseCatalog}
             onLocate={locate}
-          />
+          /></LazyFeature>
 
           {sidebar && (
             <button
@@ -620,7 +621,10 @@ export default function App() {
                       onSelect={setSelectedId}
                       onChange={changeData}
                       onAddDevice={addDevice}
+                      deviceToolLabel={catalogEntry?.label}
                       onNotify={notify}
+                      onUploadBackground={() => backgroundInput.current?.click()}
+                      onDropBackground={(files) => addBackground(files, sheet.id)}
                       tools={
                         <div className="drawing-tools" aria-label={t('Rajzeszközök')}>
                           {[

@@ -4,9 +4,9 @@ import { createElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { SymbolGlyph } from '../components/Symbol';
 import { APP } from '../config';
-import { kindLabel } from '../catalog';
+import { catalogEntryId, deviceLabel } from '../catalog';
 import { getBoardIssues } from '../data/boardPlacement';
-import type { Asset, DeviceKind, PlanSheet, ProjectDocument } from '../types';
+import type { Asset, Device, DeviceKind, DeviceVariant, PlanSheet, ProjectDocument } from '../types';
 import { downloadBlob, safeFilename } from './files';
 import { buildSingleLineSvg, cableLabel, circuitCableLabel } from './singleLine';
 import { getBoardConnectionIssues } from '../data/boardConnections';
@@ -121,10 +121,10 @@ export async function buildPdf(doc: ProjectDocument, audience: Audience): Promis
     y = 61;
   }
 
-  async function icon(kind: DeviceKind, color: string): Promise<string> {
-    const key = `${kind}:${color}`;
+  async function icon(kind: DeviceKind, color: string, variant?: DeviceVariant): Promise<string> {
+    const key = `${kind}:${variant ?? ''}:${color}`;
     const cached = iconCache.get(key); if (cached) return cached;
-    const markup = renderToStaticMarkup(createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 160, height: 160, viewBox: '-19 -19 38 38' }, createElement(SymbolGlyph, { kind, color })));
+    const markup = renderToStaticMarkup(createElement('svg', { xmlns: 'http://www.w3.org/2000/svg', width: 160, height: 160, viewBox: '-19 -19 38 38' }, createElement(SymbolGlyph, { kind, variant, color })));
     const image = await loadImage(`data:image/svg+xml;charset=utf-8,${encodeURIComponent(markup)}`);
     const canvas = document.createElement('canvas'); canvas.width = 160; canvas.height = 160;
     const context = canvas.getContext('2d');
@@ -228,7 +228,7 @@ export async function buildPdf(doc: ProjectDocument, audience: Audience): Promis
       let raster = rasters.get(device.id);
       if (appearance.kind === 'symbol') {
         pdf.setFillColor('#ffffff'); pdf.circle(centerX, centerY, symbolSize * 0.52, 'F');
-        raster = await deviceRaster({ id: `pdf:symbol:${device.kind}:${color}`, name: '', mime: 'image/png', data: await icon(device.kind, color) }, placement.rotation, 1);
+        raster = await deviceRaster({ id: `pdf:symbol:${device.kind}:${device.variant ?? ''}:${color}`, name: '', mime: 'image/png', data: await icon(device.kind, color, device.variant) }, placement.rotation, 1);
       }
       if (raster) pdf.addImage(raster.data, 'PNG', centerX - drawingWidth / 2, centerY - drawingHeight / 2, drawingWidth, drawingHeight, undefined, 'FAST');
       pdf.setFontSize(7);
@@ -259,6 +259,14 @@ export async function buildPdf(doc: ProjectDocument, audience: Audience): Promis
       pdf.setFillColor('#ffffff'); pdf.rect(selected.x, selected.y, selected.w, selected.h, 'F');
       text(shortText(pdf, label, width - 1), selected.x + 0.5, selected.y + 2.9, 7);
     }
+    const legendDevices = [...new Map(sheet.placements.flatMap(placement => {
+      const device = deviceMap.get(placement.deviceId);
+      return device ? [[catalogEntryId(device), device] as const] : [];
+    })).values()];
+    const legendIcon = async (device: Device, x: number, y: number, width: number) => {
+      pdf.addImage(await icon(device.kind, TEAL, device.variant), 'PNG', x, y - 3.2, 4.6, 4.6);
+      text(shortText(pdf, deviceLabel(device), width - 8, 7.5), x + 6, y, 7.5);
+    };
     if (floorPlanDisplay === 'images') {
       text(t('VALÓS KÉPEK'), MARGIN, 258, 7.5, MUTED);
       text(t('A képek a kiválasztott terméket szemléltetik; az azonosítók az eszközjegyzékre hivatkoznak.'), MARGIN, 265, 7.5);
@@ -268,17 +276,21 @@ export async function buildPdf(doc: ProjectDocument, audience: Audience): Promis
         text(t('Nincs alaprajzi kép hozzárendelve'), MARGIN + 6, 271.5, 7.5, MUTED);
       }
     } else {
-      const kinds = [...new Set(sheet.placements.map(placement => deviceMap.get(placement.deviceId)?.kind).filter((kind): kind is DeviceKind => Boolean(kind)))];
       text(t('JELMAGYARÁZAT'), MARGIN, 258, 7.5, MUTED);
-      for (let i = 0; i < kinds.length; i++) {
-        const col = i % 7, row = Math.floor(i / 7), cellX = MARGIN + col * (WIDTH / 7), cellY = 265 + row * 7;
-        pdf.addImage(await icon(kinds[i], TEAL), 'PNG', cellX, cellY - 3.2, 4.6, 4.6);
-        text(kindLabel(kinds[i]), cellX + 6, cellY, 7.5);
+      for (let i = 0; i < Math.min(8, legendDevices.length); i++) {
+        await legendIcon(legendDevices[i], MARGIN + i % 4 * (WIDTH / 4), 265 + Math.floor(i / 4) * 7, WIDTH / 4);
       }
+      if (legendDevices.length > 8) text(t('Teljes jelmagyarázat a következő oldalon.'), MARGIN, 276, 7, MUTED);
     }
     const scaleText = sheet.mmPerUnit ? t('Nyomtatási lépték: kb. 1:{scale} (A3, 100%)', { scale: Math.round(sheet.mmPerUnit / scale) }) : t('Méretarány nincs beállítva · vázlat');
     text(scaleText, MARGIN, 280, 7, MUTED);
     text(t('Folytonos: tápellátás    Szaggatott: vezérlés'), MARGIN + 145, 280, 7, MUTED);
+    if (floorPlanDisplay === 'symbols' && legendDevices.length > 8) {
+      page(t('JELMAGYARÁZAT'), sheet.name);
+      for (let i = 0; i < legendDevices.length; i++) {
+        await legendIcon(legendDevices[i], MARGIN + i % 3 * (WIDTH / 3), 70 + Math.floor(i / 3) * 16, WIDTH / 3);
+      }
+    }
   }
 
   function table(title: string, headers: string[], widths: number[], rows: string[][], subtitle = '') {
@@ -331,7 +343,7 @@ export async function buildPdf(doc: ProjectDocument, audience: Audience): Promis
         pdf.setFillColor(invalid ? '#fff0ed' : '#ffffff'); pdf.setDrawColor(invalid ? '#ca4838' : '#9dbbbd'); pdf.rect(x + 0.3, atY + 0.6, Math.max(0.2, w - 0.6), height - 1.2, 'FD');
         pdf.setFontSize(8); text(shortText(pdf, device.code, Math.max(0, w - 2)), x + 1, atY + 6, 8);
         pdf.setFillColor(invalid ? '#ca4838' : TEAL); pdf.roundedRect(x + w * 0.37, atY + 10, Math.max(0.2, w * 0.26), 6, 0.4, 0.4, 'F');
-        pdf.setFontSize(6.5); text(shortText(pdf, device.rating || kindLabel(device.kind), Math.max(0, w - 2)), x + 1, atY + 24, 6.5, MUTED);
+        pdf.setFontSize(6.5); text(shortText(pdf, device.rating || deviceLabel(device), Math.max(0, w - 2)), x + 1, atY + 24, 6.5, MUTED);
       }
       for (let n = 0; n < row.capacity; n += row.capacity > 36 ? 5 : 1) text(String(n + 1), MARGIN + n * moduleW + 0.8, atY + height + 4, 6.5, MUTED);
       y += 51;
@@ -340,7 +352,7 @@ export async function buildPdf(doc: ProjectDocument, audience: Audience): Promis
     for (const row of board.rows) for (const placement of row.placements) {
       const device = deviceMap.get(placement.deviceId); if (!device) continue;
       const circuits = doc.data.circuits.filter(circuit => circuit.protectionDeviceId === device.id).map(circuit => circuit.code).join(', ');
-      boardRows.push([row.name, String(placement.start + 1), String(device.moduleWidth ?? 1), device.code, `${device.name}\n${kindLabel(device.kind)}`, device.rating || '', circuits || (device.circuitId ? circuitMap.get(device.circuitId)?.code || '' : ''), device.model]);
+      boardRows.push([row.name, String(placement.start + 1), String(device.moduleWidth ?? 1), device.code, `${device.name}\n${deviceLabel(device)}`, device.rating || '', circuits || (device.circuitId ? circuitMap.get(device.circuitId)?.code || '' : ''), device.model]);
     }
     table(t('{board} · készülékjegyzék', { board: board.name }), ['Sor', 'Kezdőhely', 'Modul', 'Azonosító', 'Készülék', 'Névleges adat', 'Áramkör', 'Típus / modell'], [35, 25, 20, 46, 96, 55, 35, 72], boardRows);
     const accessories = doc.data.devices.filter(device => device.boardId === board.id && device.product?.mounting === 'accessory');
@@ -382,13 +394,13 @@ export async function buildPdf(doc: ProjectDocument, audience: Audience): Promis
   }
 
   if (audience === 'professional') {
-    table(t('Eszközjegyzék'), ['Azonosító', 'Eszköz', 'Helyiség', 'Áramkör', 'Mag. mm', 'Modell', 'Állapot', 'Megjegyzés'], [43, 54, 30, 24, 20, 47, 27, 139], doc.data.devices.map(device => [device.code, `${device.name}\n${kindLabel(device.kind)}`, device.room, device.circuitId ? circuitMap.get(device.circuitId)?.code || '' : '', String(device.heightMm), [device.model, device.product && !device.model.includes(device.product.reference) ? device.product.reference : ''].filter(Boolean).join('\n'), t(statuses[device.status]), [device.product?.description?.[getLanguage()], device.notes].filter(Boolean).join('\n')]));
+    table(t('Eszközjegyzék'), ['Azonosító', 'Eszköz', 'Helyiség', 'Áramkör', 'Mag. mm', 'Modell', 'Állapot', 'Megjegyzés'], [43, 54, 30, 24, 20, 47, 27, 139], doc.data.devices.map(device => [device.code, `${device.name}\n${deviceLabel(device)}`, device.room, device.circuitId ? circuitMap.get(device.circuitId)?.code || '' : '', String(device.heightMm), [device.model, device.product && !device.model.includes(device.product.reference) ? device.product.reference : ''].filter(Boolean).join('\n'), t(statuses[device.status]), [device.product?.description?.[getLanguage()], device.notes].filter(Boolean).join('\n')]));
     const loadLabels={socket:'Dugalj',lamp:'Világítás',motor:'Motor',other:'Egyéb fogyasztó'};
     table(t('Áramkörjegyzék'), ['Áramkör', 'Megnevezés', 'Védelem', 'Hozzárendelt fogyasztók', 'Kábel', 'Telj. W', 'Megjegyzés'], [25, 65, 35, 74, 60, 25, 100], doc.data.circuits.map(circuit => [circuit.code, [circuit.name,circuit.loadType?t(loadLabels[circuit.loadType]):''].filter(Boolean).join('\n'), circuit.protectionDeviceId ? deviceMap.get(circuit.protectionDeviceId)?.code || '' : '', doc.data.devices.filter(device => device.circuitId === circuit.id).map(device => `${device.code} · ${device.name}`).join('\n'), circuitCableLabel(circuit),circuit.powerW===undefined?'':circuit.powerW.toLocaleString(locale),circuit.notes]));
     const routes = doc.data.sheets.flatMap(sheet => sheet.routes.map(route => [sheet.name, route.kind === 'control' ? t('Vezérlés') : t('Tápellátás'), deviceMap.get(route.fromDeviceId)?.code || '', deviceMap.get(route.toDeviceId)?.code || '', route.circuitId ? circuitMap.get(route.circuitId)?.code || '' : '']));
     table(t('Kapcsolatjegyzék'), ['Tervlap', 'Kapcsolat', 'Kiinduló eszköz', 'Cél eszköz', 'Áramkör'], [90, 55, 90, 90, 59], routes);
   } else {
-    table(t('Mi hova kerül?'), ['Azonosító', 'Eszköz', 'Helyiség', 'Áramkör', 'Állapot'], [43, 128, 70, 55, 88], doc.data.devices.map(device => [device.code, `${device.name} · ${kindLabel(device.kind)}`, device.room, device.circuitId ? circuitMap.get(device.circuitId)?.code || '' : '', t(statuses[device.status])]));
+    table(t('Mi hova kerül?'), ['Azonosító', 'Eszköz', 'Helyiség', 'Áramkör', 'Állapot'], [43, 128, 70, 55, 88], doc.data.devices.map(device => [device.code, `${device.name} · ${deviceLabel(device)}`, device.room, device.circuitId ? circuitMap.get(device.circuitId)?.code || '' : '', t(statuses[device.status])]));
   }
   if (doc.data.notes.trim()) table(t('Projektmegjegyzések'), ['Megjegyzés'], [WIDTH], [[doc.data.notes]]);
 

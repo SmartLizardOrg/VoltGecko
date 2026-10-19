@@ -1,5 +1,6 @@
 import { t } from '../../i18n';
 import type { Asset, Device, ProjectDocument } from '../../types';
+import { isDeviceVariantForKind } from '../../catalog';
 import { effectiveDevicePoles } from '../boardWiring';
 import { isPlanImageAsset } from '../planAppearance';
 import { fail, identifier, object, text, type JsonObject } from './format';
@@ -306,6 +307,8 @@ function validateData(value: unknown, assets: ReadonlyMap<string, Asset>, projec
     text(entry.kind, 'Készüléktípus');
     text(entry.status, 'Készülékállapot');
     if (!kinds.has(entry.kind) || !statuses.has(entry.status)) fail('ismeretlen készüléktípus vagy állapot.');
+    if (entry.variant !== undefined && !isDeviceVariantForKind(entry.variant, entry.kind))
+      fail('ismeretlen vagy nem megfelelő készülékváltozat.');
     finite(entry.heightMm, 'Szerelési magasság');
     if (entry.moduleWidth !== undefined) finite(entry.moduleWidth, 'Modulszélesség', 100_000);
     if (entry.rating !== undefined) text(entry.rating, 'Névleges adat');

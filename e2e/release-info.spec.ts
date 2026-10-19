@@ -11,7 +11,8 @@ async function expectExactLink(locator:Locator){
     await expect(locator.locator('a')).toHaveCount(0);await expect(locator.locator('time')).toHaveCount(0);
   }else{
     await expect(locator.locator('a')).toHaveAttribute('href',`https://github.com/SmartLizardOrg/VoltGecko/commit/${metadata.commit}`);
-    await expect(locator.locator('time')).toHaveAttribute('datetime',metadata.committedAt!);await expect(locator).toContainText('(Europe/Budapest)');
+    await expect(locator.locator('time')).toHaveAttribute('datetime',metadata.committedAt!);
+    await expect(locator.locator('time')).not.toContainText(/Budapest|Europe|\(|\)/);
   }
   return metadata;
 }
