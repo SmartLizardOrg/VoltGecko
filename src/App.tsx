@@ -727,7 +727,9 @@ export default function App() {
               data={data}
               assets={doc.assets}
               device={device}
+              boardId={view === 'board' ? boardId : undefined}
               onChange={changeData}
+              onNotify={notify}
               onClose={() => setSelectedId(null)}
               onDelete={removeDevice}
               onPhoto={addPhoto}

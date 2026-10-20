@@ -39,7 +39,6 @@ test('keeps stored solid colours and persists an explicit two-tone PE wire with 
   await page.getByRole('button', { name: 'Choose project file', exact: true }).click();
   await (await choosing).setFiles({ name: 'wire-colours.vgecko', mimeType: 'application/zip', buffer: Buffer.from(await (await encodeProject(doc)).arrayBuffer()) });
   await page.locator('.view-tabs').getByRole('button', { name: 'Distribution board', exact: true }).click();
-  await page.getByRole('button', { name: /Detailed wiring/ }).click();
 
   await page.locator('.wiring-wire-list').getByRole('button', { name: 'Legacy green', exact: true }).click();
   await expect(page.getByLabel('Custom wire colour', { exact: true })).toHaveValue('#70a029');
@@ -77,7 +76,6 @@ test('keeps stored solid colours and persists an explicit two-tone PE wire with 
   await page.reload();
   await reopenRecentProject(page);
   await page.locator('.view-tabs').getByRole('button', { name: 'Distribution board', exact: true }).click();
-  await page.getByRole('button', { name: /Detailed wiring/ }).click();
   await page.locator('.wiring-wire-list').getByRole('button', { name: 'New PE link', exact: true }).click();
   await expect(page.locator('.wiring-wire.selected .wiring-wire-stripe')).toHaveAttribute('stroke', '#f2cf1d');
   const saved = (await readDocument(page)).data.boards[0].wiring!.wires;

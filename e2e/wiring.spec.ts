@@ -15,12 +15,11 @@ test('preserves the exact four-pole neutral terminal in either selection order a
   const errors:string[]=[];page.on('pageerror',error=>errors.push(error.message));
   await page.goto('/');await chooseSample(page);await openBoard(page);
   const original=await readDocument(page),main=original.data.devices.find(device=>device.code==='Q1')!;
-  await page.locator('.din-device').filter({hasText:'Q1'}).click();
+  await page.locator('.wiring-device-group').filter({hasText:'Q1'}).click();
   await page.locator('.electrical-device-fields>summary').click();
   await page.getByLabel('Pólusok: Pólusok száma',{exact:true}).fill('4');
   for(const [index,pole] of ['L1','L2','L3','N'].entries())await page.getByLabel(`Pólusok: ${index+1}. pólus`,{exact:true}).selectOption(pole);
   await page.getByLabel('Névleges áram (A)',{exact:true}).fill('40');
-  await page.getByRole('button',{name:'Részletes huzalozás',exact:false}).click();
   await page.getByRole('button',{name:'Sín hozzáadása',exact:true}).click();
   await page.locator('.wiring-item>summary').filter({hasText:'Új sín'}).click();
   await page.getByLabel('1. sín kapacitása',{exact:true}).fill('6');
@@ -56,17 +55,16 @@ test('preserves the exact four-pole neutral terminal in either selection order a
   await expect(page.getByRole('alert')).toContainText('A kapacitás nem csökkenthető');
   await expect(page.getByLabel('1. sín kapacitása',{exact:true})).toHaveValue('6');
   expect((await readDocument(page)).data.boards[0].wiring!.wires).toHaveLength(2);
-  await page.reload();await reopenRecentProject(page);await openBoard(page);await page.getByRole('button',{name:'Részletes huzalozás',exact:false}).click();
+  await page.reload();await reopenRecentProject(page);await openBoard(page);
   await page.locator('.wiring-wire-list').getByRole('button',{name:'N összekötés',exact:true}).click();
   const saved=(await readDocument(page)).data.boards[0].wiring!.wires[1];expect(saved.points?.[0]).toEqual({x:335,y:305});expect(saved.labelOffset).toEqual({x:28,y:14});expect(saved.cable).toMatchObject({designation:'H07V-K',cores:1,crossSectionMm2:6,lengthM:2,resistanceOhmPerKm:3.39});
   expect((await readDocument(page)).data.sheets).toEqual(original.data.sheets);expect((await readDocument(page)).data.boards[0].connections).toEqual(original.data.boards[0].connections);
-  await expect(page.locator('.din-device')).toHaveCount(6);await page.locator('.din-device').filter({hasText:'Q1'}).click();await page.getByLabel('Névleges adatok',{exact:true}).fill('4P 40 A');await expect.poll(async()=>(await readDocument(page)).data.devices.find(device=>device.id===main.id)?.rating).toBe('4P 40 A');
+  await expect(page.locator('rect.wiring-device')).toHaveCount(6);await page.locator('.wiring-device-group').filter({hasText:'Q1'}).click();await page.getByLabel('Névleges adatok',{exact:true}).fill('4P 40 A');await expect.poll(async()=>(await readDocument(page)).data.devices.find(device=>device.id===main.id)?.rating).toBe('4P 40 A');
   expect(errors).toEqual([]);
 });
 
 test('offers an English keyboard form for cabinet terminals on a narrow screen',async({page})=>{
   await page.setViewportSize({width:700,height:950});await page.addInitScript(()=>localStorage.setItem('planner.language','en'));await page.goto('/');await chooseSample(page);await page.locator('.view-tabs').getByRole('button',{name:'Distribution board',exact:true}).click();
-  await page.getByRole('button',{name:'Detailed wiring',exact:false}).click();
   await expect(page.getByLabel('Wire start terminal',{exact:true})).toBeVisible();await expect(page.getByRole('button',{name:'Add bus',exact:true})).toBeVisible();
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth)).toBe(true);
 });
@@ -74,12 +72,10 @@ test('offers an English keyboard form for cabinet terminals on a narrow screen',
 test('creates useful device presets and keeps a bus used by another cabinet',async({page})=>{
   await page.goto('/');await chooseSample(page);await openBoard(page);
   const original=await readDocument(page),firstBoardId=original.data.boards[0].id;
-  await page.getByRole('button',{name:'Részletes huzalozás',exact:false}).click();
   await page.getByRole('button',{name:'Sín hozzáadása',exact:true}).click();
   await expect.poll(async()=>(await readDocument(page)).data.boards[0].wiring?.buses.length).toBe(1);
   const bus=(await readDocument(page)).data.boards[0].wiring!.buses[0];
   page.once('dialog',dialog=>dialog.accept('Melléképület'));await page.getByRole('button',{name:'Új elosztó',exact:true}).click();
-  await page.getByRole('button',{name:'Részletes huzalozás',exact:false}).click();
   await page.getByRole('button',{name:'Sorkapocs hozzáadása',exact:true}).click();
   await page.getByRole('button',{name:'Motorvédő hozzáadása',exact:true}).click();
   await page.getByRole('button',{name:'Fogyasztásmérő hozzáadása',exact:true}).click();
@@ -92,7 +88,7 @@ test('creates useful device presets and keeps a bus used by another cabinet',asy
   await page.getByLabel('Vezeték végpontja',{exact:true}).selectOption(JSON.stringify({kind:'device',deviceId:terminal.id,side:'top',pole:0}));
   await page.getByRole('button',{name:'Vezeték létrehozása',exact:true}).click();
   await expect.poll(async()=>(await readDocument(page)).data.boards[1].wiring?.wires.length).toBe(1);
-  await page.getByLabel('Aktív elosztó',{exact:true}).selectOption(firstBoardId);await page.getByRole('button',{name:'Részletes huzalozás',exact:false}).click();
+  await page.getByLabel('Aktív elosztó',{exact:true}).selectOption(firstBoardId);
   await page.locator('.wiring-item>summary').filter({hasText:'Új sín'}).click();await page.getByRole('button',{name:'Sín törlése',exact:true}).click();
   await expect(page.locator('.toast')).toContainText('A sínhez vezeték kapcsolódik');expect((await readDocument(page)).data.boards[0].wiring!.buses).toHaveLength(1);
   await page.getByRole('button',{name:'Betáplálás hozzáadása',exact:true}).click();await expect.poll(async()=>(await readDocument(page)).data.boards[0].wiring?.infeeds.length).toBe(1);
@@ -109,7 +105,7 @@ test('assigns an unassigned single-phase device from a phase bus in either order
   await page.locator('.view-tabs').getByRole('button',{name:'Áramkörök',exact:true}).click();
   for(const [index,power]of [1200,900,800].entries())await page.getByLabel(`${original.data.circuits[index].code} teljesítménye`,{exact:true}).fill(String(power));
   await page.getByLabel(`${original.data.circuits[2].code} fázisa`,{exact:true}).selectOption('L1');
-  await openBoard(page);await page.getByRole('button',{name:'Részletes huzalozás',exact:false}).click();
+  await openBoard(page);
   for(const [index,conductor]of ['L2','L3'].entries()){
     await page.getByRole('button',{name:'Sín hozzáadása',exact:true}).click();await page.locator('.wiring-item>summary').nth(index).click();await page.getByLabel(`${index+1}. sín vezetője`,{exact:true}).selectOption(conductor);
   }

@@ -94,7 +94,7 @@ test('precaches lazy features without loading them on welcome, then opens each f
   await expect(library.locator('.product-reference')).toHaveText('EZ9F57116');
   await library.getByRole('button', { name: 'Termékkönyvtár bezárása', exact: true }).click();
   await page.locator('.view-tabs').getByRole('button', { name: 'Elosztó', exact: true }).click();
-  await expect(page.locator('.din-device')).toHaveCount(6);
+  await expect(page.locator('rect.wiring-device')).toHaveCount(6);
   await page.locator('.view-tabs').getByRole('button', { name: 'Egyvonalas', exact: true }).click();
   await expect(page.locator('.single-line-svg [data-device-id]')).toHaveCount(6);
 

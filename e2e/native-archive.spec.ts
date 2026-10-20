@@ -108,7 +108,7 @@ test('opens a native archive and retains every terminal wire in all-board SVG, P
   expect(imported.data.circuits.map(c=>[c.code,c.powerW])).toEqual([['21',250],['22',500]]);
 
   // A pre-existing feature still attaches photographs to the same shared device.
-  await page.locator('.din-device').filter({hasText:'X-N'}).click();
+  await page.locator('.wiring-device-group').filter({hasText:'X-N'}).click();
   await page.locator('.photo-upload input').setInputFiles({name:'terminal-photo.png',mimeType:'image/png',buffer:photo});
   await expect(page.locator('.photo-grid img')).toHaveCount(2);
   await expect.poll(async()=>Object.keys((await readDocument(page)).assets).length).toBe(3);

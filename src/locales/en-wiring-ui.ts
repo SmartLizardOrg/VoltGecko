@@ -1,4 +1,7 @@
 const messages:Record<string,string>={
+  'Készülék mozgatása: {code}':'Move device: {code}',
+  'Elosztó és huzalozás':'Cabinet and wiring',
+  'A készülékeket a fogantyújukkal mozgasd. A kapcsokra kattintva vezetékeket hozhatsz létre.':'Use the grips to move devices. Select terminals to create wires.',
   'Betáplálás feliratának eltolása':'Supply label offset','{number}. betáplálás felirata {axis}':'Supply {number} label offset {axis}',
   'A kiválasztott csatlakozópont megváltozott. Válaszd ki újra a két végpontot.':'A selected terminal has changed. Choose both terminals again.',
   'Sorkapocs hozzáadása':'Add terminal block','Motorvédő hozzáadása':'Add motor protection switch','Fogyasztásmérő hozzáadása':'Add energy meter',

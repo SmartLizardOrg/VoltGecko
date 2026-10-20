@@ -14,6 +14,7 @@ import './components/product-library.css';
 import './styles.css';
 import './app/sidebar-catalog.css';
 import './appearance.css';
+import './components/board-cabinet.css';
 import './theme';
 const updateSW = registerSW({ onNeedRefresh() { window.dispatchEvent(new CustomEvent('app-update', { detail: () => updateSW(true) })); } });
 createRoot(document.getElementById('root')!).render(<StrictMode><App/></StrictMode>);

@@ -8,7 +8,6 @@ test('routes same-row connections outside devices and preserves a manual route d
   await page.goto('/');
   await chooseSample(page);
   await page.locator('.view-tabs').getByRole('button', { name: 'Elosztó', exact: true }).click();
-  await page.getByRole('button', { name: 'Részletes huzalozás', exact: false }).click();
   const connect = async (source: string, target: string) => {
     await page.getByRole('button', { name: source, exact: true }).click();
     await page.getByRole('button', { name: target, exact: true }).click();
@@ -72,7 +71,6 @@ test('includes automatic outer gutters in the canvas without moving default supp
   await page.getByRole('button', { name: 'Projektfájl kiválasztása', exact: true }).click();
   await (await choosing).setFiles({ name: 'gutter.vgecko', mimeType: 'application/zip', buffer: Buffer.from(await (await encodeProject(doc)).arrayBuffer()) });
   await page.locator('.view-tabs').getByRole('button', { name: 'Elosztó', exact: true }).click();
-  await page.getByRole('button', { name: 'Részletes huzalozás', exact: false }).click();
   const drawing = page.locator('.wiring-diagram');
   const points = await page.locator('.wiring-wire-hit').getAttribute('points');
   const coordinates = points!.split(' ').map((point) => point.split(',').map(Number));

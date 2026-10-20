@@ -17,7 +17,7 @@ Offline-first electrical floor-plan and distribution-board planner, in **English
 - Import PDF pages, PNG and JPG floor plans; use multiple sheets, layers, scale calibration, zoom, device placement and rotation.
 - Share device identities and properties across floor plans, circuits, distribution boards and single-line diagrams. Record room, mounting height, product details, notes and site photos.
 - Switch the whole floor plan between **Symbols** and **Real images**. Assign a separate image to each device by uploading a PNG/JPG/WebP or choosing a site photo; set its display size, rotation and opacity. Devices without an image show a neutral placeholder in image mode. Both PDF audiences follow the saved display mode, preserving photo proportions and transparency.
-- Draw circuit and control connections, edit routes, arrange DIN devices by row and module width, and see collisions and overcapacity. The detailed cabinet editor adds per-pole terminals, phase/N/PE busbars, incoming supplies, cross-board wires, cable data and movable wire routes and labels.
+- Arrange DIN devices and connect their terminals in one cabinet drawing, with module markers, phase/N/PE busbars, incoming supplies and cross-board wires. Move devices by their grips with half-module snapping, or use the row and starting-position fields; collisions and overcapacity remain visible. Wire routes and labels stay editable, and manual bends remain in place when devices move.
 - Reuse a selected source with continuous wiring, choose named wire colours or a custom colour, and document green-yellow PE wires in the editor and single-line exports. Automatic routes leave each terminal on its selected side and use available gaps and outer gutters; saved manual routes remain editable.
 - Search the bundled Schneider catalogue offline: 260 references from the Hungarian Easy9 Pro catalogue, including DIN devices, enclosures and accessories. Each entry retains its manufacturer source.
 - Export customer and detailed PDF documents, including legends, circuit lists and board layouts. Export the single-line drawing as SVG or PNG.
@@ -124,7 +124,7 @@ Node.js 22.13+ (22-es ág) vagy Node.js 24 LTS szükséges. Klónozás után `np
 
 - A PDF minden oldala külön tervlapként importálható; PNG/JPG vagy üres tervlap is használható. Az eszköz kijelölés után húzással vagy nyílbillentyűkkel mozgatható. A Delete csak a tervlapról veszi le; az adatlap törlés gombja a közös eszközt törli.
 - A kapcsolat és vezérlés eszközzel két eszköz összeköthető. A töréspontok húzhatók; dupla kattintás új töréspontot ad. A méretarány két pont és ismert távolság alapján kalibrálható.
-- Az elosztóban a sor, kezdőhely és modulszélesség szerkeszthető, félmodulos értékekkel is. A program jelzi az ütközést és túlfoglalást. Az egyvonalas nézet a megadott készülékkapcsolatokból épül fel.
+- Az elosztóban a készülékek elhelyezése és a kapcsok huzalozása egy közös szekrényrajzon történik. A fogantyúval félmodulos lépésekben, sorok között is mozgathatók; a sor és kezdőhely mezőkkel is megadható. A program jelzi az ütközést és túlfoglalást. A kézi vezetéktöréspontok mozgatáskor helyben maradnak. Az egyvonalas nézet a megadott készülékkapcsolatokból épül fel.
 - Az áramkörhöz védelmi készülék, kábelmegnevezés, fogyasztótípus és teljesítmény rögzíthető. Ezek dokumentációs adatok; nem indítanak automatikus villamos méretezést.
 - A fotók, megjegyzések és eszközadatok ugyanahhoz az eszközhöz tartoznak minden nézetben. Az ügyfél- és részletes PDF mellett az egyvonalas rajz SVG-ként is menthető.
 

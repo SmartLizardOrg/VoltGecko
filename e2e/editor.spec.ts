@@ -155,15 +155,15 @@ test('centers a sidebar-selected device outside the view while preserving zoom',
 test('adds a board device and reports width overflow and overlapping module slots', async ({ page }) => {
   await openPlanner(page);
   await page.locator('.view-tabs').getByRole('button', { name: 'Elosztó', exact: true }).click();
-  await expect(page.locator('.din-device')).toHaveCount(6);
+  await expect(page.locator('rect.wiring-device')).toHaveCount(6);
   await page.locator('.catalog-grid').getByRole('button', { name: /Kismegszakító/ }).click();
   await expect(page.getByLabel('Eszköz azonosítója', { exact: true })).toHaveValue('QF4');
-  await expect(page.locator('.din-device')).toHaveCount(7);
+  await expect(page.locator('rect.wiring-device')).toHaveCount(7);
   await page.getByLabel('Modulszélesség', { exact: true }).fill('3');
   await expect(page.locator('.validation-box')).toContainText('túllóg');
   await page.getByLabel('Kezdő modulhely', { exact: true }).fill('1');
   await expect(page.locator('.validation-box')).toContainText('ütköző modulfoglalás');
-  await expect(page.locator('.din-device.invalid')).not.toHaveCount(0);
+  await expect(page.locator('rect.wiring-device.invalid')).not.toHaveCount(0);
   await page.screenshot({ path: path.join(qaDir, 'desktop-board-validation.png'), fullPage: true });
 });
 

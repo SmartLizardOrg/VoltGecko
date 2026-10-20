@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AlertTriangle, Cable, Plus } from 'lucide-react';
 import { t, getLocale } from '../i18n';
 import { uid, makeDevice } from '../catalog';
@@ -26,14 +26,15 @@ import { SourcesPanel } from './board-wiring/SourcesPanel';
 interface Props {
   data: ProjectData;
   board: Board;
+  selectedId: string | null;
   onChange: (data: ProjectData) => void;
   onNotify: (message: string) => void;
-  onSelect: (id: string) => void;
+  onSelect: (id: string | null) => void;
+  onPlaceDevice: (deviceId: string, rowId: string, start: number) => void;
 }
 const EMPTY: BoardWiring = { buses: [], wires: [], infeeds: [] };
 
-export function BoardWiringEditor({ data, board, onChange, onNotify, onSelect }: Props) {
-  const [open, setOpen] = useState(false);
+export function BoardWiringEditor({ data, board, selectedId, onChange, onNotify, onSelect, onPlaceDevice }: Props) {
   const [fromValue, setFromValue] = useState('');
   const [toValue, setToValue] = useState('');
   const [continuousWiring, setContinuousWiring] = useState(false);
@@ -44,6 +45,17 @@ export function BoardWiringEditor({ data, board, onChange, onNotify, onSelect }:
   const locale = getLocale();
   const issues = useMemo(() => getWiringIssues(data, board), [data, board, locale]);
   const loads = useMemo(() => getPhaseLoads(data, board), [data, board]);
+  useEffect(() => {
+    if (selectedId) setWireId(undefined);
+  }, [selectedId]);
+  const selectDevice = (id: string | null) => {
+    setWireId(undefined);
+    onSelect(id);
+  };
+  const selectWire = (id: string) => {
+    onSelect(null);
+    setWireId(id);
+  };
   const update = (fn: (value: BoardWiring, data: ProjectData) => void) => {
     const next = structuredClone(data),
       target = next.boards.find((b) => b.id === board.id)!;
@@ -67,6 +79,7 @@ export function BoardWiringEditor({ data, board, onChange, onNotify, onSelect }:
       if (source) Object.assign(source, patch);
     });
   const selectEndpoint = (endpoint: WiringEndpoint) => {
+    onSelect(null);
     setError('');
     if (!fromValue || (toValue && !continuousWiring)) {
       setFromValue(encodeEndpoint(endpoint));
@@ -97,7 +110,7 @@ export function BoardWiringEditor({ data, board, onChange, onNotify, onSelect }:
     if (!target.rows.length)
       target.rows.push({ id: uid(), name: t('{number}. sor', { number: 1 }), capacity: 12, placements: [] });
     onChange(placeBoardDevice(next, target.id, target.rows[0].id, device.id));
-    onSelect(device.id);
+    selectDevice(device.id);
   };
   const addWire = () => {
     if (!from || !to) return;
@@ -125,7 +138,7 @@ export function BoardWiringEditor({ data, board, onChange, onNotify, onSelect }:
       const conductor = endpointConductor(next, from);
       value.wires.push({ id, from, to, ...defaultWireColor(conductor) });
     });
-    setWireId(id);
+    selectWire(id);
     if (!continuousWiring) setFromValue('');
     setToValue('');
     setError('');
@@ -144,21 +157,19 @@ export function BoardWiringEditor({ data, board, onChange, onNotify, onSelect }:
       }}
     />
   );
-  const diagram = useWiringDiagram(data, board, wiring, { patchWire, patchBus, patchInfeed });
+  const diagram = useWiringDiagram(data, board, wiring, { patchWire, patchBus, patchInfeed, placeDevice: onPlaceDevice });
   const selectedWire = wiring.wires.find((wire) => wire.id === wireId);
   const selectedRoute = selectedWire ? diagram.route(selectedWire, wiring.wires.indexOf(selectedWire)) : [];
 
   return (
-    <section className="board-wiring" data-testid="board-wiring">
-      <button className="wiring-heading" aria-expanded={open} onClick={() => setOpen((value) => !value)}>
+    <section className="board-wiring board-wiring-unified" data-testid="board-wiring">
+      <div className="wiring-heading">
         <Cable size={19} />
-        <span>{t('Részletes huzalozás')}</span>
+        <span>{t('Elosztó és huzalozás')}</span>
         <span className="small-tag">
           {wiring.wires.length} {t('vezeték')}
         </span>
-        <span aria-hidden="true">{open ? '−' : '+'}</span>
-      </button>
-      {open && (
+      </div>
         <div className="wiring-content">
           <div className="row-actions wiring-presets">
             <button className="quiet" onClick={() => addPreset('terminal')}>
@@ -174,6 +185,23 @@ export function BoardWiringEditor({ data, board, onChange, onNotify, onSelect }:
               {t('Fogyasztásmérő hozzáadása')}
             </button>
           </div>
+          <p className="subtle">
+            {t('A készülékeket a fogantyújukkal mozgasd. A kapcsokra kattintva vezetékeket hozhatsz létre.')}
+          </p>
+          <WiringDiagram
+            data={data}
+            board={board}
+            wiring={wiring}
+            diagram={diagram}
+            from={from}
+            to={to}
+            selectedDeviceId={selectedId}
+            selectedWireId={wireId}
+            onSelectWire={selectWire}
+            onSelectDevice={selectDevice}
+            onSelectEndpoint={selectEndpoint}
+            onPlaceDevice={onPlaceDevice}
+          />
           <p className="subtle">
             {t(
               'Válassz két konkrét csatlakozópontot a rajzon vagy a listákban, majd hozd létre a vezetéket. A kattintási sorrend szabad.'
@@ -219,18 +247,6 @@ export function BoardWiringEditor({ data, board, onChange, onNotify, onSelect }:
               {error}
             </p>
           )}
-          <WiringDiagram
-            data={data}
-            board={board}
-            wiring={wiring}
-            diagram={diagram}
-            from={from}
-            to={to}
-            selectedWireId={wireId}
-            onSelectWire={setWireId}
-            onSelectDevice={onSelect}
-            onSelectEndpoint={selectEndpoint}
-          />
           <p className="subtle">
             {t(
               'A kijelölt vezeték csomópontjai és felirata húzhatók. Az alábbi mezőkkel billentyűzettel is szerkeszthetők.'
@@ -243,7 +259,7 @@ export function BoardWiringEditor({ data, board, onChange, onNotify, onSelect }:
               selectedWireId={wireId}
               selectedRoute={selectedRoute}
               endpoints={endpoints}
-              onSelectWire={setWireId}
+              onSelectWire={selectWire}
               onPatchWire={patchWire}
               onDeleteWire={(id) => {
                 update((value) => {
@@ -329,7 +345,6 @@ export function BoardWiringEditor({ data, board, onChange, onNotify, onSelect }:
             </div>
           )}
         </div>
-      )}
     </section>
   );
 }

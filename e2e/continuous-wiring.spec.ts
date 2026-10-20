@@ -28,7 +28,6 @@ async function readDocument(page: Page): Promise<ProjectDocument> {
 
 async function openWiring(page: Page) {
   await page.locator('.view-tabs').getByRole('button', { name: 'Elosztó', exact: true }).click();
-  await page.getByRole('button', { name: 'Részletes huzalozás', exact: false }).click();
 }
 
 test('reuses a source for diagram and form connections, keeps safeguards and saves the resulting wires', async ({ page }) => {

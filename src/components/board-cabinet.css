@@ -1,0 +1,166 @@
+/* The cabinet shares the wiring coordinate system; only its appearance changes. */
+.board-wiring-unified {
+  --cabinet-frame: #e5ecef;
+  --cabinet-inset: #f6f8f9;
+  --cabinet-row: #edf2f4;
+  --cabinet-edge: #9eafb9;
+  --cabinet-rail: #cbd6dc;
+  --cabinet-rail-edge: #879ba7;
+  --cabinet-device: #ffffff;
+  --cabinet-device-edge: #718994;
+  --cabinet-grip: #e6edf0;
+  --cabinet-wire-outline: #ffffff;
+  margin-top: 18px;
+  overflow: hidden;
+}
+:root[data-theme='dark'] .board-wiring-unified {
+  --cabinet-frame: #263e4b;
+  --cabinet-inset: #172a35;
+  --cabinet-row: #1d3440;
+  --cabinet-edge: #718a99;
+  --cabinet-rail: #49616f;
+  --cabinet-rail-edge: #91a8b5;
+  --cabinet-device: #2c4654;
+  --cabinet-device-edge: #94acba;
+  --cabinet-grip: #3b5867;
+  --cabinet-wire-outline: #93a8b2;
+}
+.board-wiring-unified .wiring-heading {
+  gap: 10px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  flex-wrap: wrap;
+}
+.board-wiring-unified .wiring-heading > svg { color: var(--accent); flex: 0 0 auto; }
+.board-wiring-unified .wiring-heading > .small-tag { margin-left: auto; font-size: .875rem; }
+.board-wiring-unified .wiring-content { padding-top: 16px; gap: 16px; }
+.board-wiring-unified .wiring-content > .subtle { margin: 0; }
+.board-wiring-unified .wiring-presets { gap: 8px; }
+.board-wiring-unified .wiring-presets > button { font-size: .875rem; }
+.board-wiring-unified .wiring-diagram-scroll {
+  background: var(--surface-subtle);
+  border: 1px solid var(--cabinet-edge);
+  border-radius: 8px;
+  max-height: 70vh;
+  overscroll-behavior: contain;
+  isolation: isolate;
+}
+.board-wiring-unified .wiring-diagram { max-width: none; }
+.wiring-cabinet-frame { fill: var(--cabinet-frame); stroke: var(--cabinet-edge); stroke-width: 2px; }
+.wiring-cabinet-inset { fill: var(--cabinet-inset); stroke: var(--cabinet-edge); }
+.board-wiring-unified .wiring-row { fill: var(--cabinet-row); stroke: var(--line); }
+.wiring-din-rail { fill: var(--cabinet-rail); stroke: var(--cabinet-rail-edge); }
+.wiring-module-tick { stroke: var(--cabinet-edge); stroke-width: 1px; stroke-dasharray: 2 5; }
+.board-wiring-unified .wiring-diagram .wiring-module-number {
+  fill: var(--text-secondary);
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+  stroke: none;
+}
+.board-wiring-unified .wiring-diagram text { stroke: var(--cabinet-inset); stroke-width: 3.5px; }
+.board-wiring-unified .wiring-diagram .wiring-row-label { font-size: 12px; font-weight: 600; letter-spacing: .2px; }
+.board-wiring-unified .wiring-device {
+  fill: var(--cabinet-device);
+  stroke: var(--cabinet-device-edge);
+  stroke-width: 1.5px;
+}
+.board-wiring-unified .wiring-device:hover { stroke: var(--accent); stroke-width: 2px; }
+.board-wiring-unified .wiring-device.selected { fill: var(--accent-subtle); stroke: var(--focus); stroke-width: 3px; }
+.board-wiring-unified .wiring-device.invalid { stroke: var(--danger); stroke-width: 2.5px; fill: var(--danger-bg); }
+.board-wiring-unified .wiring-device.invalid.selected { stroke: var(--focus); }
+.board-wiring-unified .wiring-device.blank { fill: var(--cabinet-row); stroke: var(--cabinet-edge); stroke-dasharray: 4 3; }
+.board-wiring-unified .wiring-diagram .wiring-device-code,
+.board-wiring-unified .wiring-diagram .wiring-device-rating,
+.board-wiring-unified .wiring-diagram .wiring-device-type { stroke: none; }
+.board-wiring-unified .wiring-diagram .wiring-device-code { font-size: 12px; font-weight: 700; }
+.board-wiring-unified .wiring-diagram .wiring-device-rating { font-size: 11px; font-weight: 600; fill: var(--text); }
+.board-wiring-unified .wiring-diagram .wiring-device-type { font-size: 10px; fill: var(--text-secondary); letter-spacing: .2px; }
+.wiring-device-grip-container { overflow: visible; }
+.wiring-device-grip {
+  display: grid;
+  place-items: center;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  border: 1px solid var(--cabinet-device-edge);
+  border-radius: 3px;
+  background: var(--cabinet-grip);
+  color: var(--text-secondary);
+  cursor: grab;
+  touch-action: none;
+}
+.wiring-device-grip svg { color: var(--text-secondary); pointer-events: none; }
+.wiring-device-grip:hover,
+.wiring-device-grip:focus-visible { background: var(--accent-subtle); border-color: var(--focus); }
+.wiring-device-grip:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.wiring-device-grip:active,
+.wiring-device-dragging .wiring-device-grip { cursor: grabbing; }
+.wiring-device-dragging { opacity: .72; }
+.board-wiring-unified .wiring-row.wiring-device-drop-target { fill: var(--accent-subtle); stroke: var(--focus); stroke-width: 2px; }
+.board-wiring-unified .wiring-wire-outline,
+.board-wiring-unified .wiring-wire-line {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+.board-wiring-unified .wiring-wire-outline { stroke: var(--cabinet-wire-outline); stroke-width: 7px; }
+.board-wiring-unified .wiring-wire-line { stroke-width: 4px; }
+.board-wiring-unified .wiring-wire.selected .wiring-wire-outline { stroke: var(--focus); stroke-width: 9px; }
+.board-wiring-unified .wiring-wire.selected .wiring-wire-line { stroke-width: 5px; }
+.board-wiring-unified .wiring-wire-hit { stroke-width: 18px; stroke-linecap: round; stroke-linejoin: round; }
+.board-wiring-unified .wiring-terminal circle:not(.wiring-terminal-hit) { stroke: var(--cabinet-device-edge); stroke-width: 2px; }
+.board-wiring-unified .wiring-terminal:hover circle:not(.wiring-terminal-hit),
+.board-wiring-unified .wiring-terminal.selected circle:not(.wiring-terminal-hit) { stroke: var(--focus); stroke-width: 4px; }
+.board-wiring-unified .wiring-source { fill: var(--cabinet-device); stroke: var(--cabinet-device-edge); }
+.board-wiring-unified .wiring-bus { stroke: var(--cabinet-edge); }
+.board-wiring-unified .wiring-connect-form { padding: 16px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-subtle); }
+.board-wiring-unified .wiring-panel { background: var(--surface); }
+.board-row-controls { display: grid; gap: 12px; }
+.board-row-controls .cabinet-label { margin-bottom: 0; }
+.board-row-control {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  min-width: 0;
+}
+.board-row-control-heading { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.board-row-control-heading > input { flex: 1; min-width: 0; width: 100%; font-size: .875rem; }
+.board-row-control-heading > label { display: flex; align-items: center; gap: 6px; flex-direction: row; white-space: nowrap; }
+.board-row-control-heading > label input { width: 4.5rem; padding: 8px; }
+.board-row-control-heading > .icon-button { flex: 0 0 auto; }
+.board-row-control-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 0; font-size: .875rem; color: var(--text-secondary); }
+.board-row-control-footer > span { white-space: nowrap; }
+.board-row-control-footer .row-actions { flex: 1; min-width: 0; }
+.board-row-control-footer select { width: 100%; min-width: 0; font-size: .875rem; }
+.board-row-controls .add-row { min-height: 44px; padding: 8px; }
+
+@media (max-width: 1100px) {
+  .board-row-control { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+}
+@media (max-width: 760px) {
+  .board-wiring-unified .wiring-heading { padding: 14px 12px; }
+  .board-wiring-unified .wiring-content { padding: 12px; gap: 14px; }
+  .board-wiring-unified .wiring-diagram-scroll { max-height: 58vh; max-height: 58dvh; }
+  .board-wiring-unified .wiring-presets > button { flex: 1 1 12rem; }
+  .board-wiring-unified .wiring-connect-form { padding: 12px; }
+  .board-row-control { padding: 10px; }
+  .board-row-control-heading { flex-wrap: wrap; gap: 8px; }
+  .board-row-control-heading > input { flex: 1 1 calc(100% - 52px); order: 0; }
+  .board-row-control-heading > label { flex: 1 1 100%; order: 2; justify-content: space-between; }
+  .board-row-control-heading > label input { margin-left: auto; width: 5.5rem; }
+  .board-row-control-heading > .icon-button { order: 1; }
+  .board-row-control-footer { flex-wrap: wrap; gap: 8px; }
+  .board-row-control-footer .row-actions { flex: 1 1 100%; }
+  .board-row-control-footer select { font-size: 1rem; }
+  .board-row-controls .cabinet-label > span { max-width: 100%; overflow-wrap: anywhere; }
+}
