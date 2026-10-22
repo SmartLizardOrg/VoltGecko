@@ -4,7 +4,7 @@
 
 Offline-first electrical floor-plan and distribution-board planner, in **English and Hungarian**. Built with React, TypeScript, Vite and an installable PWA; projects stay on the user's device unless the user exports a file or explicitly saves to Google Drive.
 
-[Magyar útmutató](#magyar) · [GitHub](https://github.com/SmartLizardOrg/VoltGecko) · [MIT License](LICENSE)
+[Magyar útmutató](#magyar) · [GitHub](https://github.com/molnard-labs/VoltGecko) · [MIT License](LICENSE)
 
 **Live app / Élő alkalmazás:** [voltgecko.pages.dev](https://voltgecko.pages.dev)
 
@@ -54,7 +54,7 @@ Browser storage is tied to the exact origin: localhost, a LAN address, a product
 
 The app is a static site: no application server, database, Pages Functions or runtime secrets are required.
 
-1. In Cloudflare **Workers & Pages → Create application → Pages**, import the GitHub repository **SmartLizardOrg/VoltGecko**. Grant the Cloudflare GitHub app access to this repository when requested.
+1. In Cloudflare **Workers & Pages → Create application → Pages**, import the GitHub repository **molnard-labs/VoltGecko**. Grant the Cloudflare GitHub app access to this repository when requested.
 2. Configure the build:
 
    | Setting | Value |

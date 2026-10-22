@@ -6,11 +6,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SmartLizardOrg/VoltGecko.git"
+    "url": "https://github.com/molnard-labs/VoltGecko.git"
   },
   "homepage": "https://voltgecko.pages.dev",
   "bugs": {
-    "url": "https://github.com/SmartLizardOrg/VoltGecko/issues"
+    "url": "https://github.com/molnard-labs/VoltGecko/issues"
   },
   "engines": {
     "node": "^22.13.0 || ^24.0.0 || >=26.0.0"
